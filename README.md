@@ -1,4 +1,4 @@
 # Digital Cookbook Application
 
 ## CI/CD
-- In progress
+- HTML5 Validation Complete
