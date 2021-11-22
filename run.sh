@@ -17,13 +17,13 @@ echo "html lint"
 npx htmlhint index.html assets/**/*.html
 
 echo "css lint"
-npx stylelint **/*.css 
+npx stylelint ./**/*.css 
 
 echo "jscpd"
-npx jscpd --pattern *.js assets/**.js *.css assets/**.css *.html assets/**.html
+npx jscpd --pattern *glob*.js assets/**.js *glob*.css assets/**.css *glob*.html assets/**.html
 
 echo "eslint"
-npx eslint **/*.js
+npx eslint ./**/*.js
 
 echo "standard"
 npx standard
