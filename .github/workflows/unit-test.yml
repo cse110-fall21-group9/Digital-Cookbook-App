@@ -3,22 +3,22 @@ name: Unit-Test
 on: [push, pull_request]
 
 jobs: 
+    build:
+     runs-on: ubuntu-latest
+     steps:
+            - name: unit-testing
+                
 
-Unit-test:
-  steps:
-        - name: unit-testing
-          runs-on: ubuntu-latest
+            - name: Check out Git repository
+              uses: actions/checkout@v2
 
-        - name: Check out Git repository
-          uses: actions/checkout@v2
+            - name: Set up Node.js
+              uses: actions/setup-node@v1
+              with:
+                node-version: 12
 
-        - name: Set up Node.js
-          uses: actions/setup-node@v1
-          with:
-            node-version: 12
-            
-        - name: Install Node.js dependencies
-          run: npm ci
-          
-        - name: test
-          run: npm test
+            - name: Install Node.js dependencies
+              run: npm ci
+
+            - name: test
+              run: npm test
