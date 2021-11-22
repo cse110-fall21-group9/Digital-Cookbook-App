@@ -1,0 +1,32 @@
+{
+  "name": "digital-cookbook-app",
+  "version": "1.0.0",
+  "description": "The Pandas Cookbook app",
+  "main": "./assets/scripts/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build-win": "electron-packager . import-pandas-debug-app --platform=win32 --arch=x64 --overwrite",
+    "build-darwin": "electron-packager . import-pandas-debug-app --platform=darwin --arch=x64 --overwrite",
+    "build-linux": "electron-packager . import-pandas-debug-app --platform=linux --arch=x64 --overwrite"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cse110-fall21-group9/Digital-Cookbook-App.git"
+  },
+  "author": "The Import Pandas Team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App/issues"
+  },
+  "homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
+  "devDependencies": {
+    "electron": "^16.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-google": "^0.14.0",
+    "htmlhint": "^0.16.1",
+    "jscpd": "^3.4.2",
+    "stylelint": "^14.1.0",
+    "stylelint-config-standard": "^24.0.0"
+  }
+}
