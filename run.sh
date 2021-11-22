@@ -3,19 +3,27 @@ echo "HTML Validation..."
 html5validator --root . --blacklist node_modules
 
 echo "Github action linting..."
-./actionlint
 
-echo "HTML Linting..."
-npx htmlhint "index.html"
-npx htmlhint "assets/**/*.html"
+case "$OSTYPE" in
+	linux-*)
+		./actionlint
+	;;
+	msys|cygwin|win32)
+		./actionlint.exe
+	;;
+esac
 
-echo "CSS linting..."
-npx stylelint "**/*.css"
+echo "html lint"
+npx htmlhint index.html assets/**/*.html
 
-echo "JavaScript Linting..."
-npx eslint "**/*.js"
+echo "css lint"
+npx stylelint **/*.css 
 
-echo "Copy Pase detection..."
-npx jscpd --pattern "*.js" "assets/**.js"
-npx jscpd --pattern "*.css" "assets/**.css"
-npx jscpd --pattern "*.html" "assets/**.html"
+echo "jscpd"
+npx jscpd --pattern *.js assets/**.js *.css assets/**.css *.html assets/**.html
+
+echo "eslint"
+npx eslint **/*.js
+
+echo "standard"
+npx standard
