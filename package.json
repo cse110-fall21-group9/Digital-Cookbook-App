@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
-    "build-win": "electron-packager . import-pandas-debug-app --platform=win32 --arch=x64 --overwrite",
-    "build-darwin": "electron-packager . import-pandas-debug-app --platform=darwin --arch=x64 --overwrite",
-    "build-linux": "electron-packager . import-pandas-debug-app --platform=linux --arch=x64 --overwrite"
+    "build-win": "electron-packager . import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
+    "build-darwin": "electron-packager . import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
+    "build-linux": "electron-packager . import-pandas-cookbook-app --platform=linux --arch=x64 --overwrite"
   },
   "repository": {
     "type": "git",
