@@ -16,7 +16,7 @@
     <!-- Top Bar Container -->
     <div class="container-fluid px-0">
         <div class="row TopBar">
-            <a href=./index.html><img src="./assets/images/cooking.png" id="Logo" alt="Our Website logo"></a>
+            <a href="./index.html"><img src="./assets/images/cooking.png" id="Logo" alt="Our Website logo"></a>
         </div>
     </div>
 
@@ -26,8 +26,7 @@
             <!-- 1st Column NavBar -->
             <div class="col-2">
                 <nav class="navStyle">
-                    <a href="./assets/pages/makeEdit-recipe.html">New Recipes</a>
-                    <a href="#">Edit Recipes</a>
+                    <a href="./assets/pages/makeEdit-recipe.html">Create Recipe</a>
                     <a href="#">Favorites</a>
                     <a href="#">Meal Planner</a>
                     <a href="#">Shopping List</a>
@@ -49,122 +48,158 @@
                                 </span>
                             </div>
                         </div>
-                    </div>
-                    <!-- First Recipe Card Row -->
-                    <div class="row mb-4">
-                        <div class="col-3 recipeCards p-0">
-                            <!-- 1st Recipe Card -->
-                            <div class="container-fluid p-0">
-                                <!-- Recipe Image -->
-                                <div class="row mb-2">
-                                    <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food"
-                                        id="img1">
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Name -->
-                                    <div class="col-5 offset-1" id="name1">
-                                        Burrito
-                                    </div>
-                                    <div class="col-6">
-                                        <!-- Favorite Recipe Button -->
-                                        <button type="button" class="btn btn-outline-success"
-                                            id="fav1">Favorite</button>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Description -->
-                                    <div class="col offset-1" id="info1">
-                                        A scrumptious meal for anytime!
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2 offset-1">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <!-- Recipe Time to Complete -->
-                                    <div class="col-9" id="time1">
-                                        30 minutes
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 offset-1 recipeCards p-0">
-                            <!-- 2nd Recipe Card -->
-                            <div class="container-fluid p-0">
-                                <!-- Recipe Image -->
-                                <div class="row mb-2">
-                                    <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food"
-                                        id="img2">
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Name -->
-                                    <div class="col-5 offset-1" id="name2">
-                                        Burrito
-                                    </div>
-                                    <div class="col-6">
-                                        <!-- Favorite Recipe Button -->
-                                        <button type="button" class="btn btn-outline-success"
-                                            id="fav2">Favorite</button>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Description -->
-                                    <div class="col offset-1" id="info2">
-                                        A scrumptious meal for anytime!
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2 offset-1">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <!-- Recipe Time to Complete -->
-                                    <div class="col-9" id="time2">
-                                        30 minutes
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-3 offset-1 recipeCards p-0">
-                            <!-- 3rd Recipe Card -->
-                            <div class="container-fluid p-0">
-                                <!-- Recipe Image -->
-                                <div class="row mb-2">
-                                    <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food"
-                                        id="img3">
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Name -->
-                                    <div class="col-5 offset-1" id="name3">
-                                        Burrito
-                                    </div>
-                                    <div class="col-6">
-                                        <!-- Favorite Recipe Button -->
-                                        <button type="button" class="btn btn-outline-success"
-                                            id="fav3">Favorite</button>
-                                    </div>
-                                </div>
-                                <div class="row mb-2">
-                                    <!-- Recipe Description -->
-                                    <div class="col offset-1" id="info3">
-                                        A scrumptious meal for anytime!
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-2 offset-1">
-                                        <i class="fas fa-clock"></i>
-                                    </div>
-                                    <!-- Recipe Time to Complete -->
-                                    <div class="col-9" id="time3">
-                                        30 minutes
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </div>                     
                 </div>
+                <!-- First Recipe Card Row -->
+                <article class="recipe-cards">
+                    <!-- 1st Recipe Card -->
+                    <div class="recipe">
+                        <!-- Recipe Image -->
+                        <div class="image">
+                            <a href="assets/pages/view-recipeCard.html">
+                                <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img1">
+                            </a>
+                        </div>
+                        <div class="recipe-content">
+                            <p class="recipe-tags">
+                                <span class="recipe-tag">Gluten Free</span>
+                                <span class="recipe-tag">Breakfast</span>
+                            </p>
+                            <!-- Recipe Name -->
+                            <h1 class="title" id="name1"> Burrito</h1>
+                            <!-- Recipe Description -->
+                            <p class="description" id="info1">A scrumptious meal for anytime!</p>
+                            <!-- Recipe Time to Complete -->
+                            <div class="recipe-time">
+                                <i class="fas fa-clock"></i>
+                                <time>30 min</time> 
+                            </div>
+                        </div>
+                        <!-- Favorite Recipe Button -->
+                        <button type="button" class="btn btn-outline-success" id="fav1">Favorite</button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="./assets/pages/makeEdit-recipe.html">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="#">Share</a>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 2nd Recipe Card -->
+                    <div class="recipe">
+                        <!-- Recipe Image -->
+                        <div class="image">
+                            <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img2">
+                        </div>
+                        <div class="recipe-content">
+                            <p class="recipe-tags">
+                                <span class="recipe-tag">Gluten Free</span>
+                                <span class="recipe-tag">Breakfast</span>
+                            </p>
+                            <!-- Recipe Name -->
+                            <h1 class="title" id="name2"> Burrito</h1>
+                            <!-- Recipe Description -->
+                            <p class="description" id="info2">A scrumptious meal for anytime!</p>
+                            <!-- Recipe Time to Complete -->
+                            <div class="recipe-time">
+                                <i class="fas fa-clock"></i>
+                                <time>30 min</time> 
+                            </div>
+                        </div>
+                        <!-- Favorite Recipe Button -->
+                        <button type="button" class="btn btn-outline-success" id="fav2">Favorite</button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="#">Share</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3rd Recipe Card -->
+                    <div class="recipe">
+                        <!-- Recipe Image -->
+                        <div class="image">
+                            <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img3">
+                        </div>
+                        <div class="recipe-content">
+                            <p class="recipe-tags">
+                                <span class="recipe-tag">Gluten Free</span>
+                                <span class="recipe-tag">Breakfast</span>
+                            </p>
+                            <!-- Recipe Name -->
+                            <h1 class="title" id="name3"> Burrito</h1>
+                            <!-- Recipe Description -->
+                            <p class="description" id="info3">A scrumptious meal for anytime!</p>
+                            <!-- Recipe Time to Complete -->
+                            <div class="recipe-time">
+                                <i class="fas fa-clock"></i>
+                                <time>30 min</time> 
+                            </div>
+                        </div>
+                        <!-- Favorite Recipe Button -->
+                        <button type="button" class="btn btn-outline-success" id="fav3">Favorite</button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="#">Share</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4th Recipe Card -->  
+                    <div class="recipe">
+                        <!-- Recipe Image -->
+                        <div class="image">
+                            <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img4">
+                        </div>
+                        <div class="recipe-content">
+                            <p class="recipe-tags">
+                                <span class="recipe-tag">Gluten Free</span>
+                                <span class="recipe-tag">Breakfast</span>
+                            </p>
+                            <!-- Recipe Name -->
+                            <h1 class="title" id="name4"> Burrito</h1>
+                            <!-- Recipe Description -->
+                            <p class="description" id="info4">A scrumptious meal for anytime!</p>
+                            <!-- Recipe Time to Complete -->
+                            <div class="recipe-time">
+                                <i class="fas fa-clock"></i>
+                                <time>30 min</time> 
+                            </div>
+                        </div>
+                        <!-- Favorite Recipe Button -->
+                        <button type="button" class="btn btn-outline-success" id="fav4">Favorite</button>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                More
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="#">Edit</a>
+                                <a class="dropdown-item" href="#">Delete</a>
+                                <a class="dropdown-item" href="#">Share</a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 </body>
-
 </html>

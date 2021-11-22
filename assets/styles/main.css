@@ -38,7 +38,6 @@ nav {
   list-style-type: none;
 }
 
-
 .navStyle a:hover{
   background-color:#f3efbf;
   color:rgb(0, 0, 0);
@@ -48,9 +47,86 @@ nav {
 }
 
 /* INDIVIDUAL RECIPE CARDS */
-.recipeCards {
-  height: 375px;
-  background: #C4C4C4;
+.recipe, .image {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+}
+.recipe-cards {
+  margin-top: 50px;
+  width: 100%;
+  display: grid;
+  grid-gap: 10px;
+  grid-template: auto / repeat(auto-fit, minmax(270px, 1fr));
+}
+.recipe {
+	border: 2px solid #F2F2F2;
+	border-radius: 10px;
+  box-sizing: border-box;
+  width: 100%;
+	padding: 2px;
+}
+
+.img-fluid {
+  flex: 3 1 30ch;
+	overflow: hidden;
+  max-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: cover;
+  object-position: 40% 60%;
+}
+
+#fav1 {
+  margin: 0 auto;
+  display: block;
+}
+
+.recipe-tags {
+  margin: 0 -2px;
+}
+.recipe-tag {
+  display: inline-block;
+  margin: 10px;
+  font-size: .875em;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: .02em;
+  color: var(--primary);
+}
+
+#name1 {
+  font: 800 35px Raleway;
+  margin: 5px;
+  font-size: 25px;
+  font-style: bold;
+  font-family: "Roboto Slab", Helvetica, Arial, sans-serif;
+  color: inhereit;
+}
+
+#info1 {
+  font: Raleway;
+  margin-left: 5px;
+  font-size: 20px;
+  color: inhereit;
+}
+.recipe-time {
+  margin-left: 5px;
+}
+
+body {
+	--primary: #E05D26;
+	--grey: #857171;
+	--lightgrey: #666;
+	
+	color: var(--grey);
+	line-height: 1.55;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+  font-family: "Raleway";
 }
 
 
@@ -110,3 +186,5 @@ border: 1px solid #000000;
 border-radius: 40px;
 background-color: rgb(243, 195, 131);
 }
+
+
