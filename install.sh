@@ -1,7 +1,10 @@
 #!/bin/sh
 pip install html5validator
+bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+
 npm install htmlhint --save-dev
 npm install eslint@6.8.0 --save-dev
+npm install jscpd  --save-dev
 npm install stylelint stylelint-config-standard --save-devs
 
 touch .eslintrc.json
