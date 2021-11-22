@@ -5,6 +5,11 @@
   "main": "./assets/scripts/main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "htmlhint": "htmlhint index.html assets/**/*.html",
+    "stylelint": "styleint **/*.css",
+    "eslint": "**/*.js",
+    "jscpd": "jscpd --pattern *.js assets/**.js *.css assets/**.css *.html assets/**.html",
+    "standard": "standard",
     "start": "electron .",
     "build-win": "electron-packager . import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
     "build-darwin": "electron-packager . import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
@@ -26,6 +31,7 @@
     "eslint-config-google": "^0.14.0",
     "htmlhint": "^0.16.1",
     "jscpd": "^3.4.2",
+    "standard": "^16.0.4",
     "stylelint": "^14.1.0",
     "stylelint-config-standard": "^24.0.0"
   }
