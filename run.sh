@@ -20,7 +20,7 @@ echo "css lint"
 npx stylelint ./**/*.css 
 
 echo "jscpd"
-npx jscpd --pattern *glob*.js assets/**.js *glob*.css assets/**.css *glob*.html assets/**.html
+npx jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**.html
 
 echo "eslint"
 npx eslint ./**/*.js
