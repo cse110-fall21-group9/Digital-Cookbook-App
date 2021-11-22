@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 echo "HTML Validation..."
 html5validator --root . --blacklist node_modules
 
