@@ -4,6 +4,7 @@ const path = require('path');
 
 const UTF8 = 'utf8'; // for encoding & decoding text to/from Blob types
 const BINARY = 'base64'; // for encoding & decoding binary data to/from Blob types (e.g. images)
+const JSON_EXT_LEN = 5;
 
 /**
  * The IOSystem class provides the data structures & methods for
@@ -43,7 +44,6 @@ export class IOSystem {
     this.filesDict[name] = filePath;
   }
 
-
   /**
    * Scans the files in a directory and returns a list
    * containing the file data retrieved. To be called once on startup.
@@ -59,17 +59,18 @@ export class IOSystem {
     let files = [];
 
     for (let fileName of fileNames) {
+      // we need to ensure that the file extension is ".json" here
+      if (fileName.substring(fileName.length - JSON_EXT_LEN, fileName.length - 1).toLowerCase() === '.json') {
+        let thisFilePath = `${dir}${fileName}`;
 
-      // FIXME: we need to ensure that the file extension is ".json" here!
-      let thisFilePath = `${dir}${fileName}`;
-
-      // get file handle from file path
-      try {
-        let thisFile = fs.readFileSync(thisFilePath, {encoding: UTF8}); // let thisFile = fs.readFileSync(thisFilePath, BLOB_TO_STRING_ENCODING);
-        // let thisFile = fsPromises.readFile(thisFilePath, {encoding: BLOB_TO_STRING_ENCODING});
-        files.push({name: fileName, data: thisFile});
-      } catch (error) {
-        throw "This file path does not exist!";
+        // get file handle from file path
+        try {
+          let thisFile = fs.readFileSync(thisFilePath, {encoding: UTF8}); // let thisFile = fs.readFileSync(thisFilePath, BLOB_TO_STRING_ENCODING);
+          // let thisFile = fsPromises.readFile(thisFilePath, {encoding: BLOB_TO_STRING_ENCODING});
+          files.push({name: fileName, data: thisFile});
+        } catch (error) {
+          throw "This file path does not exist or is not available.";
+        }
       }
     }
 
@@ -108,7 +109,7 @@ export class IOSystem {
   
 
   /**
-   * Reads & converts a file's contents into a string.
+   * Reads & converts a File's contents into a string.
    * Can be used for converting images & other Blob types into a JSON-compatible format.
    * @param {File} file the file to convert into a string.
    * @returns {string} the file's contents as a string.
@@ -129,12 +130,13 @@ export class IOSystem {
 
   }
 
-   /**
+  /**
    * Reads & converts a file's contents into a string.
    * Can be used for converting images & other Blob types into a JSON-compatible format.
    * @param {File} file the file to convert into a string.
    * @returns {Promise} a promise that passes the file as a string when it resolves.
    */
+  /*
   async static encodeFileToStringPromise(file) {
     // we can use Blob.arrayBuffer() to get something that the Node Buffer type can process
     return new Promise((resolve, reject) => {
@@ -147,7 +149,7 @@ export class IOSystem {
 
       });
     });
-  }
+  } */
   
   /**
    * Unpacks a JSON file into a JS object.

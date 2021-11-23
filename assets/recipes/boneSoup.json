@@ -1,0 +1,18 @@
+{
+  "recipe_id": "rec-1",
+  "name": "BoneSOuup",
+  "image": "eeeeeeeeeeeeeeeee.png",
+  "metadata": {
+     "time_added": "Wed Dec 31 1999 16:16:40 GMT-0800 (Pacific Standard Time)",
+     "labels": ["hot", "cold", "bony"],
+     "src_url": ""
+  },
+  "metrics": {
+      "cook_time": 28800,
+      "prep_time": 2,
+      "servings": 60
+  },
+  "tagline": "Not to be confused with bone broth",
+  "ingredients": ["1/2 Cup Bones", "3 Cups Oil"],
+  "steps": ["Place Bones in Oil", "Wait 20 Days", "BoneSOuup"]
+}
