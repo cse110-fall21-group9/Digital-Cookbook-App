@@ -44,14 +44,21 @@ class IOSystem {
     this.filesDict[name] = filePath;
   }
 
+  static pathFormatValid(dir) {
+    if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\')|| !dir) {
+      return false;
+    } return true;
+  }
+
   /**
    * Scans the files in a directory and returns a list
    * containing the file data retrieved. To be called once on startup.
+   * Performs READ.
    * @param {string} dir The directory to scan.
    * @returns {object[]} a list of objects of the following form: {path: (string), data: (string)}.
    */
   static scanFiles(dir) {
-    if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\')|| !dir) {
+    if (!this.pathFormatValid()) {
       throw `"${dir}" is not a valid directory format!`;
     }
     
@@ -74,17 +81,31 @@ class IOSystem {
         }
       }
     }
-
+    console.log(`All files from ${dir} have been read by the IOSystem and returned.`);
     return files;
   }
 
   /**
    * Given a pointer to a JS object and a directory path,
    * pack the object into a JSON file and dump it to the disk.
+   * Performs CREATE and UPDATE.
    * @param {object} data the JS object to pack.
-   * @param {string} location the dir to dump the JSON file into. Ensure that the filename is appended to the location string!
+   * @param {string} dir the dir to dump the JSON file into. 
+   * @param {string} fileName the name of the file to dump.
    */
-  static dumpJSON(data, location) {
+  static dumpJSON(data, dir, fileName) {
+    // TESTME: 
+    /**
+     * 1. Ensure that directory creation is working
+     * 2. Ensure that the JSON dumped is correct
+     */
+    if (!this.pathFormatValid(dir) || !data || !fileName) {
+      throw `"${dir}" is not a valid directory format!`;
+    }
+    if(!fs.existsSync(dir)) { // does the directory exist?
+      fs.mkdirSync(dir);
+    }
+    const location = `${dir}${fileName}`;
     const dataAsString = JSON.stringify(data);
     fs.writeFile(location, dataAsString, {encoding: UTF8}, () => {
       console.log(`JSON file written to ${location}.`);
@@ -92,20 +113,36 @@ class IOSystem {
   }
 
   /**
+   * Erases the file found at the given file path. 
+   * Possibly dangerous; use with safety checks.
+   * Performs DELETE.
+   * @param {string} dir the directory containing to the file to delete.
+   * @param {string} fileName the name of the file to delete.
+   */
+   static eraseFileAt(dir, fileName) {
+    // TESTME: 
+    /**
+     * 1. Ensure that deleting a dummy file works
+     * 2. Ensure that the proper errors are thrown by `fs`
+     *  when the directory or file do not exist.
+     */
+    if (!this.pathFormatValid(dir)) {
+      throw `"${dir}" is not a valid directory format!`;
+    }
+    const location = `${dir}${fileName}`;
+    fs.unlink(location, (error) => {
+      if(error) throw error;
+      console.log(`File at ${location} was deleted successfully.`)
+    });
+  }
+
+  /**
    * Given a list of recipe JSON data, pack them into an array & return it.
-   * @param {object[]} recipes the recipes to pack
+   * @param {object[]} recipes the recipes to pack.
    * @returns {object} an object containing a single array with the recipes inside.
    */
   static makeRCPackage(recipes) {
     // TODO: implement RCPackage export
-  }
-
-  /**
-   * Erases the file found at the given file path. Dangerous; use with safety checks.
-   * @param {string} location the path to the file to delete. Ensure that the filename is appended to the location string!
-   */
-  static eraseFileAt(location) {
-    // TODO: implement.
   }
   
   /**
@@ -164,8 +201,8 @@ class IOSystem {
       throw `This file handle is null!`;
     }
 
-    const fileAsString = encodeFileToString(fileHandle);
-    let fileAsObject = JSON.parse(fileAsString);
+    // const fileAsString = encodeFileToString(fileHandle);
+    // let fileAsObject = JSON.parse(fileAsString);
 
     return fileAsObject;
   }

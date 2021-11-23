@@ -3,7 +3,9 @@ const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
 
+// directory with recipes
 const recipesDir = path.join(__dirname, '../recipes/');
+// const indexDir = path.join(__dirname, '../../'); // directory with index.html
 
 /**
  * Initializes the Window.
