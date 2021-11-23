@@ -14,6 +14,7 @@ const BINARY = 'base64'; // for encoding & decoding binary data to/from Blob typ
  * @method indexFile indexes recipes by name & maps them to file locations.
  * @method scanFiles scans a dir for files and returns a list of objects containing the files' data.
  * @method dumpJSON takes a JS object and a file path, and writes it to that file path.
+ * @method eraseFileAt takes a file path and erases the file found there. Dangerous; use with safety checks.
  * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
  */
 export class IOSystem {
@@ -95,6 +96,14 @@ export class IOSystem {
    */
   static makeRCPackage(recipes) {
     // TODO: implement RCPackage export
+  }
+
+  /**
+   * Erases the file found at the given file path. Dangerous; use with safety checks.
+   * @param {string} location the path to the file to delete. Ensure that the filename is appended to the location string!
+   */
+  static eraseFileAt(location) {
+    // TODO: implement.
   }
   
 
