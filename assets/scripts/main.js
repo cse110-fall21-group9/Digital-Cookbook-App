@@ -1,6 +1,9 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
+const IOSystem = require('./IOSystem');
+
+const recipesDir = path.join(__dirname, '../recipes/');
 
 /**
  * Initializes the Window.
@@ -32,7 +35,9 @@ app.whenReady().then(() => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
-  });z
+  });
+
+  cacheRecipesFromDisk();
 });
 
 // Quit when all windows are closed, except on macOS. There, it's common
@@ -44,3 +49,23 @@ app.on('window-all-closed', function() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+/**
+ * Loads all of the json files in the "./assets/recipes" folder
+ * into our data structures
+ */
+function cacheRecipesFromDisk() {
+  // READ: retrieve all entries from disk complete
+  const readDict = IOSystem.scanFiles(recipesDir);
+  for (const fileObj of readDict) {
+    const filePath = fileObj.path;
+    const fileData = fileObj.data;
+    const fileAsJSON = JSON.parse(fileData);
+
+    IOSystem.indexRecipe(fileAsJSON.name, fileAsJSON);
+    IOSystem.indexFile(fileAsJSON.name, filePath);
+  }
+  console.log(IOSystem.recipesDict);
+  console.log(IOSystem.filesDict);
+}

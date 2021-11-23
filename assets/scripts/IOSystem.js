@@ -18,7 +18,7 @@ const JSON_EXT_LEN = 5;
  * @method eraseFileAt takes a file path and erases the file found there. Dangerous; use with safety checks.
  * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
  */
-export class IOSystem {
+class IOSystem {
   
   static recipesDict = {};
   static filesDict = {};
@@ -48,10 +48,10 @@ export class IOSystem {
    * Scans the files in a directory and returns a list
    * containing the file data retrieved. To be called once on startup.
    * @param {string} dir The directory to scan.
-   * @returns {object[]} a list of objects of the following form: {name: (string), data: (string)}.
+   * @returns {object[]} a list of objects of the following form: {path: (string), data: (string)}.
    */
   static scanFiles(dir) {
-    if (dir.charAt(dir.length - 1) != '/' || !dir) {
+    if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\')|| !dir) {
       throw `"${dir}" is not a valid directory format!`;
     }
     
@@ -60,14 +60,15 @@ export class IOSystem {
 
     for (let fileName of fileNames) {
       // we need to ensure that the file extension is ".json" here
-      if (fileName.substring(fileName.length - JSON_EXT_LEN, fileName.length - 1).toLowerCase() === '.json') {
+      const fileNameNoExt = fileName.substring(fileName.length - JSON_EXT_LEN, fileName.length).toLowerCase();
+      if (fileNameNoExt === '.json') {
         let thisFilePath = `${dir}${fileName}`;
 
         // get file handle from file path
         try {
           let thisFile = fs.readFileSync(thisFilePath, {encoding: UTF8}); // let thisFile = fs.readFileSync(thisFilePath, BLOB_TO_STRING_ENCODING);
           // let thisFile = fsPromises.readFile(thisFilePath, {encoding: BLOB_TO_STRING_ENCODING});
-          files.push({name: fileName, data: thisFile});
+          files.push({path: thisFilePath, data: thisFile});
         } catch (error) {
           throw "This file path does not exist or is not available.";
         }
@@ -107,29 +108,6 @@ export class IOSystem {
     // TODO: implement.
   }
   
-
-  /**
-   * Reads & converts a File's contents into a string.
-   * Can be used for converting images & other Blob types into a JSON-compatible format.
-   * @param {File} file the file to convert into a string.
-   * @returns {string} the file's contents as a string.
-   */
-  async static encodeFileToString(file) {
-    // we can use Blob.arrayBuffer() to get something that the Node Buffer type can process
-    const fileAsArrayBuffer = await file.arrayBuffer();
-    const fileAsBuffer = Buffer.from(fileAsArrayBuffer);
-    const fileAsString = fileAsBuffer.toString(UTF8);
-    return fileAsString;
-  }
-
-  /**
-   * Converts a string-encoded binary into an image.
-   * @param {string} jString The string to convert into an image.
-   */
-  static decodeStringtoImage(jString) {
-
-  }
-
   /**
    * Reads & converts a file's contents into a string.
    * Can be used for converting images & other Blob types into a JSON-compatible format.
@@ -151,6 +129,30 @@ export class IOSystem {
     });
   } */
   
+
+  /**
+   * Reads & converts a File's contents into a string.
+   * Can be used for converting images & other Blob types into a JSON-compatible format.
+   * @param {File} file the file to convert into a string.
+   * @returns {string} the file's contents as a string.
+   */
+  /* 
+  async static encodeFileToString(file) {
+    // we can use Blob.arrayBuffer() to get something that the Node Buffer type can process
+    const fileAsArrayBuffer = await file.arrayBuffer();
+    const fileAsBuffer = Buffer.from(fileAsArrayBuffer);
+    const fileAsString = fileAsBuffer.toString(UTF8);
+    return fileAsString;
+  } */
+
+  /**
+   * Converts a string-encoded binary into an image.
+   * @param {string} jString The string to convert into an image.
+   */
+  static decodeStringtoImage(jString) {
+
+  }
+
   /**
    * Unpacks a JSON file into a JS object.
    * TODO: may be unnecessary if we do not get JSON files directly from users.
@@ -177,6 +179,7 @@ export class IOSystem {
   static bufferToJSBlob(theBuffer) {
     // convert buffer to JSON
     return theBuffer.toString('base64');
-  }
-  
+  }  
 }
+
+module.exports = IOSystem;
