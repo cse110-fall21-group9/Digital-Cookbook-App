@@ -24,6 +24,3 @@ npx jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**
 
 echo "eslint"
 npx eslint ./**/*.js
-
-echo "standard"
-npx standard
