@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
   "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/eslint-parser": "^7.16.3",
     "electron": "^16.0.1",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
@@ -40,9 +42,9 @@
       "node_modules/**"
     ],
     "env": {
-      "browser": true,
-      "es6": true
+      "browser": true
     },
+    "parser": "@babel/eslint-parser",
     "extends": [
       "plugin:prettier/recommended"
     ],
@@ -52,7 +54,8 @@
     },
     "parserOptions": {
       "ecmaVersion": 2018,
-      "sourceType": "module"
+      "sourceType": "module",
+      "requireConfigFile": false
     },
     "plugins": [
       "prettier"
