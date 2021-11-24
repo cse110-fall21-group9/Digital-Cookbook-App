@@ -10,6 +10,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/4f24a48237.js" crossorigin="anonymous"></script>
+    <script src="assets/scripts/app.js" type="module"></script>
+
 </head>
 
 <body>
@@ -26,7 +28,7 @@
             <!-- 1st Column NavBar -->
             <div class="col-2">
                 <nav class="navStyle">
-                    <a href="./assets/pages/makeEdit-recipe.html">Create Recipe</a>
+                    <a id="add" href="#">Create Recipe</a>
                     <a href="#">Favorites</a>
                     <a href="#">Meal Planner</a>
                     <a href="#">Shopping List</a>
@@ -56,9 +58,7 @@
                     <div class="recipe">
                         <!-- Recipe Image -->
                         <div class="image">
-                            <a href="assets/pages/view-recipeCard.html">
-                                <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img1">
-                            </a>
+                            <img src="assets/images/burrito.jpeg" class="img-fluid" alt="Default Food" id="img3">
                         </div>
                         <div class="recipe-content">
                             <p class="recipe-tags">
@@ -76,13 +76,13 @@
                             </div>
                         </div>
                         <!-- Favorite Recipe Button -->
-                        <button type="button" class="btn btn-outline-success" id="fav1">Favorite</button>
+                        <button type="button" class="btn btn-outline-success" id="fav3">Favorite</button>
                         <div class="dropdown">
-                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 More
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <a class="dropdown-item" href="./assets/pages/makeEdit-recipe.html">Edit</a>
+                                <a class="dropdown-item" href="#">Edit</a>
                                 <a class="dropdown-item" href="#">Delete</a>
                                 <a class="dropdown-item" href="#">Share</a>
                             </div>
@@ -198,6 +198,39 @@
             </div>
         </div>
     </div>
+
+    <div id="add-recipe" class="popup hidden">
+        <div id="close" class="close-btn">&times</div>
+        <form class="form">
+            <div class="form-element">
+                <textarea type="text" id="RecipeName" placeholder="Enter Recipe Name"></textarea>
+            </div>
+            <div class="form-element">
+                <textarea type="text" id="Ingredients" placeholder="Enter Ingredients"></textarea>
+            </div>
+            <div class="form-element">
+                <textarea type="text" id="Instructions" placeholder="Enter Instructions"></textarea>
+            </div>
+        </form> 
+        <div class="form-button">
+            <button id="save">Save</button>
+            <button id="discard">Discard</button>
+        </div>
+        <div class="meta-data">
+            <label id="time-cook-label">Cook Time</label>
+            <input type="number" id="time-cook">
+
+            <label id="time-prep-label">Prep Time</label>
+            <input type="number" id="time-prep">
+
+            <label id="serving-label">Serving</label>
+            <input type="number" id="serving">
+        </div>
+        <!-- <div class="photo">
+            <img src="./assets/images/burrito.jpeg" class="img-thumbnail" id="photo" alt="Picture of the food">
+        </div> -->
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>

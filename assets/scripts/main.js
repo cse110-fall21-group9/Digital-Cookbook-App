@@ -1,7 +1,8 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
-const IOSystem = require('./IOSystem');
+const { doc } = require('prettier');
+const {IOSystem}= require('./IOSystem');
 
 // directory with recipes
 const recipesDir = path.join(__dirname, '../recipes/');
@@ -18,10 +19,12 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
+    
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html');
+
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -68,7 +71,12 @@ function cacheRecipesFromDisk() {
     IOSystem.indexFile(fileAsJSON.name, filePath);
   }
   console.log(IOSystem.recipesDict);
-  console.log(IOSystem.filesDict);https://prod.liveshare.vsengsaas.visualstudio.com/join?1E9CD8A81545CAE868FF24193A9F6363FCED 
+  console.log(IOSystem.filesDict);
 }
+
+
+
+
+
 
 
