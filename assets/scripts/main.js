@@ -68,5 +68,7 @@ function cacheRecipesFromDisk() {
     IOSystem.indexFile(fileAsJSON.name, filePath);
   }
   console.log(IOSystem.recipesDict);
-  console.log(IOSystem.filesDict);
+  console.log(IOSystem.filesDict);https://prod.liveshare.vsengsaas.visualstudio.com/join?1E9CD8A81545CAE868FF24193A9F6363FCED 
 }
+
+
