@@ -7,7 +7,7 @@ jobs:
     name: Lint Codebase
     runs-on: ubuntu-latest
     steps:
-      - name: checkou Code
+      - name: Checkout Code
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
