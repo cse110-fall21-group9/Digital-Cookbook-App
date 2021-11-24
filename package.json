@@ -65,6 +65,7 @@
       "prettier/prettier": [
         "error",
         {
+          "endOfLine": "auto",
           "singleQuote": true,
           "printWidth": 100,
           "bracketSpacing": false
