@@ -10,7 +10,6 @@ const JSON_EXT_LEN = 5;
  * The IOSystem class provides the data structures & methods for
  * reading and writing JSON files to the disk, as well as caching
  * recipe information at runtime.
- * 
  * @method indexRecipe indexes recipes by name & maps them to JSON data.
  * @method indexFile indexes recipes by name & maps them to file locations.
  * @method scanFiles scans a dir for files and returns a list of objects containing the files' data.
@@ -19,7 +18,6 @@ const JSON_EXT_LEN = 5;
  * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
  */
 class IOSystem {
-  
   static recipesDict = {};
   static filesDict = {};
 
@@ -34,8 +32,7 @@ class IOSystem {
   }
 
   /**
-   * Adds an entry to the filesDict that maps 
-   * recipe names to file paths.
+   * Adds an entry to the filesDict that maps recipe names to file paths.
    * @param {string} name name of recipe.
    * @param {string} filePath path to recipe JSON on disk.
    */
@@ -45,9 +42,10 @@ class IOSystem {
   }
 
   static pathFormatValid(dir) {
-    if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\')|| !dir) {
+    if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\') || !dir) {
       return false;
-    } return true;
+    }
+    return true;
   }
 
   /**
@@ -59,15 +57,17 @@ class IOSystem {
    */
   static scanFiles(dir) {
     if (!this.pathFormatValid()) {
-      throw `"${dir}" is not a valid directory format!`;
+      throw new Error(`"${dir}" is not a valid directory format!`);
     }
-    
+
     let fileNames = fs.readdirSync(dir);
     let files = [];
 
     for (let fileName of fileNames) {
       // we need to ensure that the file extension is ".json" here
-      const fileNameNoExt = fileName.substring(fileName.length - JSON_EXT_LEN, fileName.length).toLowerCase();
+      const fileNameNoExt = fileName
+        .substring(fileName.length - JSON_EXT_LEN, fileName.length)
+        .toLowerCase();
       if (fileNameNoExt === '.json') {
         let thisFilePath = `${dir}${fileName}`;
 
@@ -77,7 +77,7 @@ class IOSystem {
           // let thisFile = fsPromises.readFile(thisFilePath, {encoding: BLOB_TO_STRING_ENCODING});
           files.push({path: thisFilePath, data: thisFile});
         } catch (error) {
-          throw "This file path does not exist or is not available.";
+          throw new Error('This file path does not exist or is not available.');
         }
       }
     }
@@ -90,11 +90,11 @@ class IOSystem {
    * pack the object into a JSON file and dump it to the disk.
    * Performs CREATE and UPDATE.
    * @param {object} data the JS object to pack.
-   * @param {string} dir the dir to dump the JSON file into. 
+   * @param {string} dir the dir to dump the JSON file into.
    * @param {string} fileName the name of the file to dump.
    */
   static dumpJSON(data, dir, fileName) {
-    // TESTME: 
+    // TESTME:
     /**
      * 1. Ensure that directory creation is working
      * 2. Ensure that the JSON dumped is correct
@@ -102,37 +102,38 @@ class IOSystem {
     if (!this.pathFormatValid(dir) || !data || !fileName) {
       throw `"${dir}" is not a valid directory format!`;
     }
-    if(!fs.existsSync(dir)) { // does the directory exist?
+    if (!fs.existsSync(dir)) {
+      // does the directory exist?
       fs.mkdirSync(dir);
     }
     const location = `${dir}${fileName}`;
     const dataAsString = JSON.stringify(data);
     fs.writeFile(location, dataAsString, {encoding: UTF8}, () => {
       console.log(`JSON file written to ${location}.`);
-    })
+    });
   }
 
   /**
-   * Erases the file found at the given file path. 
+   * Erases the file found at the given file path.
    * Possibly dangerous; use with safety checks.
    * Performs DELETE.
    * @param {string} dir the directory containing to the file to delete.
    * @param {string} fileName the name of the file to delete.
    */
-   static eraseFileAt(dir, fileName) {
-    // TESTME: 
+  static eraseFileAt(dir, fileName) {
+    // TESTME:
     /**
      * 1. Ensure that deleting a dummy file works
      * 2. Ensure that the proper errors are thrown by `fs`
      *  when the directory or file do not exist.
      */
     if (!this.pathFormatValid(dir)) {
-      throw `"${dir}" is not a valid directory format!`;
+      throw new Error(`"${dir}" is not a valid directory format!`);
     }
     const location = `${dir}${fileName}`;
     fs.unlink(location, (error) => {
-      if(error) throw error;
-      console.log(`File at ${location} was deleted successfully.`)
+      if (error) throw error;
+      console.log(`File at ${location} was deleted successfully.`);
     });
   }
 
@@ -144,7 +145,7 @@ class IOSystem {
   static makeRCPackage(recipes) {
     // TODO: implement RCPackage export
   }
-  
+
   /**
    * Reads & converts a file's contents into a string.
    * Can be used for converting images & other Blob types into a JSON-compatible format.
@@ -165,7 +166,6 @@ class IOSystem {
       });
     });
   } */
-  
 
   /**
    * Reads & converts a File's contents into a string.
@@ -186,9 +186,7 @@ class IOSystem {
    * Converts a string-encoded binary into an image.
    * @param {string} jString The string to convert into an image.
    */
-  static decodeStringtoImage(jString) {
-
-  }
+  static decodeStringtoImage(jString) {}
 
   /**
    * Unpacks a JSON file into a JS object.
@@ -197,8 +195,8 @@ class IOSystem {
    * @returns {object} the unpacked JS object.
    */
   static unpackJSON(fileHandle) {
-    if(!fileHandle) {
-      throw `This file handle is null!`;
+    if (!fileHandle) {
+      throw new Error(`This file handle is null!`);
     }
 
     // const fileAsString = encodeFileToString(fileHandle);
@@ -216,7 +214,7 @@ class IOSystem {
   static bufferToJSBlob(theBuffer) {
     // convert buffer to JSON
     return theBuffer.toString('base64');
-  }  
+  }
 }
 
 module.exports = IOSystem;
