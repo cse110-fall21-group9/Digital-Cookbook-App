@@ -82,7 +82,7 @@ ipcMain.on('LOAD', (event) => {
  * If success "SUCCESS" will be returned.
  */
 
- ipcMain.on('ADD', (event, recipeData, recipeName) => {
+ipcMain.on('ADD', (event, recipeData, recipeName) => {
   try {
     IOSystem.dumpJSON(recipeData, recipesDir, `${recipeName}.json`);
     event.returnValue = 'SUCCESS';
@@ -97,7 +97,7 @@ ipcMain.on('LOAD', (event) => {
  * If error occur 'FAILED' will be returned.
  *  If success "SUCCESS" will be returned.
  */
- ipcMain.on('DELETE', (event, recipeName) => {
+ipcMain.on('DELETE', (event, recipeName) => {
   try {
     IOSystem.eraseFileAt(recipesDir, `${recipeName}.json`);
     event.returnValue = 'SUCCESS';

@@ -86,10 +86,20 @@
             <button id="save">Save</button>
             <button id="discard">Discard</button>
         </div>
-        <!-- <form id='file' action="/action_page.php">
+        <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+        <p><label id='upload' for="file" style="cursor: pointer;">Upload Image</label></p>
+        <p><img id="output" width="200" /></p>
+        <!-- <form id='file' action="action_page.php">
             <input type="file" id="myFile" name="filename">
             <input type="submit">
         </form> -->
+        <script>
+            var loadFile = function(event) {
+            var image = document.getElementById('output');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            };
+        </script>
+        
     </div>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

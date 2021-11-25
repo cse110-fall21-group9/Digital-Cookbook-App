@@ -138,14 +138,16 @@ body {
   border-radius: 10px;
   background: #C4C4C4;
 }
-#file {
+
+#output {
   grid-column: 2;
   grid-row: 3;
-  margin-top: -500px;
-  width: 300px;
-
-
+  margin-top: -400px;
+  margin-left: auto;
+  width: 90%;
+  display: block;
 }
+
 button {
   width: 30%;
   height: calc(15vh - 50px);

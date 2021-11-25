@@ -75,7 +75,8 @@ class recipeCard extends HTMLElement{
         }
         
         .recipe-time {
-          margin-left: 10px;
+          margin-left: 20px;
+          margin-bottom: 15px;
         }
         .recipe .buttons {
             display: flex;
@@ -170,7 +171,7 @@ class recipeCard extends HTMLElement{
         let cookingTime = data.metrics.cook_time;
         time.innerHTML = `
         <i class="fas fa-clock"></i>
-        <time>${cookingTime}</time>
+        <time>Cook time: ${cookingTime}</time>
         `
         recipeContent.appendChild(time);
         card.appendChild(recipeContent);
@@ -182,8 +183,8 @@ class recipeCard extends HTMLElement{
                 <button onclick="myFunction()" class="dropbtn">Dropdown</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#">Edit</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <a href="#">Delete</a>
+                    <a href="#">Share</a>
                 </div>
             </div>
         </div>

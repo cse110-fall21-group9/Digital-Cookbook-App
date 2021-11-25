@@ -34,6 +34,7 @@ save.addEventListener('click', function () {
   document.getElementById('time-cook').value = '';
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
+  document.getElementById('output').src = '';
 
   // Save file to local storage
   let recipeName = json['name'];
@@ -58,6 +59,10 @@ function createJSON() {
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   let tag = 'Gluten Free';
+  let imgURL = '.png';
+  if (document.getElementById('output').src !== undefined) {
+    imgURL = document.getElementById('output').src;
+  }
 
   let ingredients = document.getElementById('Ingredients').value.split('\n');
   let instruction = document.getElementById('Instructions').value.split('\n');
@@ -68,7 +73,7 @@ function createJSON() {
   let newRecipe = {
     recipe_id: 12313,
     name: titleText,
-    image: '.png',
+    image: imgURL,
     metadata: {
       time_added: date,
       labels: tag,
