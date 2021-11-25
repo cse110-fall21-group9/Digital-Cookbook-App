@@ -105,5 +105,3 @@ ipcMain.on('DELETE', (event, recipeName) => {
     event.returnValue = 'FAILED';
   }
 });
-
-

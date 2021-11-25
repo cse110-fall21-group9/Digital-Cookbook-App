@@ -41,18 +41,17 @@ save.addEventListener('click', function () {
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
-//   dumpJSON(json, "../assets/recipes", file);
+  //   dumpJSON(json, "../assets/recipes", file);
 });
 
-
 function createRecipeCards(data) {
-    const recipeCard = document.createElement('recipe-card');
-    recipeCard.data = data;
-    document.querySelector('.recipe-cards').appendChild(recipeCard);
+  const recipeCard = document.createElement('recipe-card');
+  recipeCard.data = data;
+  document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
- /**
-   * Create a new JSON file on the data user enter 
-   */
+/**
+ * Create a new JSON file on the data user enter
+ */
 function createJSON() {
   const titleText = document.getElementById('RecipeName').value;
 
@@ -86,6 +85,6 @@ function createJSON() {
     },
     ingredients: ingredients,
     steps: instruction,
-  }
+  };
   return newRecipe;
 }

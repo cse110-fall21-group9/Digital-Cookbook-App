@@ -1,24 +1,23 @@
-class recipeCard extends HTMLElement{
-    constructor() {
-        super();
-        this.attachShadow({mode:"open"});
-    }
+class recipeCard extends HTMLElement {
+  constructor() {
+    super();
+    this.attachShadow({mode: 'open'});
+  }
 
-    /**
-   * Create a new JSON file on the data user enter 
+  /**
+   * Create a new JSON file on the data user enter
    * @param {dict} data the name of the json dictionary.
    */
-    set data(data) {
-        if (!data) return;
-        
-        // Used to access the actual data object
-        // this.json = data;
-    
-         // Create a wrapper      
-        const card = document.createElement('div');
-        const style = document.createElement('style');
-        style.innerHTML = 
-        `
+  set data(data) {
+    if (!data) return;
+
+    // Used to access the actual data object
+    // this.json = data;
+
+    // Create a wrapper
+    const card = document.createElement('div');
+    const style = document.createElement('style');
+    style.innerHTML = `
         .recipe {
             background-color: #eeeee4;
             border-radius: 16px;
@@ -122,61 +121,59 @@ class recipeCard extends HTMLElement{
           
           .dropdown-content a:hover {background-color: #ddd}
           
-        `
-        card.classList.add("recipe");
+        `;
+    card.classList.add('recipe');
 
-        // Grab the thumbnail
-        const imgWrapper = document.createElement('div');
-        imgWrapper.classList.add("image");
-        const imageUrl = data.image;
-        const image = document.createElement('img');
-        image.classList.add("img-fluid")
-        image.setAttribute('src', imageUrl);
-        image.setAttribute('alt', imageUrl);
-        imgWrapper.appendChild(image);
-        card.appendChild(imgWrapper);
+    // Grab the thumbnail
+    const imgWrapper = document.createElement('div');
+    imgWrapper.classList.add('image');
+    const imageUrl = data.image;
+    const image = document.createElement('img');
+    image.classList.add('img-fluid');
+    image.setAttribute('src', imageUrl);
+    image.setAttribute('alt', imageUrl);
+    imgWrapper.appendChild(image);
+    card.appendChild(imgWrapper);
 
-        // Create recipe content
-        const recipeContent = document.createElement('div');
-        recipeContent.classList.add("recipe-content");
+    // Create recipe content
+    const recipeContent = document.createElement('div');
+    recipeContent.classList.add('recipe-content');
 
-        // Create tags 
-        const tag = document.createElement('p');
-        tag.classList.add("recipe-tags");
-        tag.innerHTML = ` 
+    // Create tags
+    const tag = document.createElement('p');
+    tag.classList.add('recipe-tags');
+    tag.innerHTML = ` 
         <span class="recipe-tag">Gluten Free</span>
         <span class="recipe-tag">Breakfast</span>
-        `
-        recipeContent.appendChild(tag);
-        
+        `;
+    recipeContent.appendChild(tag);
 
-        // Grab the title  
-        const title = document.createElement('h1');
-        title.classList.add('title');
-        title.id = 'name';
-        title.textContent = data.name;
-        recipeContent.appendChild(title);
+    // Grab the title
+    const title = document.createElement('h1');
+    title.classList.add('title');
+    title.id = 'name';
+    title.textContent = data.name;
+    recipeContent.appendChild(title);
 
-        // Get description
-        const desc = document.createElement('p');
-        desc.classList.add('description');
-        desc.id = 'info';
-        desc.textContent = data.steps;
-        recipeContent.appendChild(desc);
+    // Get description
+    const desc = document.createElement('p');
+    desc.classList.add('description');
+    desc.id = 'info';
+    desc.textContent = data.steps;
+    recipeContent.appendChild(desc);
 
-
-        // Get time
-        const time = document.createElement('div');
-        time.classList.add('recipe-time');
-        let cookingTime = data.metrics.cook_time;
-        time.innerHTML = `
+    // Get time
+    const time = document.createElement('div');
+    time.classList.add('recipe-time');
+    let cookingTime = data.metrics.cook_time;
+    time.innerHTML = `
         <i class="fas fa-clock"></i>
         <time>Cook time: ${cookingTime}</time>
-        `
-        recipeContent.appendChild(time);
-        card.appendChild(recipeContent);
+        `;
+    recipeContent.appendChild(time);
+    card.appendChild(recipeContent);
 
-        card.innerHTML += `
+    card.innerHTML += `
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
             <div class="dropdown">
@@ -188,12 +185,11 @@ class recipeCard extends HTMLElement{
                 </div>
             </div>
         </div>
-        `
-        this.shadowRoot.append(style, card);
-    }
+        `;
+    this.shadowRoot.append(style, card);
+  }
 }
 customElements.define('recipe-card', recipeCard);
-
 
 //   get data() {
 //     // Stored in .json to avoid calling set data() recursively in a loop.
@@ -201,4 +197,3 @@ customElements.define('recipe-card', recipeCard);
 //     return this.json;
 //   }
 // }
-    

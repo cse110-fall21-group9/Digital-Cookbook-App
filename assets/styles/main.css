@@ -102,6 +102,7 @@ body {
               opacity 200ms ease-in-out 0ms,
               transform 20ms ease-in-out 0ms;
 }
+
 .popup .close-btn {
   position: absolute;
   top: 10px;
