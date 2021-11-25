@@ -10,6 +10,7 @@ const JSON_EXT_LEN = 5;
  * The IOSystem class provides the data structures & methods for
  * reading and writing JSON files to the disk, as well as caching
  * recipe information at runtime.
+ * @
  * @method indexRecipe indexes recipes by name & maps them to JSON data.
  * @method indexFile indexes recipes by name & maps them to file locations.
  * @method scanFiles scans a dir for files and returns a list of objects containing the files' data.

@@ -6,83 +6,193 @@ class recipeCard extends HTMLElement{
 
     /**
    * Create a new JSON file on the data user enter 
-   * @param {string} data the name of the file to delete.
+   * @param {dict} data the name of the json dictionary.
    */
-//     set data(data) {
-//         if (!data) return;
-    
-//         // Used to access the actual data object
-//         this.json = data;
-    
-//         const style = document.createElement('style');
-//         const card = document.createElement('div');
-
-//         // Grab the title
+    set data(data) {
+        if (!data) return;
         
-//         title.classList.add('title');
-//         title.id = 'name';
+        // Used to access the actual data object
+        // this.json = data;
+    
+         // Create a wrapper      
+        const card = document.createElement('div');
+        const style = document.createElement('style');
+        style.innerHTML = 
+        `
+        .recipe {
+            background-color: #eeeee4;
+            border-radius: 16px;
+            color: v#070705;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-wrap: wrap;
+            height: auto;
+            max-width: 300px;
+            margin-bottom: 30px
+            column-gap: 10px;
+            row-gap: 5px
+            box-sizing: border-box;
+            padding: 2px;
+            overflow: visible
+        }
+        
+        .image {
+            width: 100%;
+            height: 10rem;
+            overflow: hidden;
+            border-radius: 16px 16px 0 0;
+            margin-bottom: 0.025 rem;
+        }
 
-//         // Grab the recipe link
-//         const href = getUrl(data);
-//         const link = document.createElement('a');
-//         link.setAttribute('href', href);
-//         link.innerText = titleText;
-//         title.appendChild(link); // Make the title a link
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-//         // Grab the thumbnail
-//         const imageUrl = getImage(data);
-//         const image = document.createElement('img');
-//         image.setAttribute('src', imageUrl);
-//         image.setAttribute('alt', titleText);
+        .recipe-tag {
+            font-weight: 550;
+            font-size: 15px;
+            letter-spacing: -0.25px;
+            color: #fff;
+            margin: 5px ;
+            background-color: #BB5274;
+            padding: .125rem 1rem;
+            border-radius: 100px;
+        }
+        
+        h1[id ^= "name"] {
+            margin: .25rem .5rem .25rem 1rem;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+        
+        p[id ^= "info"] {
+            margin: .5rem .5rem .5rem 1rem;
+            font-size: 20px;
+            color: inhereit;
+        }
+        
+        .recipe-time {
+          margin-left: 10px;
+        }
+        .recipe .buttons {
+            display: flex;
+            flex-wrap: wrap;;
+        }
+        .recipe .btn,  .recipe .dropbtn {
+            display: inline-block;
+            font-weight: 600;
+            letter-spacing: -0.25px;
+            color: #fff;
+            padding:0.45em 1.5em;
+            border:0.1em solid #FFFFFF;
+            margin:0 0.3em 0.7em 0.9em;
+            border-radius:0.12em;
+            box-sizing: border-box;
+            background-color: #2B3044;
+            cursor: pointer;
+        }
 
-//         // Grab the organization name
-//         const organizationText = getOrganization(data);
-//         const organization = document.createElement('p');
-//         organization.classList.add('organization');
-//         organization.innerText = organizationText;
+          .dropdown {
+            position: relative;
+            display: inline-block;
+          }
+          
+          .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 100px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+          }
 
-//         // Grab the reviews
-//         const ratingVal = searchForKey(data, 'ratingValue');
-//         const ratingTotal = searchForKey(data, 'ratingCount');
-//         const rating = document.createElement('div');
-//         rating.classList.add('rating');
-//         const numStars = Math.round(ratingVal);
-//         if (ratingVal) {
-//         rating.innerHTML = `
-//             <span>${ratingVal}</span>
-//             <img src="./assets/images/icons/${numStars}-star.svg" >
-//         `;
-//         if (ratingTotal) {
-//             rating.innerHTML += `<span>(${ratingTotal})</span>`;
-//         }
-//         } else {
-//         rating.innerHTML = `
-//             <span>No Reviews</span>
-//         `;
-//         }
+          .dropdown:hover .dropdown-content {display: block;}
 
-//         // Grab the total time
-//         const totalTime = searchForKey(data, 'totalTime');
-//         const time = document.createElement('time');
-//         time.innerText = convertTime(totalTime);
+          .dropdown:hover .dropbtn {background-color: #3e8e41;}
+          
+          .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            display: block;
+          }
+          
+          .dropdown-content a:hover {background-color: #ddd}
+          
+        `
+        card.classList.add("recipe");
 
-//         // Grabt the ingredients
-//         const ingredientsArr = searchForKey(data, 'recipeIngredient');
-//         const ingredientsList = createIngredientList(ingredientsArr);
-//         const ingredients = document.createElement('p');
-//         ingredients.classList.add('ingredients');
-//         ingredients.innerText = ingredientsList;
+        // Grab the thumbnail
+        const imgWrapper = document.createElement('div');
+        imgWrapper.classList.add("image");
+        const imageUrl = data.image;
+        const image = document.createElement('img');
+        image.classList.add("img-fluid")
+        image.setAttribute('src', imageUrl);
+        image.setAttribute('alt', imageUrl);
+        imgWrapper.appendChild(image);
+        card.appendChild(imgWrapper);
 
-//         // Add all of the elements to the card
-//         card.appendChild(image);
-//         card.appendChild(title);
-//         card.appendChild(organization);
-//         card.appendChild(rating);
-//         card.appendChild(time);
-//         card.appendChild(ingredients);
+        // Create recipe content
+        const recipeContent = document.createElement('div');
+        recipeContent.classList.add("recipe-content");
 
-//         this.shadowRoot.append(style, card);
-//   }
+        // Create tags 
+        const tag = document.createElement('p');
+        tag.classList.add("recipe-tags");
+        tag.innerHTML = ` 
+        <span class="recipe-tag">Gluten Free</span>
+        <span class="recipe-tag">Breakfast</span>
+        `
+        recipeContent.appendChild(tag);
+        
+
+        // Grab the title  
+        const title = document.createElement('h1');
+        title.classList.add('title');
+        title.id = 'name';
+        title.textContent = data.name;
+        recipeContent.appendChild(title);
+
+        // Get description
+        const desc = document.createElement('p');
+        desc.classList.add('description');
+        desc.id = 'info';
+        desc.textContent = data.steps;
+        recipeContent.appendChild(desc);
+
+
+        // Get time
+        const time = document.createElement('div');
+        time.classList.add('recipe-time');
+        let cookingTime = data.metrics.cook_time;
+        time.innerHTML = `
+        <i class="fas fa-clock"></i>
+        <time>${cookingTime}</time>
+        `
+        recipeContent.appendChild(time);
+        card.appendChild(recipeContent);
+
+        card.innerHTML += `
+        <div class="buttons">
+            <button type="button" class="btn" id="fav">Favorite</button>
+            <div class="dropdown">
+                <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+                <div id="myDropdown" class="dropdown-content">
+                    <a href="#">Edit</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                </div>
+            </div>
+        </div>
+        `
+        this.shadowRoot.append(style, card);
+    }
+}
+customElements.define('recipe-card', recipeCard);
+
 
 //   get data() {
 //     // Stored in .json to avoid calling set data() recursively in a loop.
@@ -91,7 +201,3 @@ class recipeCard extends HTMLElement{
 //   }
 // }
     
-
-    
-
-}

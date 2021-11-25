@@ -1,4 +1,4 @@
-// Save button for add new recipe 
+// Create recipe for add new recipe 
 let addButton = document.getElementById("add");
 addButton.addEventListener("click", function() {
   document.getElementById("add-recipe").classList.remove("hidden");
@@ -25,8 +25,9 @@ save.addEventListener("click", function() {
   console.log(document.getElementById("add-recipe").classList);
 
   let json = createJSON();
+  createRecipeCards(json);
 
-  // Reset field
+  // Reset field after user hit submit
   document.getElementById('RecipeName').value = "";
   document.getElementById('Ingredients').value = "";
   document.getElementById('Instructions').value = "";
@@ -39,12 +40,17 @@ save.addEventListener("click", function() {
   console.log(json);
   let recipeName = json["name"];
   let file = `${recipeName}.json`
-  dumpJSON(json, "../assets/recipes", file);
+//   dumpJSON(json, "../assets/recipes", file);
 });
 
+
+function createRecipeCards(data) {
+    const recipeCard = document.createElement('recipe-card');
+    recipeCard.data = data;
+    document.querySelector('.recipe-cards').appendChild(recipeCard);
+}
  /**
    * Create a new JSON file on the data user enter 
-   * @param {string} data the name of the file to delete.
    */
 function createJSON() {
   const titleText = document.getElementById('RecipeName').value;
@@ -61,9 +67,9 @@ function createJSON() {
 
 
   let newRecipe = {
-    "recipe_id":12313,
+    "recipe_id": 100000,
     "name": titleText,
-    "image": ".png",
+    "image": "assets/images/burrito.jpeg",
     "metadata": {
       "time_added": date,
       "labels": tag,
