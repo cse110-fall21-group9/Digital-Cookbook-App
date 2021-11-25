@@ -72,3 +72,38 @@ function cacheRecipesFromDisk() {
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
 }
+ipcMain.on('LOAD', (event) => {
+  event.returnValue(IOSystem.recipesDict);
+});
+
+/**
+ * Add recipe
+ * If error occur 'FAILED' will be returned.
+ * If success "SUCCESS" will be returned.
+ */
+
+ ipcMain.on('ADD', (event, recipeData, recipeName) => {
+  try {
+    IOSystem.dumpJSON(recipeData, recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    console.error(err);
+    event.returnValue = 'FAILED';
+  }
+});
+
+/**
+ * Delete recipe
+ * If error occur 'FAILED' will be returned.
+ *  If success "SUCCESS" will be returned.
+ */
+ ipcMain.on('DELETE', (event, recipeName) => {
+  try {
+    IOSystem.eraseFileAt(recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    event.returnValue = 'FAILED';
+  }
+});
+
+

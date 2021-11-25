@@ -27,18 +27,19 @@ save.addEventListener('click', function () {
   createRecipeCards(json);
 
   // Reset field after user hit submit
-  document.getElementById('RecipeName').value = "";
-  document.getElementById('Ingredients').value = "";
-  document.getElementById('Instructions').value = "";
+  document.getElementById('RecipeName').value = '';
+  document.getElementById('Ingredients').value = '';
+  document.getElementById('Instructions').value = '';
 
   document.getElementById('time-cook').value = '';
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
 
   // Save file to local storage
-  console.log(json);
-  let recipeName = json["name"];
-  let file = `${recipeName}.json`
+  let recipeName = json['name'];
+  let file = `${recipeName}.json`;
+  let status = window.electron.addRecipe(json, recipeName);
+  console.log(status);
 //   dumpJSON(json, "../assets/recipes", file);
 });
 
@@ -65,13 +66,13 @@ function createJSON() {
   let serving = document.getElementById('serving').value;
 
   let newRecipe = {
-    "recipe_id": 100000,
-    "name": titleText,
-    "image": "assets/images/burrito.jpeg",
-    "metadata": {
-      "time_added": date,
-      "labels": tag,
-      "src_url": "#",
+    recipe_id: 12313,
+    name: titleText,
+    image: '.png',
+    metadata: {
+      time_added: date,
+      labels: tag,
+      src_url: '#',
     },
     metrics: {
       cook_time: cookTime, // minutes
@@ -80,6 +81,6 @@ function createJSON() {
     },
     ingredients: ingredients,
     steps: instruction,
-  };
+  }
   return newRecipe;
 }
