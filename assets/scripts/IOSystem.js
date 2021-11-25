@@ -57,7 +57,7 @@ class IOSystem {
    * @returns {object[]} a list of objects of the following form: {path: (string), data: (string)}.
    */
   static scanFiles(dir) {
-    if (!this.pathFormatValid()) {
+    if (!this.pathFormatValid(dir)) {
       throw new Error(`"${dir}" is not a valid directory format!`);
     }
 

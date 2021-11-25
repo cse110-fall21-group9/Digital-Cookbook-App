@@ -1,8 +1,9 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
-const { doc } = require('prettier');
-const {IOSystem}= require('./IOSystem');
+const {doc} = require('prettier');
+const IOSystem = require('./IOSystem');
+const {ipcMain} = require('electron');
 
 // directory with recipes
 const recipesDir = path.join(__dirname, '../recipes/');
@@ -19,15 +20,13 @@ function createWindow() {
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
-    
   });
 
   // and load the index.html of the app.
   mainWindow.loadFile('index.html');
 
-
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -72,4 +71,42 @@ function cacheRecipesFromDisk() {
   }
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
+<<<<<<< HEAD
 }
+=======
+}
+
+ipcMain.on('LOAD', (event) => {
+  event.returnValue(IOSystem.recipesDict);
+});
+
+/**
+ * Add recipe
+ * If error occur 'FAILED' will be returned.
+ * If success "SUCCESS" will be returned.
+ */
+
+ipcMain.on('ADD', (event, recipeData, recipeName) => {
+  try {
+    IOSystem.dumpJSON(recipeData, recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    console.error(err);
+    event.returnValue = 'FAILED';
+  }
+});
+
+/**
+ * Delete recipe
+ * If error occur 'FAILED' will be returned.
+ *  If success "SUCCESS" will be returned.
+ */
+ipcMain.on('DELETE', (event, recipeName) => {
+  try {
+    IOSystem.eraseFileAt(recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    event.returnValue = 'FAILED';
+  }
+});
+>>>>>>> 9b3b23b60ac29680ee51dc25f47d8a85712f4718
