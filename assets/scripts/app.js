@@ -1,5 +1,9 @@
 let frontEndRecipeDict = {};
 
+function strStrip(name) {
+  return name.replace(/\s/g, '');
+}
+
 const OPENED_FROM = 'data-opened-from';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 
@@ -37,15 +41,16 @@ save.addEventListener('click', function () {
   document.getElementById('add-recipe').style.display = 'none';
   console.log(document.getElementById('add-recipe').classList);
 
-  let recipeName = document.getElementById('recipe-name').value;
+  let recipeName = strStrip(document.getElementById('recipe-name').value);
   let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
 
   if (oldRecipeName != '') {
     //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
-    let oldCard = document.querySelector(`recipe-card[class="${oldRecipeName}"]`);
+    let oldCard = document.querySelector(`recipe-card[class=${oldRecipeName}]`);
     parent.removeChild(oldCard);
     if (recipeName != oldRecipeName) {
+      console.log(oldRecipeName);
       let status = window.electron.removeRecipe(oldRecipeName);
       console.log(status);
     }
@@ -55,7 +60,7 @@ save.addEventListener('click', function () {
   createRecipeCard(json);
 
   // Save file to local storage
-  recipeName = json['name'];
+  recipeName = strStrip(json['name']);
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
@@ -64,7 +69,7 @@ save.addEventListener('click', function () {
 
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
-  recipeCard.classList.add(data.name); // TODO: Might have to strip spaces for all recipe class names
+  recipeCard.classList.add(strStrip(data.name));
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }

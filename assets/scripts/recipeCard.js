@@ -5,6 +5,10 @@ class recipeCard extends HTMLElement {
     this.attachShadow({mode: 'open'});
   }
 
+  strStrip(name) {
+    return name.replace(/\s/g, '');
+  }
+
   /**
    * Create a new JSON file on the data user enter
    * @param {dict} data the name of the json dictionary.
@@ -195,7 +199,7 @@ class recipeCard extends HTMLElement {
     let share = card.getElementsByClassName('share').item(0);
     // Edit recipe
     edit.addEventListener('click', (event) => {
-      let recipeData = window.electron.acquireRecipe(title.textContent);
+      let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
       console.log(document.getElementById('add-recipe').classList);
       console.log(recipeData);
       fillData(recipeData);
@@ -207,14 +211,14 @@ class recipeCard extends HTMLElement {
 function fillData(recipeData) {
   document.getElementById('add-recipe').classList.remove('hidden');
   document.getElementById('add-recipe').style.display = 'grid';
-  document.getElementById('RecipeName').value = recipeData.name;
-  document.getElementById('Ingredients').value = recipeData.ingredients;
-  document.getElementById('Instructions').value = recipeData.steps;
+  document.getElementById('recipe-name').value = recipeData.name;
+  document.getElementById('ingredients').value = recipeData.ingredients;
+  document.getElementById('instructions').value = recipeData.steps;
   document.getElementById('time-cook').value = recipeData.metrics.cook_time;
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
-  document.getElementById('add-recipe')['data-opened-from'] = recipeData.name;
+  document.getElementById('add-recipe')['data-opened-from'] = recipeData.name.replace(/\s/g, '');
 }
 
 customElements.define('recipe-card', recipeCard);
