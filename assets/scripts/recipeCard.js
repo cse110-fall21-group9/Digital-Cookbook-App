@@ -182,7 +182,7 @@ class recipeCard extends HTMLElement {
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
             <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+                <button onclick="myFunction()" class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" class="edit">Edit</a>
                     <a href="#" class="delete">Delete</a>
@@ -204,6 +204,19 @@ class recipeCard extends HTMLElement {
       console.log(recipeData);
       fillData(recipeData);
       //clearData();
+    });
+
+    delete_recipe.addEventListener('click', (event) => {
+      if (!confirm('Are you sure you want to delete this recipe?')) {
+        event.preventDefault();
+      } else {
+        window.electron.removeRecipe(this.strStrip(title.textContent));
+        const parent = document.querySelector('article.recipe-cards');
+        let removeCard = document.querySelector(
+          `recipe-card[class=${this.strStrip(title.textContent)}]`
+        );
+        parent.removeChild(removeCard);
+      }
     });
   }
 }
