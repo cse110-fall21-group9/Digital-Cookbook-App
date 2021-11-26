@@ -214,7 +214,7 @@ function fillData(recipeData) {
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
-  document.getElementById('add-recipe')['opened-from'] = recipeData.name;
+  document.getElementById('add-recipe')['data-opened-from'] = recipeData.name;
 }
 
 customElements.define('recipe-card', recipeCard);

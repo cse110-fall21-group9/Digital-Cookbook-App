@@ -4,11 +4,11 @@
   "description": "The Pandas Cookbook app",
   "main": "./assets/scripts/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "htmlhint": "htmlhint index.html assets/**/*.html",
-    "stylelint": "styleint **/*.css",
-    "eslint": "**/*.js",
-    "jscpd": "jscpd --pattern *.js assets/**.js *.css assets/**.css *.html assets/**.html",
+    "stylelint": "stylelint ./**/*.css",
+    "eslint": "eslint ./assets/**/*.js __tests__/**/*.js",
+    "jscpd": "jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**.html",
     "start": "electron .",
     "build-win": "electron-packager . import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
     "build-darwin": "electron-packager . import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
@@ -27,13 +27,18 @@
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.3",
+    "@babel/preset-env": "^7.16.4",
+    "babel-jest": "^27.3.1",
     "electron": "^16.0.1",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "htmlhint": "^0.16.1",
+    "jest": "^27.3.1",
+    "jest-puppeteer": "^6.0.0",
     "jscpd": "^3.4.2",
     "prettier": "2.4.1",
+    "puppeteer": "^11.0.0",
     "stylelint": "^14.1.0",
     "stylelint-config-standard": "^24.0.0"
   },
@@ -65,6 +70,7 @@
       "prettier/prettier": [
         "error",
         {
+          "endOfLine": "auto",
           "singleQuote": true,
           "printWidth": 100,
           "bracketSpacing": false
@@ -77,5 +83,9 @@
     "ignoreFiles": [
       "node_modules/"
     ]
+  },
+  "jest": {
+    "preset": "jest-puppeteer",
+    "verbose": true
   }
 }

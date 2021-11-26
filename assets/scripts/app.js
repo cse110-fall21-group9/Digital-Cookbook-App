@@ -1,6 +1,6 @@
 let frontEndRecipeDict = {};
 
-const OPENED_FROM = 'opened-from';
+const OPENED_FROM = 'data-opened-from';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 
 window.addEventListener('OnDOMContentLoaded', () => {
