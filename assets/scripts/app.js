@@ -40,11 +40,15 @@ save.addEventListener('click', function () {
   let recipeName = document.getElementById('RecipeName').value;
   let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
 
-  if (document.getElementById('add-recipe')[OPENED_FROM] != '') {
+  if (oldRecipeName != '') {
+    //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
-    console.log(parent);
     let oldCard = document.querySelector(`recipe-card[class="${oldRecipeName}"]`);
     parent.removeChild(oldCard);
+    if (recipeName != oldRecipeName) {
+      let status = window.electron.removeRecipe(oldRecipeName);
+      console.log(status);
+    }
   }
 
   let json = createJSON();
