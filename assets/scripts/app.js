@@ -1,5 +1,9 @@
 let frontEndRecipeDict = {};
 
+function strStrip(name) {
+  return name.replace(/\s/g, '');
+}
+
 const OPENED_FROM = 'data-opened-from';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 
@@ -37,21 +41,26 @@ save.addEventListener('click', function () {
   document.getElementById('add-recipe').style.display = 'none';
   console.log(document.getElementById('add-recipe').classList);
 
-  let recipeName = document.getElementById('RecipeName').value;
+  let recipeName = strStrip(document.getElementById('recipe-name').value);
   let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
 
-  if (document.getElementById('add-recipe')[OPENED_FROM] != '') {
+  if (oldRecipeName != '') {
+    //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
-    console.log(parent);
-    let oldCard = document.querySelector(`recipe-card[class="${oldRecipeName}"]`);
+    let oldCard = document.querySelector(`recipe-card[class=${oldRecipeName}]`);
     parent.removeChild(oldCard);
+    if (recipeName != oldRecipeName) {
+      console.log(oldRecipeName);
+      let status = window.electron.removeRecipe(oldRecipeName);
+      console.log(status);
+    }
   }
 
   let json = createJSON();
   createRecipeCard(json);
 
   // Save file to local storage
-  recipeName = json['name'];
+  recipeName = strStrip(json['name']);
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
@@ -60,7 +69,7 @@ save.addEventListener('click', function () {
 
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
-  recipeCard.classList.add(data.name); // TODO: Might have to strip spaces for all recipe class names
+  recipeCard.classList.add(strStrip(data.name));
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
@@ -69,7 +78,7 @@ function createRecipeCard(data) {
  * Create a new JSON file on the data user enter
  */
 function createJSON() {
-  const titleText = document.getElementById('RecipeName').value;
+  const titleText = document.getElementById('recipe-name').value;
 
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -79,8 +88,8 @@ function createJSON() {
     imgURL = document.getElementById('output').src;
   }
 
-  let ingredients = document.getElementById('Ingredients').value.split('\n');
-  let instruction = document.getElementById('Instructions').value.split('\n');
+  let ingredients = document.getElementById('ingredients').value.split('\n');
+  let instruction = document.getElementById('instructions').value.split('\n');
   let cookTime = document.getElementById('time-cook').value;
   let timePrep = document.getElementById('time-prep').value;
   let serving = document.getElementById('serving').value;
@@ -106,10 +115,12 @@ function createJSON() {
 }
 
 function clearData() {
-  document.getElementById('RecipeName').value = '';
-  document.getElementById('Ingredients').value = '';
-  document.getElementById('Instructions').value = '';
-
+  if (document.getElementById('recipe-name') == null) {
+    return;
+  }
+  document.getElementById('recipe-name').value = '';
+  document.getElementById('ingredients').value = '';
+  document.getElementById('instructions').value = '';
   document.getElementById('time-cook').value = '';
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
