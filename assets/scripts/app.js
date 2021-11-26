@@ -37,7 +37,7 @@ save.addEventListener('click', function () {
   document.getElementById('add-recipe').style.display = 'none';
   console.log(document.getElementById('add-recipe').classList);
 
-  let recipeName = document.getElementById('RecipeName').value;
+  let recipeName = document.getElementById('recipe-name').value;
   let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
 
   if (oldRecipeName != '') {
@@ -73,7 +73,7 @@ function createRecipeCard(data) {
  * Create a new JSON file on the data user enter
  */
 function createJSON() {
-  const titleText = document.getElementById('RecipeName').value;
+  const titleText = document.getElementById('recipe-name').value;
 
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
@@ -83,8 +83,8 @@ function createJSON() {
     imgURL = document.getElementById('output').src;
   }
 
-  let ingredients = document.getElementById('Ingredients').value.split('\n');
-  let instruction = document.getElementById('Instructions').value.split('\n');
+  let ingredients = document.getElementById('ingredients').value.split('\n');
+  let instruction = document.getElementById('instructions').value.split('\n');
   let cookTime = document.getElementById('time-cook').value;
   let timePrep = document.getElementById('time-prep').value;
   let serving = document.getElementById('serving').value;
@@ -110,10 +110,12 @@ function createJSON() {
 }
 
 function clearData() {
-  document.getElementById('RecipeName').value = '';
-  document.getElementById('Ingredients').value = '';
-  document.getElementById('Instructions').value = '';
-
+  if (document.getElementById('recipe-name') == null) {
+    return;
+  }
+  document.getElementById('recipe-name').value = '';
+  document.getElementById('ingredients').value = '';
+  document.getElementById('instructions').value = '';
   document.getElementById('time-cook').value = '';
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
