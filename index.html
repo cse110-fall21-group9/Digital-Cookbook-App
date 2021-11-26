@@ -17,8 +17,8 @@
 <body>
     <!-- Top Bar Container -->
     <div class="container-fluid px-0">
-        <div class="row TopBar">
-            <a href="./index.html"><img src="./assets/images/cooking.png" id="Logo" alt="Our Website logo"></a>
+        <div class="row top-bar">
+            <a href="./index.html"><img src="./assets/images/cooking.png" id="logo" alt="Our Website logo"></a>
         </div>
     </div>
 
@@ -27,7 +27,7 @@
         <div class="row">
             <!-- 1st Column NavBar -->
             <div class="col-2">
-                <nav class="navStyle">
+                <nav class="nav-style">
                     <a id="add" href="#">Create Recipe</a>
                     <a href="#">Favorites</a>
                     <a href="#">Meal Planner</a>
@@ -50,7 +50,7 @@
                                 </span>
                             </div>
                         </div>
-                    </div>                     
+                    </div>
                 </div>
                 <!-- First Recipe Card Row -->
                 <article class="recipe-cards">
@@ -59,19 +59,19 @@
         </div>
     </div>
 
-    <div id="add-recipe" class="popup hidden" opened-from="">
-        <div id="close" class="close-btn">&times</div>
+    <div id="add-recipe" class="popup hidden" data-opened-from="">
+        <div id="close" class="close-btn">&times;</div>
         <form class="form">
             <div class="form-element">
-                <textarea type="text" id="RecipeName" placeholder="Enter Recipe Name"></textarea>
+                <textarea id="recipe-name" placeholder="Enter Recipe Name"></textarea>
             </div>
             <div class="form-element">
-                <textarea type="text" id="Ingredients" placeholder="Enter Ingredients"></textarea>
+                <textarea id="ingredients" placeholder="Enter Ingredients"></textarea>
             </div>
             <div class="form-element">
-                <textarea type="text" id="Instructions" placeholder="Enter Instructions"></textarea>
+                <textarea id="instructions" placeholder="Enter Instructions"></textarea>
             </div>
-        </form> 
+        </form>
         <div class="meta-data">
             <label id="time-cook-label">Cook Time</label>
             <input type="number" id="time-cook">
@@ -86,25 +86,33 @@
             <button id="save">Save</button>
             <button id="discard">Discard</button>
         </div>
-        <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
-        <p><label id='upload' for="file" style="cursor: pointer;">Upload Image</label></p>
-        <p><img id="output" width="200" /></p>
+        <p><input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)" style="display: none;">
+        </p>
+        <p><label id="upload" for="file" style="cursor: pointer;">Upload Image</label></p>
+        <p><img id="output" width="200" src="#" alt="output img"/></p>
         <!-- <form id='file' action="action_page.php">
             <input type="file" id="myFile" name="filename">
             <input type="submit">
         </form> -->
         <script>
-            var loadFile = function(event) {
-            var image = document.getElementById('output');
-            image.src = URL.createObjectURL(event.target.files[0]);
+            var loadFile = function (event) {
+                var image = document.getElementById('output');
+                image.src = URL.createObjectURL(event.target.files[0]);
             };
         </script>
-        
+
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
     <script src="assets/scripts/recipeCard.js"></script>
 </body>
+
 </html>
