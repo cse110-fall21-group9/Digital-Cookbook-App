@@ -13,14 +13,18 @@ case "$OSTYPE" in
 	;;
 esac
 
-echo "html lint"
+echo "HTML Lint"
 npx htmlhint index.html assets/**/*.html
 
-echo "css lint"
+echo "CSS Lint"
 npx stylelint ./**/*.css 
 
-echo "jscpd"
+echo "JSCPD"
 npx jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**.html
 
-echo "eslint"
-npx eslint ./**/*.js
+echo "ESLint"
+npx eslint ./assets/**/*.js __tests__/**/*.js
+
+
+echo "Jest Test"
+npx jest

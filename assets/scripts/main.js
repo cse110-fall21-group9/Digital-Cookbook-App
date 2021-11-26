@@ -61,6 +61,7 @@ app.on('window-all-closed', function () {
 function cacheRecipesFromDisk() {
   // READ: retrieve all entries from disk complete
   const readDict = IOSystem.scanFiles(recipesDir);
+  
   for (const fileObj of readDict) {
     const filePath = fileObj.path;
     const fileData = fileObj.data;
