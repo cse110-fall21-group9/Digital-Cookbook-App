@@ -105,3 +105,15 @@ ipcMain.on('DELETE', (event, recipeName) => {
     event.returnValue = 'FAILED';
   }
 });
+
+ipcMain.on('ACQUIRE', (event, recipeName) => {
+  let filedir = recipesDir + `${recipeName}.json`;
+  event.returnValue = require(filedir);
+});
+
+/**
+ * Acquire the dictionary of recipes
+ */
+ipcMain.on('CACHEDICT', (event) => {
+  event.returnValue = IOSystem.recipesDict;
+});

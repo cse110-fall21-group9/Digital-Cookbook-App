@@ -1,4 +1,5 @@
 class recipeCard extends HTMLElement {
+  DOMRef = null;
   constructor() {
     super();
     this.attachShadow({mode: 'open'});
@@ -179,16 +180,43 @@ class recipeCard extends HTMLElement {
             <div class="dropdown">
                 <button onclick="myFunction()" class="dropbtn">Dropdown</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#">Edit</a>
-                    <a href="#">Delete</a>
-                    <a href="#">Share</a>
+                    <a href="#" class="edit">Edit</a>
+                    <a href="#" class="delete">Delete</a>
+                    <a href="#" class="share">Share</a>
                 </div>
             </div>
         </div>
         `;
+    this.DOMRef = card;
     this.shadowRoot.append(style, card);
+
+    let edit = card.getElementsByClassName('edit').item(0);
+    let delete_recipe = card.getElementsByClassName('delete').item(0);
+    let share = card.getElementsByClassName('share').item(0);
+    // Edit recipe
+    edit.addEventListener('click', (event) => {
+      let recipeData = window.electron.acquireRecipe(title.textContent);
+      console.log(document.getElementById('add-recipe').classList);
+      console.log(recipeData);
+      fillData(recipeData);
+      //clearData();
+    });
   }
 }
+
+function fillData(recipeData) {
+  document.getElementById('add-recipe').classList.remove('hidden');
+  document.getElementById('add-recipe').style.display = 'grid';
+  document.getElementById('RecipeName').value = recipeData.name;
+  document.getElementById('Ingredients').value = recipeData.ingredients;
+  document.getElementById('Instructions').value = recipeData.steps;
+  document.getElementById('time-cook').value = recipeData.metrics.cook_time;
+  document.getElementById('time-prep').value = recipeData.metrics.prep_time;
+  document.getElementById('serving').value = recipeData.metrics.servings;
+  // give the add-recipe form a state saying that it was opened from the "edit" option
+  document.getElementById('add-recipe')['opened-from'] = recipeData.name;
+}
+
 customElements.define('recipe-card', recipeCard);
 
 //   get data() {

@@ -10,7 +10,8 @@ const JSON_EXT_LEN = 5;
  * The IOSystem class provides the data structures & methods for
  * reading and writing JSON files to the disk, as well as caching
  * recipe information at runtime.
- * @
+ * @member recipesDict a dictionary that maps recipe names to their JSON data.
+ * @member filesDict a dictionary that maps recipe names to their file paths.
  * @method indexRecipe indexes recipes by name & maps them to JSON data.
  * @method indexFile indexes recipes by name & maps them to file locations.
  * @method scanFiles scans a dir for files and returns a list of objects containing the files' data.
@@ -29,6 +30,9 @@ class IOSystem {
    * @param {object} data JSON data backing the recipe.
    */
   static indexRecipe(name, data) {
+    // REMARKS: after some reconsideration it is probably better to map a uuid to the JSON data.
+    // however, we can just check for file existence for now.
+    // Note that this is feirly expensive as filesystem calls are rather slow.
     this.recipesDict[name] = data;
   }
 
@@ -38,7 +42,6 @@ class IOSystem {
    * @param {string} filePath path to recipe JSON on disk.
    */
   static indexFile(name, filePath) {
-    // TODO: may have to change to a disk location
     this.filesDict[name] = filePath;
   }
 
@@ -74,7 +77,7 @@ class IOSystem {
 
         // get file handle from file path
         try {
-          let thisFile = fs.readFileSync(thisFilePath, {encoding: UTF8}); // let thisFile = fs.readFileSync(thisFilePath, BLOB_TO_STRING_ENCODING);
+          let thisFile = fs.readFileSync(thisFilePath, {encoding: UTF8});
           // let thisFile = fsPromises.readFile(thisFilePath, {encoding: BLOB_TO_STRING_ENCODING});
           files.push({path: thisFilePath, data: thisFile});
         } catch (error) {
@@ -100,6 +103,7 @@ class IOSystem {
      * 1. Ensure that directory creation is working
      * 2. Ensure that the JSON dumped is correct
      */
+    // Basic tests passed
     if (!this.pathFormatValid(dir) || !data || !fileName) {
       throw `"${dir}" is not a valid directory format!`;
     }
@@ -126,7 +130,7 @@ class IOSystem {
     /**
      * 1. Ensure that deleting a dummy file works
      * 2. Ensure that the proper errors are thrown by `fs`
-     *  when the directory or file do not exist.
+     *  when the directory or file does not exist.
      */
     if (!this.pathFormatValid(dir)) {
       throw new Error(`"${dir}" is not a valid directory format!`);
