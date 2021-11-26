@@ -1,7 +1,9 @@
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
+const {doc} = require('prettier');
 const IOSystem = require('./IOSystem');
+const {ipcMain} = require('electron');
 
 // directory with recipes
 const recipesDir = path.join(__dirname, '../recipes/');
@@ -24,7 +26,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -59,7 +61,7 @@ app.on('window-all-closed', function () {
 function cacheRecipesFromDisk() {
   // READ: retrieve all entries from disk complete
   const readDict = IOSystem.scanFiles(recipesDir);
-  
+
   for (const fileObj of readDict) {
     const filePath = fileObj.path;
     const fileData = fileObj.data;
@@ -71,3 +73,48 @@ function cacheRecipesFromDisk() {
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
 }
+ipcMain.on('LOAD', (event) => {
+  event.returnValue(IOSystem.recipesDict);
+});
+
+/**
+ * Add recipe
+ * If error occur 'FAILED' will be returned.
+ * If success "SUCCESS" will be returned.
+ */
+
+ipcMain.on('ADD', (event, recipeData, recipeName) => {
+  try {
+    IOSystem.dumpJSON(recipeData, recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    console.error(err);
+    event.returnValue = 'FAILED';
+  }
+});
+
+/**
+ * Delete recipe
+ * If error occur 'FAILED' will be returned.
+ *  If success "SUCCESS" will be returned.
+ */
+ipcMain.on('DELETE', (event, recipeName) => {
+  try {
+    IOSystem.eraseFileAt(recipesDir, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    event.returnValue = 'FAILED';
+  }
+});
+
+ipcMain.on('ACQUIRE', (event, recipeName) => {
+  let filedir = recipesDir + `${recipeName}.json`;
+  event.returnValue = require(filedir);
+});
+
+/**
+ * Acquire the dictionary of recipes
+ */
+ipcMain.on('CACHEDICT', (event) => {
+  event.returnValue = IOSystem.recipesDict;
+});

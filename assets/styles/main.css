@@ -1,0 +1,214 @@
+/* Apply an overall font and size */
+* {
+  font-family: verdana, sans-serif;
+  font-size: 18px;
+}
+
+/* HEADER/NAVBAR ELEMENTS */
+
+/* top-bar Elements */
+.top-bar {
+  background: rgb(88 88 88);
+  width: 100%;
+  top: 0;
+}
+
+#logo {
+  width: 7%;
+  padding-top: 5px;
+  background: rgb(88 88 88);
+}
+
+/* Nav Bar Styling */
+nav {
+  height: 100%;
+  padding-right: 1px;
+  background-color: rgb(243 195 131);
+  font-weight: bold;
+  text-align: left;
+}
+
+.nav-style a:link,
+.nav-style a:visited {
+  background-color: rgb(243 195 131);
+  border-bottom: 1px solid rgb(88 88 88);
+  color: rgb(88 88 88);
+  display: block;
+  text-decoration: none;
+  padding: 20px 10px;
+}
+
+.nav-style ul {
+  list-style-type: none;
+}
+
+.nav-style a:hover {
+  background-color: #f3efbf;
+  color: rgb(0 0 0);
+}
+
+.nav-style a:active {
+  background-color: #f3efbf;
+}
+
+/* INDIVIDUAL RECIPE CARDS */
+
+/* .recipe, .image {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+
+} */
+.recipe-cards {
+  column-gap: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  margin: 30px 0 30px 30px;
+  max-width: 1000px;
+  row-gap: 20px;
+  width: 100%;
+}
+
+body {
+  --primary: #e05d26;
+  --grey: #857171;
+  --lightgrey: #666;
+
+  color: var(--grey);
+  line-height: 1.55;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: Raleway, sans-serif;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.popup {
+  display: grid;
+  align-items: flex-start;
+  position: absolute;
+  grid-gap: 10px;
+  height: calc(100vh - 50px);
+  width: 750px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: whitesmoke;
+  box-shadow: 2px 2px 5px 5px gray;
+  border-radius: 15px;
+  transition:
+    top 0ms ease-in-out 200ms,
+    opacity 200ms ease-in-out 0ms,
+    transform 20ms ease-in-out 0ms;
+}
+
+.popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  background: #888;
+  color: #eee;
+  text-align: center;
+  line-height: 15px;
+  box-shadow: 2px 2px 5px 5px rgba(0 0 0 0 10);
+  border-radius: 10 px;
+  cursor: pointer;
+}
+
+#recipe-name {
+  width: 30vw;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 15px;
+  background: #c4c4c4;
+}
+
+#ingredients {
+  width: 30vw;
+  height: calc(25vh - 50px);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background: #c4c4c4;
+}
+
+#instructions {
+  width: 30vw;
+  margin-bottom: 20px;
+  height: calc(40vh - 50px);
+  border-radius: 10px;
+  background: #c4c4c4;
+}
+
+#output {
+  grid-column: 2;
+  grid-row: 3;
+  margin-top: -400px;
+  margin-left: auto;
+  width: 90%;
+  display: block;
+}
+
+button {
+  width: 30%;
+  height: calc(15vh - 50px);
+
+  /* padding: 10px 20px; */
+  border: 1px solid #000;
+  border-radius: 40px;
+  background-color: rgb(243 195 131);
+  cursor: pointer;
+}
+
+.popup .meta-data {
+  width: 50%;
+  grid-column: 2;
+  margin-left: 20px;
+  justify-content: flex-end;
+}
+
+/* MAKE/EDIT RECIPE PAGE */
+
+/* Edit Item Boxes */
+
+/* #Photo{
+  border-radius: 10px;
+  background: #C4C4C4;
+} */
+
+/* Save and Discard Buttons */
+
+/* #SaveButton{
+display: flex;
+flex-direction: row;
+justify-content: space-evenly;
+align-items: center;
+padding: 10px 20px;
+
+width: 15%;
+
+border: 1px solid #000000;
+border-radius: 40px;
+background-color: rgb(243, 195, 131);
+}
+
+#DiscardButton{
+display: flex;
+flex-direction: row;
+justify-content: space-evenly;
+align-items: center;
+padding: 10px 20px;
+
+width: 15%;
+
+border: 1px solid #000000;
+border-radius: 40px;
+background-color: rgb(243, 195, 131);
+} */
