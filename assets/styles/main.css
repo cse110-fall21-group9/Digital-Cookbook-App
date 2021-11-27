@@ -1,7 +1,7 @@
 /* Apply an overall font and size */
 * {
   font-family: verdana, sans-serif;
-  font-size: 18px;
+  font-size: 1.2vw;
 }
 
 /* HEADER/NAVBAR ELEMENTS */
@@ -94,7 +94,7 @@ body {
   position: absolute;
   grid-gap: 10px;
   height: calc(100vh - 50px);
-  width: 750px;
+  /* width: 750px; */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -102,9 +102,7 @@ body {
   background-color: whitesmoke;
   box-shadow: 2px 2px 5px 5px gray;
   border-radius: 15px;
-  transition:
-    top 0ms ease-in-out 200ms,
-    opacity 200ms ease-in-out 0ms,
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
     transform 20ms ease-in-out 0ms;
 }
 
@@ -148,17 +146,18 @@ body {
 }
 
 #output {
-  grid-column: 2;
-  grid-row: 3;
-  margin-top: -400px;
-  margin-left: auto;
-  width: 90%;
+  /* grid-column: 2;
+  grid-row: 3; */
+  /* margin-top: -400px; */
+  /* margin-left: auto; */
+  margin-top: 2rem;
+  width: 155%;
   display: block;
 }
 
 button {
   width: 30%;
-  height: calc(15vh - 50px);
+  height: 30px;
 
   /* padding: 10px 20px; */
   border: 1px solid #000;
