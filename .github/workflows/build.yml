@@ -21,6 +21,7 @@ jobs:
       - run: npm ci
       - name: Build Electron app
         run: ./buildall.sh "${{ runner.os }}"
+        shell: bash
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-build
