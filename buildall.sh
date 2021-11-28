@@ -1,19 +1,17 @@
 #!/bin/bash
 PLATFORM=""
-NAME=""
+NAME=$1
+
 
 case "$OSTYPE" in
 	linux-*)
 		PLATFORM="linux"
-		NAME="Linux"
 	;;
 	msys|cygwin|win32)
 		PLATFORM="win"
-		NAME="Windows"
 	;;
 	darwin*)
 		PLATFORM="darwin"
-		NAME="macOS"
 	;;
 	*)
 		echo "Unrecognizable OS!"
@@ -21,7 +19,12 @@ case "$OSTYPE" in
 	;;
 esac
 
-npm run-script build-${PLATFORM}
+mkdir electron-build
+cp -r assets electron-build/assets/
+cp index.html electron-build/index.html
+cp release-package.json electron-build/package.json
 
-zip -r build-${NAME}-x64 import-pandas-cookbook-app-${PLATFORM}-x64
-rm -rf import-pandas-cookbook-app-${PLATFORM}-x64
+npm run-script "build-${PLATFORM}"
+
+mv "import-pandas-cookbook-app-${PLATFORM}-x64" "build-${NAME}-x64"
+rm -rf electron-build

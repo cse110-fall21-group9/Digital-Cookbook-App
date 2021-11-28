@@ -20,8 +20,8 @@ jobs:
           node-version: 14
       - run: npm ci
       - name: Build Electron app
-        run: ./buildall.sh
+        run: ./buildall.sh "${{ runner.os }}"
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ runner.os }}-build
-          path: build-${{ runner.os }}-x64.zip
+          path: build-${{ runner.os }}-x64
