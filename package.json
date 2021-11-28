@@ -10,7 +10,7 @@
     "eslint": "eslint ./assets/**/*.js __tests__/**/*.js",
     "jscpd": "jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**.html",
     "start": "electron .",
-    "build-win": "electron-packager electron-build import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
+    "build-win32": "electron-packager electron-build import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
     "build-darwin": "electron-packager electron-build import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
     "build-linux": "electron-packager electron-build import-pandas-cookbook-app --platform=linux --arch=x64 --overwrite"
   },
