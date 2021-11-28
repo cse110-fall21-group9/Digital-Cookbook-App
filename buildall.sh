@@ -8,7 +8,7 @@ case "$OSTYPE" in
 		PLATFORM="linux"
 	;;
 	msys|cygwin|win32)
-		PLATFORM="win"
+		PLATFORM="win32"
 	;;
 	darwin*)
 		PLATFORM="darwin"
