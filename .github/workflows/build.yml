@@ -8,24 +8,20 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v1
 
-      - name: Install Node.js, NPM and Yarn
+      - name: Install Node
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: npm install
+      - run: npm ci
       - name: Build Electron app
-        uses: samuelmeuli/action-electron-builder@v1
+        run: buildall.sh
+      - uses: actions/upload-artifact@v2
         with:
-          # GitHub token, automatically provided to the action
-          # (No need to define this secret in the repo settings)
-          github_token: ${{ secrets.github_token }}
-
-          # If the commit is tagged with a version (e.g. "v1.0.0"),
-          # release the app after building
-          release: false
+          name: ${{ runner.os }}-build
+          path: build-${{ runner.os }}-x64.zip
