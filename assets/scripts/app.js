@@ -7,9 +7,12 @@ function strStrip(name) {
 const OPENED_FROM = 'data-opened-from';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 
-window.addEventListener('OnDOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log(frontEndRecipeDict);
+  Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    createRecipeCard(val);
+  });
 });
 
 // Save button for add new recipe
