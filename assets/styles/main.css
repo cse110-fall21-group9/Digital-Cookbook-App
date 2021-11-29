@@ -52,13 +52,6 @@ nav {
 }
 
 /* INDIVIDUAL RECIPE CARDS */
-
-/* .recipe, .image {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-
-} */
 .recipe-cards {
   column-gap: 25px;
   display: flex;
@@ -89,11 +82,8 @@ body {
 }
 
 .popup {
-  /* display: grid; */
-  /* align-items: flex-start; */
   position: absolute;
   grid-gap: 10px;
-  /* height: calc(100vh - 50px); */
   max-width: 750px;
   top: 50%;
   left: 50%;
@@ -102,16 +92,17 @@ body {
   background-color: whitesmoke;
   box-shadow: 2px 2px 5px 5px gray;
   border-radius: 15px;
-  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
-    transform 20ms ease-in-out 0ms;
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms, transform 20ms ease-in-out 0ms;
 }
 
 .popup::-webkit-scrollbar {
   width: 7px;
 }
+
 .popup::-webkit-scrollbar-track {
   background: #f1f1f1;
 }
+
 .popup::-webkit-scrollbar-thumb {
   background: rgb(88, 88, 88);
   border-radius: 10px;
@@ -133,7 +124,6 @@ body {
 }
 
 #recipe-name {
-  /* width: 30vw; */
   margin-bottom: 20px;
   border-radius: 10px;
   padding: 10px;
@@ -141,7 +131,6 @@ body {
 }
 
 #ingredients {
-  /* width: 30vw; */
   height: calc(25vh - 50px);
   border-radius: 10px;
   margin-bottom: 20px;
@@ -149,7 +138,6 @@ body {
 }
 
 #instructions {
-  /* width: 30vw; */
   margin-bottom: 20px;
   height: calc(40vh - 50px);
   border-radius: 10px;
@@ -157,71 +145,19 @@ body {
 }
 
 #output {
-  /* grid-column: 2;
-  grid-row: 3; */
-  /* margin-top: -400px; */
-  /* margin-left: auto; */
   margin-top: 2rem;
   width: 90%;
   display: block;
 }
 
 button {
-  /* width: 30%; */
   height: 25px;
-
-  /* padding: 10px 20px; */
   border: 1px solid #000;
   border-radius: 40px;
   background-color: rgb(243 195 131);
   cursor: pointer;
 }
 
-/* .popup .meta-data {
-  width: 100%;
-  grid-column: 2;
-  margin-left: 20px;
-  justify-content: flex-end;
-} */
-
-/* MAKE/EDIT RECIPE PAGE */
-
-/* Edit Item Boxes */
-
-/* #Photo{
-  border-radius: 10px;
-  background: #C4C4C4;
-} */
-
-/* Save and Discard Buttons */
-
-/* #SaveButton{
-display: flex;
-flex-direction: row;
-justify-content: space-evenly;
-align-items: center;
-padding: 10px 20px;
-
-width: 15%;
-
-border: 1px solid #000000;
-border-radius: 40px;
-background-color: rgb(243, 195, 131);
-}
-
-#DiscardButton{
-display: flex;
-flex-direction: row;
-justify-content: space-evenly;
-align-items: center;
-padding: 10px 20px;
-
-width: 15%;
-
-border: 1px solid #000000;
-border-radius: 40px;
-background-color: rgb(243, 195, 131);
-} */
 
 @media screen and (min-width: 800px) {
   .popup {
