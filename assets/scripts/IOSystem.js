@@ -119,6 +119,31 @@ class IOSystem {
   }
 
   /**
+   * Given a file path, copy the resident file into a dir that is "owned" by our app.
+   * and write it to the disk.
+   * @param {File} origin the File or Blob to pack.
+   * @param {string} dir the dir to dump the file into.
+   * @param {string} fileName the name of the file to dump.
+   */
+  static copyFile(origin, dir, fileName) {
+    if (!this.pathFormatValid(dir) || !origin || !fileName) {
+      throw `"${dir}" is not a valid directory format!`;
+    }
+    if (!fs.existsSync(dir)) {
+      // does the directory exist?
+      fs.mkdirSync(dir);
+    }
+    const destination = `${dir}${fileName}`;
+    fs.copyFile(origin, destination, () => {
+      console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
+    });
+
+    // fs.writeFile(location, buffer, 'base64', () => {
+    //   console.log(`File written to ${location} with name ${fileName}.`);
+    // });
+  }
+
+  /**
    * Erases the file found at the given file path.
    * Possibly dangerous; use with safety checks.
    * Performs DELETE.
