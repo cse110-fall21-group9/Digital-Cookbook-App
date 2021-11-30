@@ -126,10 +126,10 @@ function createJSON() {
 }
 
 //let imageInput = document.querySelector('input#file[type="file"][name="image]');
-const img = document.getElementById("output")
-img.addEventListener("error", function (event) {
-  event.target.src = "./assets/images/default-image.jpg"
-  event.onerror = null
+const img = document.getElementById('output');
+img.addEventListener('error', function (event) {
+  event.target.src = './assets/images/default-image.jpg';
+  event.onerror = null;
 });
 
 let imageInput = document.getElementById('file');
