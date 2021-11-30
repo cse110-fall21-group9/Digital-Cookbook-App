@@ -5,6 +5,7 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
+const IMAGES_DIR = './assets/images/';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -47,6 +48,11 @@ save.addEventListener('click', function () {
   let recipeName = strStrip(document.getElementById('recipe-name').value);
   let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
 
+  //Save image
+  let imageInput = document.getElementById('file');
+  let imageFile = imageInput.files[0];
+  window.electron.saveImage(imageFile.path, imageFile.name);
+
   if (oldRecipeName != '') {
     //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
@@ -88,7 +94,9 @@ function createJSON() {
   let tag = 'Gluten Free';
   let imgURL = '.png';
   if (document.getElementById('output').src !== undefined) {
-    imgURL = document.getElementById('output').src;
+    let imageInput = document.getElementById('file');
+    let imageFile = imageInput.files[0];
+    imgURL = IMAGES_DIR + imageFile.name;
   }
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
@@ -116,6 +124,19 @@ function createJSON() {
   };
   return newRecipe;
 }
+
+//let imageInput = document.querySelector('input#file[type="file"][name="image]');
+let imageInput = document.getElementById('file');
+console.log(imageInput);
+imageInput.addEventListener('change', (event) => {
+  let image = document.getElementById('output');
+  let imageFile = imageInput.files[0];
+  image.src = URL.createObjectURL(imageInput.files[0]);
+
+  // write image to local dir that we know the location of
+  // FIXME: THIS IS A TEST!!! This write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
+  console.log(imageFile.path);
+});
 
 function clearData() {
   if (document.getElementById('recipe-name') == null) {

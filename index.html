@@ -77,7 +77,7 @@
                         <button class="px-4" id="discard">Discard</button>
                     </div>
                     <p>
-                        <input type="file" accept="image/*" name="image" id="file" onchange="loadFile(event)"
+                        <input type="file" accept="image/*" name="image" id="file"
                             style="display: none" />
                     </p>
                     <p><label id="upload" for="file" style="cursor: pointer">Upload Image</label></p>
@@ -105,12 +105,6 @@
             <input type="file" id="myFile" name="filename">
             <input type="submit">
         </form> -->
-        <script>
-            var loadFile = function (event) {
-                var image = document.getElementById('output');
-                image.src = URL.createObjectURL(event.target.files[0]);
-            };
-        </script>
     </div>
 
     <script src="https://kit.fontawesome.com/4f24a48237.js" crossorigin="anonymous"></script>
