@@ -135,3 +135,12 @@ ipcMain.on('ACQUIRE', (event, recipeName) => {
 ipcMain.on('CACHEDICT', (event) => {
   event.returnValue = IOSystem.recipesDict;
 });
+
+// /**
+//  * Default Image for recipes cards
+//  */
+// const img = document.getElementById("output")
+// img.addEventListener("error", function (event) {
+//   event.target.src = "./assets/images/default-image.jpg"
+//   event.onerror = null
+// })
