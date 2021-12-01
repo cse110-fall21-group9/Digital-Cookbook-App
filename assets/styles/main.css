@@ -1,7 +1,7 @@
 /* Apply an overall font and size */
 * {
   font-family: verdana, sans-serif;
-  font-size: 18px;
+  font-size: 1.2vw;
 }
 
 /* HEADER/NAVBAR ELEMENTS */
@@ -52,13 +52,6 @@ nav {
 }
 
 /* INDIVIDUAL RECIPE CARDS */
-
-/* .recipe, .image {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-
-} */
 .recipe-cards {
   column-gap: 25px;
   display: flex;
@@ -89,12 +82,9 @@ body {
 }
 
 .popup {
-  display: grid;
-  align-items: flex-start;
   position: absolute;
   grid-gap: 10px;
-  height: calc(100vh - 50px);
-  width: 750px;
+  max-width: 750px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -102,10 +92,20 @@ body {
   background-color: whitesmoke;
   box-shadow: 2px 2px 5px 5px gray;
   border-radius: 15px;
-  transition:
-    top 0ms ease-in-out 200ms,
-    opacity 200ms ease-in-out 0ms,
-    transform 20ms ease-in-out 0ms;
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms, transform 20ms ease-in-out 0ms;
+}
+
+.popup::-webkit-scrollbar {
+  width: 7px;
+}
+
+.popup::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.popup::-webkit-scrollbar-thumb {
+  background: rgb(88 88 88);
+  border-radius: 10px;
 }
 
 .popup .close-btn {
@@ -124,15 +124,13 @@ body {
 }
 
 #recipe-name {
-  width: 30vw;
   margin-bottom: 20px;
   border-radius: 10px;
-  padding: 15px;
+  padding: 10px;
   background: #c4c4c4;
 }
 
 #ingredients {
-  width: 30vw;
   height: calc(25vh - 50px);
   border-radius: 10px;
   margin-bottom: 20px;
@@ -140,7 +138,6 @@ body {
 }
 
 #instructions {
-  width: 30vw;
   margin-bottom: 20px;
   height: calc(40vh - 50px);
   border-radius: 10px;
@@ -148,67 +145,121 @@ body {
 }
 
 #output {
-  grid-column: 2;
-  grid-row: 3;
-  margin-top: -400px;
-  margin-left: auto;
+  margin-top: 2rem;
   width: 90%;
   display: block;
 }
 
 button {
-  width: 30%;
-  height: calc(15vh - 50px);
-
-  /* padding: 10px 20px; */
+  height: 25px;
   border: 1px solid #000;
   border-radius: 40px;
   background-color: rgb(243 195 131);
   cursor: pointer;
 }
 
-.popup .meta-data {
-  width: 50%;
-  grid-column: 2;
-  margin-left: 20px;
-  justify-content: flex-end;
+@media screen and (min-width: 800px) {
+  .popup {
+    min-width: 600px;
+  }
 }
 
-/* MAKE/EDIT RECIPE PAGE */
-
-/* Edit Item Boxes */
-
-/* #Photo{
-  border-radius: 10px;
-  background: #C4C4C4;
-} */
-
-/* Save and Discard Buttons */
-
-/* #SaveButton{
-display: flex;
-flex-direction: row;
-justify-content: space-evenly;
-align-items: center;
-padding: 10px 20px;
-
-width: 15%;
-
-border: 1px solid #000000;
-border-radius: 40px;
-background-color: rgb(243, 195, 131);
+@media screen and (max-width: 800px) {
+  .popup {
+    min-width: 520px;
+  }
 }
 
-#DiscardButton{
-display: flex;
-flex-direction: row;
-justify-content: space-evenly;
-align-items: center;
-padding: 10px 20px;
+@media screen and (max-width: 700px) {
+  .popup {
+    min-width: 420px;
+  }
 
-width: 15%;
+  #ingredients {
+    height: 150px;
+  }
 
-border: 1px solid #000000;
-border-radius: 40px;
-background-color: rgb(243, 195, 131);
-} */
+  #instructions {
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .popup {
+    min-width: 380px;
+    height: calc(100vh - 80px);
+    overflow: auto;
+    padding: 15px;
+  }
+
+  #ingredients {
+    height: 150px;
+  }
+
+  #instructions {
+    height: 180px;
+  }
+
+  #recipe-name,
+  #ingredients,
+  #instructions,
+  label,
+  button {
+    font-size: 2.4vw !important;
+  }
+
+  input {
+    height: 22px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .popup {
+    min-width: 90%;
+    max-height: 480px;
+    height: 100%;
+    overflow: auto;
+  }
+
+  #ingredients {
+    height: 150px;
+  }
+
+  #instructions {
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 475px) {
+  #recipe-name {
+    padding: 10px;
+  }
+
+  #logo {
+    width: 22%;
+  }
+
+  .nav-style a:link,
+  .nav-style a:visited {
+    font-size: 14px;
+  }
+
+  .form-control {
+    font-size: 3rem !important;
+    line-height: 30px !important;
+    padding-left: 1.5rem !important;
+  }
+
+  .fas.fa-search {
+    font-size: 4rem;
+    padding: 1rem 2rem;
+  }
+
+  #ingredients {
+    height: 130px;
+  }
+
+  #instructions {
+    height: 150px;
+  }
+}

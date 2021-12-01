@@ -5,12 +5,16 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
+const IMAGES_DIR = './assets/images/';
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 const RECIPE_FORM_ID = 'add-recipe';
 
-window.addEventListener('OnDOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log(frontEndRecipeDict);
+  Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    createRecipeCard(val);
+  });
 });
 
 // Save button for add new recipe
@@ -43,6 +47,11 @@ save.addEventListener('click', () => {
 
   let recipeName = strStrip(document.getElementById('recipe-name').value);
   let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+
+  //Save image
+  let imageInput = document.getElementById('file');
+  let imageFile = imageInput.files[0];
+  window.electron.saveImage(imageFile.path, imageFile.name);
 
   if (oldRecipeName != '') {
     //check if opened from edit
@@ -85,7 +94,9 @@ function createJSON() {
   let tag = 'Gluten Free';
   let imgURL = '.png';
   if (document.getElementById('output').src !== undefined) {
-    imgURL = document.getElementById('output').src;
+    let imageInput = document.getElementById('file');
+    let imageFile = imageInput.files[0];
+    imgURL = IMAGES_DIR + imageFile.name;
   }
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
