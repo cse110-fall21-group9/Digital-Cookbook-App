@@ -1,5 +1,10 @@
 let frontEndRecipeDict = {};
 
+/**
+ * Strip the spaces from a given string
+ * @param {string} name a string to strip the spaces from
+ * @returns the stripped string
+ */
 function strStrip(name) {
   return name.replace(/\s/g, '');
 }
@@ -68,17 +73,25 @@ save.addEventListener('click', () => {
   let json = createJSON();
   createRecipeCard(json);
 
+  // add to front-end copy of dictionary
+  frontEndRecipeDict[json.name] = json;
+
   // Save file to local storage
   recipeName = strStrip(json['name']);
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
-  //   dumpJSON(json, "../assets/recipes", file);
 });
 
+/**
+ * Make a new `recipe-card` and prepend it to the list of cards in the front end
+ * @param {object} data as JSON
+ */
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.classList.add(strStrip(data.name));
+
+  // FIXME: newly-added recipe cards seem to be unable to access images that were just saved.
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }

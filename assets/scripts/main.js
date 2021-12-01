@@ -7,7 +7,8 @@ const {ipcMain} = require('electron');
 
 // directory with recipes
 const RECIPES_DIR = path.join(__dirname, '../recipes/');
-const IMAGES_DIR = path.join(__dirname, '../images/');
+// directory with *recipe images*, NOT app images
+const IMAGES_DIR = path.join(__dirname, '../recipes/recipe-images/');
 // const indexDir = path.join(__dirname, '../../'); // directory with index.html
 
 /**
@@ -125,8 +126,8 @@ ipcMain.on('DELETE', (event, recipeName) => {
 });
 
 ipcMain.on('ACQUIRE', (event, recipeName) => {
-  let filedir = RECIPES_DIR + `${recipeName}.json`;
-  event.returnValue = require(filedir);
+  let fileDir = RECIPES_DIR + `${recipeName}.json`;
+  event.returnValue = require(fileDir);
 });
 
 /**
