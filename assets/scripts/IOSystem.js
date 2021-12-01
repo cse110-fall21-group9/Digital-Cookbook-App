@@ -32,7 +32,7 @@ class IOSystem {
   static indexRecipe(name, data) {
     // REMARKS: after some reconsideration it is probably better to map a uuid to the JSON data.
     // however, we can just check for file existence for now.
-    // Note that this is feirly expensive as filesystem calls are rather slow.
+    // Note that this is fairly expensive as filesystem calls are rather slow.
     this.recipesDict[name] = data;
   }
 
@@ -191,7 +191,7 @@ class IOSystem {
    * Converts a string-encoded binary into an image.
    * @param {string} jString The string to convert into an image.
    */
-  static decodeStringtoImage(jString) {}
+  static decodeStringToImage(jString) {}
 
   /**
    * Unpacks a JSON file into a JS object.
