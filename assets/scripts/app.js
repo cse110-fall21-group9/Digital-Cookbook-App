@@ -144,6 +144,10 @@ imageInput.addEventListener('change', (event) => {
   console.log(imageFile.path);
 });
 
+export function showRecipe(recipeName) {
+  console.log(recipeName);
+}
+
 function clearData() {
   if (document.getElementById('recipe-name') == null) {
     return;

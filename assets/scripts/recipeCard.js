@@ -1,3 +1,5 @@
+import {showRecipe} from './app.js';
+
 class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
@@ -38,6 +40,9 @@ class recipeCard extends HTMLElement {
             box-sizing: border-box;
             padding: 2px;
             overflow: visible
+        }
+        .recipe:hover {
+          cursor: pointer;
         }
         
         .image {
@@ -193,6 +198,10 @@ class recipeCard extends HTMLElement {
         `;
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
+
+    card.addEventListener('click', (event) => {
+      showRecipe(data.name);
+    });
 
     let edit = card.getElementsByClassName('edit').item(0);
     let delete_recipe = card.getElementsByClassName('delete').item(0);
