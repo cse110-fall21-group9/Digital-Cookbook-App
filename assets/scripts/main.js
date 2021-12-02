@@ -1,8 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
+const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
-const { ipcMain } = require('electron');
+const {ipcMain} = require('electron');
 
 // directory with recipes
 const RECIPES_DIR = path.join(__dirname, '../recipes/');
