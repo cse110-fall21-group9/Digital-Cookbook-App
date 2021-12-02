@@ -189,9 +189,9 @@ class recipeCard extends HTMLElement {
             <div class="dropdown">
                 <button onclick="myFunction()" class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" class="edit">Edit</a>
-                    <a href="#" class="delete">Delete</a>
-                    <a href="#" class="share">Share</a>
+                    <a href="#" class="edit" id="edit">Edit</a>
+                    <a href="#" class="delete" id="delete">Delete</a>
+                    <a href="#" class="share" id="share">Share</a>
                 </div>
             </div>
         </div>
@@ -199,8 +199,19 @@ class recipeCard extends HTMLElement {
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
 
+    // View Recipe
     card.addEventListener('click', (event) => {
-      showRecipe(data.name);
+      if (
+        event.target.id === 'fav' ||
+        event.target.id === 'edit' ||
+        event.target.id === 'delete' ||
+        event.target.id === 'edit' ||
+        event.target.id === 'share'
+      ) {
+        return;
+      } else {
+        showRecipe(data);
+      }
     });
 
     let edit = card.getElementsByClassName('edit').item(0);

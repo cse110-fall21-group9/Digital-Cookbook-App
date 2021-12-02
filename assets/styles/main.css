@@ -134,6 +134,7 @@ body {
   height: calc(25vh - 50px);
   border-radius: 10px;
   margin-bottom: 20px;
+  padding: 10px;
   background: #c4c4c4;
 }
 
@@ -141,6 +142,7 @@ body {
   margin-bottom: 20px;
   height: calc(40vh - 50px);
   border-radius: 10px;
+  padding: 10px;
   background: #c4c4c4;
 }
 
@@ -150,12 +152,16 @@ body {
   display: block;
 }
 
-button {
+#save, #discard {
   height: 25px;
   border: 1px solid #000;
   border-radius: 40px;
   background-color: rgb(243 195 131);
   cursor: pointer;
+}
+
+.recipe-name {
+  font-weight: bold;
 }
 
 @media screen and (min-width: 800px) {
