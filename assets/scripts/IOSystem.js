@@ -134,13 +134,11 @@ class IOSystem {
       fs.mkdirSync(dir);
     }
     const destination = `${dir}${fileName}`;
-    fs.copyFile(origin, destination, () => {
-      console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
-    });
-
-    // fs.writeFile(location, buffer, 'base64', () => {
-    //   console.log(`File written to ${location} with name ${fileName}.`);
+    // fs.copyFile(origin, destination, () => {
+    //   console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
     // });
+    fs.copyFileSync(origin, destination);
+    console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
   }
 
   /**
