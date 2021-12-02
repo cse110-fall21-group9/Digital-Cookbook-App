@@ -51,8 +51,9 @@ save.addEventListener('click', function () {
   //Save image
   let imageInput = document.getElementById('file');
   let imageFile = imageInput.files[0];
-  window.electron.saveImage(imageFile.path, imageFile.name);
-
+  if (imageFile) {
+    window.electron.saveImage(imageFile.path, imageFile.name);
+  }
   if (oldRecipeName != '') {
     //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
@@ -96,7 +97,11 @@ function createJSON() {
   if (document.getElementById('output').src !== undefined) {
     let imageInput = document.getElementById('file');
     let imageFile = imageInput.files[0];
-    imgURL = IMAGES_DIR + imageFile.name;
+    if (imageFile) {
+      imgURL = IMAGES_DIR + imageFile.name;
+    } else {
+      imgURL = './assets/images/default-image.jpg';
+    }
   }
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
