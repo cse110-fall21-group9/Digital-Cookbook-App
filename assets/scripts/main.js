@@ -2,9 +2,11 @@
 const {app, BrowserWindow} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
+const {ipcMain} = require('electron');
 
 // directory with recipes
-const recipesDir = path.join(__dirname, '../recipes/');
+const RECIPES_DIR = path.join(__dirname, '../recipes/');
+const IMAGES_DIR = path.join(__dirname, '../images/');
 // const indexDir = path.join(__dirname, '../../'); // directory with index.html
 
 /**
@@ -15,6 +17,7 @@ function createWindow() {
   const mainWindow = new BrowserWindow({
     width: 1280,
     height: 720,
+    icon: '../images/panda.ico',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
@@ -24,7 +27,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -58,8 +61,8 @@ app.on('window-all-closed', function () {
  */
 function cacheRecipesFromDisk() {
   // READ: retrieve all entries from disk complete
-  const readDict = IOSystem.scanFiles(recipesDir);
-  
+  const readDict = IOSystem.scanFiles(RECIPES_DIR);
+
   for (const fileObj of readDict) {
     const filePath = fileObj.path;
     const fileData = fileObj.data;
@@ -71,3 +74,72 @@ function cacheRecipesFromDisk() {
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
 }
+ipcMain.on('LOAD', (event) => {
+  event.returnValue(IOSystem.recipesDict);
+});
+
+/**
+ * Add recipe
+ * If error occur 'FAILED' will be returned.
+ * If success "SUCCESS" will be returned.
+ */
+
+ipcMain.on('ADD', (event, recipeData, recipeName) => {
+  try {
+    IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    console.error(err);
+    event.returnValue = 'FAILED';
+  }
+});
+
+/**
+ * Write an image to a specified file in our app directory
+ * If error occur 'FAILED' will be returned.
+ * If success "SUCCESS" will be returned.
+ */
+ipcMain.on('COPY_IMAGE', (event, imgPath, imgName) => {
+  try {
+    IOSystem.copyFile(imgPath, IMAGES_DIR, imgName);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    console.error(err);
+    event.returnValue = 'FAILED';
+  }
+});
+
+/**
+ * Delete recipe
+ * If error occur 'FAILED' will be returned.
+ *  If success "SUCCESS" will be returned.
+ */
+ipcMain.on('DELETE', (event, recipeName) => {
+  try {
+    IOSystem.eraseFileAt(RECIPES_DIR, `${recipeName}.json`);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    event.returnValue = 'FAILED';
+  }
+});
+
+ipcMain.on('ACQUIRE', (event, recipeName) => {
+  let filedir = RECIPES_DIR + `${recipeName}.json`;
+  event.returnValue = require(filedir);
+});
+
+/**
+ * Acquire the dictionary of recipes
+ */
+ipcMain.on('CACHEDICT', (event) => {
+  event.returnValue = IOSystem.recipesDict;
+});
+
+// /**
+//  * Default Image for recipes cards
+//  */
+// const img = document.getElementById("output")
+// img.addEventListener("error", function (event) {
+//   event.target.src = "./assets/images/default-image.jpg"
+//   event.onerror = null
+// })

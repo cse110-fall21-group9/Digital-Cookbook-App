@@ -1,0 +1,265 @@
+/* Apply an overall font and size */
+* {
+  font-family: verdana, sans-serif;
+  font-size: 1.2vw;
+}
+
+/* HEADER/NAVBAR ELEMENTS */
+
+/* top-bar Elements */
+.top-bar {
+  background: rgb(88 88 88);
+  width: 100%;
+  top: 0;
+}
+
+#logo {
+  width: 7%;
+  padding-top: 5px;
+  background: rgb(88 88 88);
+}
+
+/* Nav Bar Styling */
+nav {
+  height: 100%;
+  padding-right: 1px;
+  background-color: rgb(243 195 131);
+  font-weight: bold;
+  text-align: left;
+}
+
+.nav-style a:link,
+.nav-style a:visited {
+  background-color: rgb(243 195 131);
+  border-bottom: 1px solid rgb(88 88 88);
+  color: rgb(88 88 88);
+  display: block;
+  text-decoration: none;
+  padding: 20px 10px;
+}
+
+.nav-style ul {
+  list-style-type: none;
+}
+
+.nav-style a:hover {
+  background-color: #f3efbf;
+  color: rgb(0 0 0);
+}
+
+.nav-style a:active {
+  background-color: #f3efbf;
+}
+
+/* INDIVIDUAL RECIPE CARDS */
+.recipe-cards {
+  column-gap: 25px;
+  display: flex;
+  flex-wrap: wrap;
+  height: auto;
+  margin: 30px 0 30px 30px;
+  max-width: 1000px;
+  row-gap: 20px;
+  width: 100%;
+}
+
+body {
+  --primary: #e05d26;
+  --grey: #857171;
+  --lightgrey: #666;
+
+  color: var(--grey);
+  line-height: 1.55;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-family: Raleway, sans-serif;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.popup {
+  position: absolute;
+  grid-gap: 10px;
+  max-width: 750px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 20px;
+  background-color: whitesmoke;
+  box-shadow: 2px 2px 5px 5px gray;
+  border-radius: 15px;
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms, transform 20ms ease-in-out 0ms;
+}
+
+.popup::-webkit-scrollbar {
+  width: 7px;
+}
+
+.popup::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.popup::-webkit-scrollbar-thumb {
+  background: rgb(88 88 88);
+  border-radius: 10px;
+}
+
+.popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 15px;
+  height: 15px;
+  background: #888;
+  color: #eee;
+  text-align: center;
+  line-height: 15px;
+  box-shadow: 2px 2px 5px 5px rgba(0 0 0 0 10);
+  border-radius: 10 px;
+  cursor: pointer;
+}
+
+#recipe-name {
+  margin-bottom: 20px;
+  border-radius: 10px;
+  padding: 10px;
+  background: #c4c4c4;
+}
+
+#ingredients {
+  height: calc(25vh - 50px);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  background: #c4c4c4;
+}
+
+#instructions {
+  margin-bottom: 20px;
+  height: calc(40vh - 50px);
+  border-radius: 10px;
+  background: #c4c4c4;
+}
+
+#output {
+  margin-top: 2rem;
+  width: 90%;
+  display: block;
+}
+
+button {
+  height: 25px;
+  border: 1px solid #000;
+  border-radius: 40px;
+  background-color: rgb(243 195 131);
+  cursor: pointer;
+}
+
+@media screen and (min-width: 800px) {
+  .popup {
+    min-width: 600px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .popup {
+    min-width: 520px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .popup {
+    min-width: 420px;
+  }
+
+  #ingredients {
+    height: 150px;
+  }
+
+  #instructions {
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .popup {
+    min-width: 380px;
+    height: calc(100vh - 80px);
+    overflow: auto;
+    padding: 15px;
+  }
+
+  #ingredients {
+    height: 150px;
+  }
+
+  #instructions {
+    height: 180px;
+  }
+
+  #recipe-name,
+  #ingredients,
+  #instructions,
+  label,
+  button {
+    font-size: 2.4vw !important;
+  }
+
+  input {
+    height: 22px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .popup {
+    min-width: 90%;
+    max-height: 480px;
+    height: 100%;
+    overflow: auto;
+  }
+
+  #ingredients {
+    height: 150px;
+  }
+
+  #instructions {
+    height: 180px;
+  }
+}
+
+@media screen and (max-width: 475px) {
+  #recipe-name {
+    padding: 10px;
+  }
+
+  #logo {
+    width: 22%;
+  }
+
+  .nav-style a:link,
+  .nav-style a:visited {
+    font-size: 14px;
+  }
+
+  .form-control {
+    font-size: 3rem !important;
+    line-height: 30px !important;
+    padding-left: 1.5rem !important;
+  }
+
+  .fas.fa-search {
+    font-size: 4rem;
+    padding: 1rem 2rem;
+  }
+
+  #ingredients {
+    height: 130px;
+  }
+
+  #instructions {
+    height: 150px;
+  }
+}

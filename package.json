@@ -10,9 +10,9 @@
     "eslint": "eslint ./assets/**/*.js __tests__/**/*.js",
     "jscpd": "jscpd --pattern ./*.js assets/**.js ./*.css assets/**.css ./*.html assets/**.html",
     "start": "electron .",
-    "build-win": "electron-packager . import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
-    "build-darwin": "electron-packager . import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
-    "build-linux": "electron-packager . import-pandas-cookbook-app --platform=linux --arch=x64 --overwrite"
+    "build-win32": "electron-packager electron-build import-pandas-cookbook-app --platform=win32 --arch=x64 --overwrite",
+    "build-darwin": "electron-packager electron-build import-pandas-cookbook-app --platform=darwin --arch=x64 --overwrite",
+    "build-linux": "electron-packager electron-build import-pandas-cookbook-app --platform=linux --arch=x64 --overwrite"
   },
   "repository": {
     "type": "git",
@@ -24,12 +24,14 @@
     "url": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App/issues"
   },
   "homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.3",
     "@babel/preset-env": "^7.16.4",
     "babel-jest": "^27.3.1",
     "electron": "^16.0.1",
+    "electron-packager": "^15.4.0",
     "eslint": "^7.28.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
