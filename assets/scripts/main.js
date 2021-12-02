@@ -8,7 +8,7 @@ const {ipcMain} = require('electron');
 // directory with recipes
 const RECIPES_DIR = path.join(__dirname, '../recipes/');
 // directory with *recipe images*, NOT app images
-const IMAGES_DIR = path.join(__dirname, '../recipes/recipe-images/');
+const IMAGES_DIR = path.join(__dirname, '../recipes/images/');
 // const indexDir = path.join(__dirname, '../../'); // directory with index.html
 
 /**

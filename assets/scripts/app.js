@@ -10,7 +10,7 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
-const IMAGES_DIR = './assets/images/';
+const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 const RECIPE_FORM_ID = 'add-recipe';
 
@@ -56,6 +56,7 @@ save.addEventListener('click', () => {
   //Save image
   let imageInput = document.getElementById('file');
   let imageFile = imageInput.files[0];
+  console.log(imageFile);
   window.electron.saveImage(imageFile.path, imageFile.name);
 
   if (oldRecipeName != '') {
