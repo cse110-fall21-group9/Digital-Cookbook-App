@@ -47,6 +47,24 @@ class IOSystem {
   }
 
   /**
+   * Removes an entry from the recipesDict that maps
+   * recipe names to JSON data.
+   * @param {string} name name of recipe.
+   */
+  static deIndexRecipe(name) {
+    Reflect.deleteProperty(this.recipesDict, name);
+  }
+
+  /**
+   * Removes an entry from the filesDict that maps
+   * recipe names to filePaths.
+   * @param {string} name name of recipe.
+   */
+  static deIndexFile(name) {
+    Reflect.deleteProperty(this.filesDict, name);
+  }
+
+  /**
    * Is this filepath valid on this system?
    * @param {string} dir the path to check
    * @returns {boolean} true if the format is valid, false if not.

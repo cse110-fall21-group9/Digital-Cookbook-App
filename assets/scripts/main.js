@@ -119,6 +119,8 @@ ipcMain.on('COPY_IMAGE', (event, imgPath, imgName) => {
 ipcMain.on('DELETE', (event, recipeName) => {
   try {
     IOSystem.eraseFileAt(RECIPES_DIR, `${recipeName}.json`);
+    IOSystem.deIndexFile(recipeName);
+    IOSystem.deIndexRecipe(recipeName);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;

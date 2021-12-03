@@ -1,4 +1,4 @@
-export let frontEndRecipeDict = {};
+export var frontEndRecipeDict = {};
 
 /**
  * Strip the spaces from a given string
@@ -16,6 +16,7 @@ const RECIPE_FORM_ID = 'add-recipe';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
+  console.log('Received from back end:');
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     createRecipeCard(val);
@@ -165,7 +166,7 @@ imageInput.addEventListener('change', (event) => {
   let imageFile = imageInput.files[0];
 
   // reference to this image for this session is only used to display the image preview
-  image.src = URL.createObjectURL(imageInput.files[0]);
+  if (imageFile) image.src = URL.createObjectURL(imageFile);
 
   // write image to local dir that we know the location of.
   // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk

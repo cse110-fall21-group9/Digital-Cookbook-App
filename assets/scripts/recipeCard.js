@@ -12,6 +12,10 @@ class recipeCard extends HTMLElement {
     return name.replace(/\s/g, '');
   }
 
+  get data() {
+    return this.json;
+  }
+
   /**
    * Create a new JSON file on the data user enter
    * @param {dict} data the name of the json dictionary.
@@ -20,7 +24,7 @@ class recipeCard extends HTMLElement {
     if (!data) return;
 
     // Used to access the actual data object
-    // this.json = data;
+    this.json = data;
 
     // Create a wrapper
     const card = document.createElement('div');
@@ -220,7 +224,8 @@ class recipeCard extends HTMLElement {
     let share = card.getElementsByClassName('share').item(0);
     // Edit recipe
     edit.addEventListener('click', (event) => {
-      let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
+      // let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
+      let recipeData = frontEndRecipeDict[data.name]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
       console.log(document.getElementById('add-recipe').classList);
       console.log(recipeData);
       fillData(recipeData);
@@ -236,6 +241,7 @@ class recipeCard extends HTMLElement {
         let removeCard = document.querySelector(
           `recipe-card[class=${this.strStrip(title.textContent)}]`
         );
+        Reflect.deleteProperty(frontEndRecipeDict, data.name);
         parent.removeChild(removeCard);
       }
     });
@@ -253,13 +259,7 @@ function fillData(recipeData) {
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
   document.getElementById('add-recipe')['data-opened-from'] = recipeData.name.replace(/\s/g, '');
+  document.getElementById('output')['src'] = recipeData.image;
 }
 
 customElements.define('recipe-card', recipeCard);
-
-//   get data() {
-//     // Stored in .json to avoid calling set data() recursively in a loop.
-//     // .json is also exposed so you can technically use that as well
-//     return this.json;
-//   }
-// }
