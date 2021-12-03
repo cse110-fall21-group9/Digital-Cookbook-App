@@ -1,5 +1,7 @@
 import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
+const IMAGE_CHANGED = 'data-changed';
 
 class recipeCard extends HTMLElement {
   DOMRef = null;
@@ -145,6 +147,9 @@ class recipeCard extends HTMLElement {
     const imageUrl = data.image;
     const image = document.createElement('img');
     image.classList.add('img-fluid');
+
+    // ONLY SET THE SRC if the image was changed
+    //let imageWasChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)['data-changed'];
     image.setAttribute('src', imageUrl);
     image.setAttribute('alt', imageUrl);
     imgWrapper.appendChild(image);
@@ -261,6 +266,9 @@ function fillData(recipeData) {
   // give the add-recipe form a state saying that it was opened from the "edit" option
   document.getElementById('add-recipe')['data-opened-from'] = recipeData.name.replace(/\s/g, '');
   document.getElementById('output')['src'] = recipeData.image;
+  // give the image upload form a state saying that it was opened from "edit" and should only apply itself
+  // if the image was changed.
+  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = false;
 }
 
 customElements.define('recipe-card', recipeCard);

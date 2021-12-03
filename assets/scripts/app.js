@@ -10,8 +10,10 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
+const IMAGE_CHANGED = 'data-changed';
 const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const RECIPE_FORM_ID = 'add-recipe';
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -31,6 +33,9 @@ addButton.addEventListener('click', () => {
 
   // tell the form that it was opened from the "add-recipe" button
   document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
+
+  // by default, the image for a new recipe has been "changed"
+  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
   console.log(document.getElementById(RECIPE_FORM_ID).classList);
   clearData();
 });
@@ -114,13 +119,19 @@ function buildJSONFromForm() {
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   let tag = 'Gluten Free';
   let imgURL = '.png';
+  let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
   if (document.getElementById('output').src !== undefined) {
-    let imageInput = document.getElementById('file');
-    let imageFile = imageInput.files[0];
-    if (imageFile) {
-      imgURL = IMAGES_DIR + imageFile.name;
+    if (imgChanged) {
+      let imageInput = document.getElementById('file');
+      let imageFile = imageInput.files[0];
+      if (imageFile) {
+        imgURL = IMAGES_DIR + imageFile.name;
+      } else {
+        imgURL = './assets/images/default-image.jpg';
+      }
     } else {
-      imgURL = './assets/images/default-image.jpg';
+      let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+      imgURL = frontEndRecipeDict[recipeName].image; // restore original image URL it it was not changed
     }
   }
 
@@ -160,6 +171,7 @@ img.addEventListener('error', function (event) {
 let imageInput = document.getElementById('file');
 console.log(imageInput);
 imageInput.addEventListener('change', (event) => {
+  imageInput[IMAGE_CHANGED] = true;
   let image = document.getElementById('output');
   let imageFile = imageInput.files[0];
 
