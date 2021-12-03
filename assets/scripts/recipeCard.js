@@ -1,3 +1,5 @@
+import {showRecipe} from './app.js';
+
 class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
@@ -38,6 +40,9 @@ class recipeCard extends HTMLElement {
             box-sizing: border-box;
             padding: 2px;
             overflow: visible
+        }
+        .recipe:hover {
+          cursor: pointer;
         }
         
         .image {
@@ -184,15 +189,30 @@ class recipeCard extends HTMLElement {
             <div class="dropdown">
                 <button class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
-                    <a href="#" class="edit">Edit</a>
-                    <a href="#" class="delete">Delete</a>
-                    <a href="#" class="share">Share</a>
+                    <a href="#" class="edit" id="edit">Edit</a>
+                    <a href="#" class="delete" id="delete">Delete</a>
+                    <a href="#" class="share" id="share">Share</a>
                 </div>
             </div>
         </div>
         `;
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
+
+    // View Recipe
+    card.addEventListener('click', (event) => {
+      if (
+        event.target.id === 'fav' ||
+        event.target.id === 'edit' ||
+        event.target.id === 'delete' ||
+        event.target.id === 'edit' ||
+        event.target.id === 'share'
+      ) {
+        return;
+      } else {
+        showRecipe(data);
+      }
+    });
 
     let edit = card.getElementsByClassName('edit').item(0);
     let delete_recipe = card.getElementsByClassName('delete').item(0);
