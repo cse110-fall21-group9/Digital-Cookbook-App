@@ -91,7 +91,7 @@ ipcMain.on('ADD', (event, recipeData, recipeName) => {
     event.returnValue = 'SUCCESS';
   } catch (err) {
     console.error(err);
-    event.returnValue = 'FAILED';
+    event.returnValue = `FAILED: ${err}`;
   }
 });
 
@@ -106,7 +106,7 @@ ipcMain.on('COPY_IMAGE', (event, imgPath, imgName) => {
     event.returnValue = 'SUCCESS';
   } catch (err) {
     console.error(err);
-    event.returnValue = 'FAILED';
+    event.returnValue = `FAILED: ${err}`;
   }
 });
 
@@ -120,7 +120,7 @@ ipcMain.on('DELETE', (event, recipeName) => {
     IOSystem.eraseFileAt(RECIPES_DIR, `${recipeName}.json`);
     event.returnValue = 'SUCCESS';
   } catch (err) {
-    event.returnValue = 'FAILED';
+    event.returnValue = `FAILED: ${err}`;
   }
 });
 
@@ -132,6 +132,30 @@ ipcMain.on('ACQUIRE', (event, recipeName) => {
 /**
  * Acquire the dictionary of recipes
  */
-ipcMain.on('CACHEDICT', (event) => {
+ipcMain.on('CACHE_DICT', (event) => {
   event.returnValue = IOSystem.recipesDict;
+});
+
+/**
+ * Zip an array of recipe data JSON objects into an rc package and dump to disk at specified location.
+ */
+ipcMain.on('RC_PACK', (event, recipeArray, dir, fileNameNoExtension) => {
+  try {
+    IOSystem.zipRCPackage(recipeArray, dir, fileNameNoExtension);
+    event.returnValue = 'SUCCESS';
+  } catch (err) {
+    event.returnValue = `FAILED: ${err}`;
+  }
+});
+
+/**
+ * Unzip the RC Package at the specified dir into an array of JSON objects.
+ */
+ipcMain.on('RC_UNPACK', (event, dir, fileName) => {
+  try {
+    let recipeArray = IOSystem.unzipRCPackage(dir, fileName);
+    event.returnValue = recipeArray;
+  } catch (err) {
+    event.returnValue = `FAILED: ${err}`;
+  }
 });
