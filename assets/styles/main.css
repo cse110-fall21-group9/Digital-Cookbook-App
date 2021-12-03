@@ -11,7 +11,7 @@
   background: rgb(88 88 88);
   width: 100%;
   top: 0;
-  font-family: 'Courier New', Courier, monospace; 
+  font-family: "Courier New", Courier, monospace;
   color: white;
 }
 
@@ -47,7 +47,6 @@ nav {
 
 .nav-style a:hover {
   background-color: #f3efbf;
-  color: rgb(0 0 0);
 }
 
 .nav-style a:active {
