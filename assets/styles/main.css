@@ -163,6 +163,17 @@ body {
   cursor: pointer;
 }
 
+#upload {
+  height: 25px;
+  text-align: center;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 1px solid #000;
+  border-radius: 40px;
+  background-color: rgb(243 195 131);
+  cursor: pointer;
+}
+
 .recipe-name {
   font-weight: bold;
 }
