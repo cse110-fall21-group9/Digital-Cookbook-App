@@ -43,6 +43,7 @@ class recipeCard extends HTMLElement {
         }
         .recipe:hover {
           cursor: pointer;
+          transform:scale(1.05);
         }
         
         .image {
