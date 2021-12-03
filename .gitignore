@@ -2,5 +2,7 @@ node_modules/
 actionlint*
 import-pandas-cookbook-app-*/
 assets/recipes/**
+assets/recipes/images/**
+!assets/recipes/images
 !assets/recipes/boneSoup.json
 !assets/recipes/aaaaaa.json

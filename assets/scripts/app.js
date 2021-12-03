@@ -1,12 +1,18 @@
 let frontEndRecipeDict = {};
 
+/**
+ * Strip the spaces from a given string
+ * @param {string} name a string to strip the spaces from
+ * @returns the stripped string
+ */
 function strStrip(name) {
   return name.replace(/\s/g, '');
 }
 
 const OPENED_FROM = 'data-opened-from';
-const IMAGES_DIR = './assets/images/';
+const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
+const RECIPE_FORM_ID = 'add-recipe';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
@@ -18,41 +24,42 @@ window.addEventListener('DOMContentLoaded', () => {
 
 // Save button for add new recipe
 let addButton = document.getElementById('add');
-addButton.addEventListener('click', function () {
-  document.getElementById('add-recipe').classList.remove('hidden');
-  document.getElementById('add-recipe').style.display = 'grid';
+addButton.addEventListener('click', () => {
+  document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
+  document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
 
   // tell the form that it was opened from the "add-recipe" button
-  document.getElementById('add-recipe')[OPENED_FROM] = '';
-  console.log(document.getElementById('add-recipe').classList);
+  document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
+  console.log(document.getElementById(RECIPE_FORM_ID).classList);
   clearData();
 });
 
 // Close the add function
 let close = document.getElementById('close');
-close.addEventListener('click', function () {
-  document.getElementById('add-recipe').classList.add('hidden');
-  document.getElementById('add-recipe').style.display = 'none';
-  console.log(document.getElementById('add-recipe').classList);
+close.addEventListener('click', () => {
+  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+  console.log(document.getElementById(RECIPE_FORM_ID).classList);
 });
 
 // Create JSON file when click "Save"
 let save = document.getElementById('save');
-console.log(save);
-save.addEventListener('click', function () {
+save.addEventListener('click', () => {
   // Collapse the window
-  document.getElementById('add-recipe').classList.add('hidden');
-  document.getElementById('add-recipe').style.display = 'none';
-  console.log(document.getElementById('add-recipe').classList);
+  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+  console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
   let recipeName = strStrip(document.getElementById('recipe-name').value);
-  let oldRecipeName = document.getElementById('add-recipe')[OPENED_FROM];
+  let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
 
   //Save image
   let imageInput = document.getElementById('file');
   let imageFile = imageInput.files[0];
-  window.electron.saveImage(imageFile.path, imageFile.name);
-
+  console.log(imageFile);
+  if (imageFile) {
+    window.electron.saveImage(imageFile.path, imageFile.name);
+  }
   if (oldRecipeName != '') {
     //check if opened from edit
     const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
@@ -68,17 +75,25 @@ save.addEventListener('click', function () {
   let json = createJSON();
   createRecipeCard(json);
 
+  // add to front-end copy of dictionary
+  frontEndRecipeDict[json.name] = json;
+
   // Save file to local storage
   recipeName = strStrip(json['name']);
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
-  //   dumpJSON(json, "../assets/recipes", file);
 });
 
+/**
+ * Make a new `recipe-card` and prepend it to the list of cards in the front end
+ * @param {object} data as JSON
+ */
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.classList.add(strStrip(data.name));
+
+  // FIXME: newly-added recipe cards seem to be unable to access images that were just saved.
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
@@ -96,7 +111,11 @@ function createJSON() {
   if (document.getElementById('output').src !== undefined) {
     let imageInput = document.getElementById('file');
     let imageFile = imageInput.files[0];
-    imgURL = IMAGES_DIR + imageFile.name;
+    if (imageFile) {
+      imgURL = IMAGES_DIR + imageFile.name;
+    } else {
+      imgURL = './assets/images/default-image.jpg';
+    }
   }
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
@@ -137,10 +156,12 @@ console.log(imageInput);
 imageInput.addEventListener('change', (event) => {
   let image = document.getElementById('output');
   let imageFile = imageInput.files[0];
+
+  // reference to this image for this session is only used to display the image preview
   image.src = URL.createObjectURL(imageInput.files[0]);
 
-  // write image to local dir that we know the location of
-  // FIXME: THIS IS A TEST!!! This write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
+  // write image to local dir that we know the location of.
+  // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
   console.log(imageFile.path);
 });
 

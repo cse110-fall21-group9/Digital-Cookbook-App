@@ -187,7 +187,7 @@ class recipeCard extends HTMLElement {
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
             <div class="dropdown">
-                <button onclick="myFunction()" class="dropbtn">Actions</button>
+                <button class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" class="edit" id="edit">Edit</a>
                     <a href="#" class="delete" id="delete">Delete</a>
