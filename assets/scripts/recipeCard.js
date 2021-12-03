@@ -192,7 +192,7 @@ class recipeCard extends HTMLElement {
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
             <div class="dropdown">
-                <button class="dropbtn">Actions</button>
+                <button id="dropDownBtn" class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" class="edit" id="edit">Edit</a>
                     <a href="#" class="delete" id="delete">Delete</a>
@@ -211,7 +211,8 @@ class recipeCard extends HTMLElement {
         event.target.id === 'edit' ||
         event.target.id === 'delete' ||
         event.target.id === 'edit' ||
-        event.target.id === 'share'
+        event.target.id === 'share' ||
+        event.target.id === 'dropDownBtn'
       ) {
         return;
       } else {

@@ -100,8 +100,6 @@ save.addEventListener('click', () => {
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.classList.add(strStrip(data.name));
-
-  // FIXME: newly-added recipe cards seem to be unable to access images that were just saved.
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
