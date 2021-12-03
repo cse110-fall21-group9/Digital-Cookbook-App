@@ -72,12 +72,12 @@ save.addEventListener('click', () => {
     }
   }
 
-let discard = document.getElementById('discard');
-discard.addEventListener('click',(event) => {
-  clearData();
-  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-})
+  let discard = document.getElementById('discard');
+  discard.addEventListener('click', (event) => {
+    clearData();
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+  });
 
   let json = createJSON();
   createRecipeCard(json);
