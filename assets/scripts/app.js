@@ -220,8 +220,8 @@ export function showRecipe(recipe) {
 
   // Recipe Name
   const col3 = document.createElement('div');
-  col3.className = 'recipe-name col-6 text-center text-nowrap';
-  col3.classList.add('recipe-name', 'col-6', 'text-center', 'text-nowrap');
+  col3.className = 'recipe-name col-6 text-center fs-2';
+  col3.classList.add('recipe-name', 'col-6', 'text-center', 'fs-2');
   col3.innerHTML = jsonData.name;
   row1.appendChild(col3);
   container.appendChild(row1);
