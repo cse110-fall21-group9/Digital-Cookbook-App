@@ -1,4 +1,4 @@
-let frontEndRecipeDict = {};
+export let frontEndRecipeDict = {};
 
 /**
  * Strip the spaces from a given string

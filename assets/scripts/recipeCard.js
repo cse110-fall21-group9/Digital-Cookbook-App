@@ -1,3 +1,4 @@
+import {frontEndRecipeDict} from './app.js';
 class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
@@ -195,7 +196,7 @@ class recipeCard extends HTMLElement {
     this.shadowRoot.append(style, card);
 
     let edit = card.getElementsByClassName('edit').item(0);
-    let delete_recipe = card.getElementsByClassName('delete').item(0);
+    let deleteRecipe = card.getElementsByClassName('delete').item(0);
     let share = card.getElementsByClassName('share').item(0);
     // Edit recipe
     edit.addEventListener('click', (event) => {
@@ -206,7 +207,7 @@ class recipeCard extends HTMLElement {
       //clearData();
     });
 
-    delete_recipe.addEventListener('click', (event) => {
+    deleteRecipe.addEventListener('click', (event) => {
       if (!confirm('Are you sure you want to delete this recipe?')) {
         event.preventDefault();
       } else {
