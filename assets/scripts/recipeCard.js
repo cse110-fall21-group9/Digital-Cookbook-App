@@ -1,4 +1,7 @@
+import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
+const IMAGE_CHANGED = 'data-changed';
 
 class recipeCard extends HTMLElement {
   DOMRef = null;
@@ -11,6 +14,10 @@ class recipeCard extends HTMLElement {
     return name.replace(/\s/g, '');
   }
 
+  get data() {
+    return this.json;
+  }
+
   /**
    * Create a new JSON file on the data user enter
    * @param {dict} data the name of the json dictionary.
@@ -19,7 +26,7 @@ class recipeCard extends HTMLElement {
     if (!data) return;
 
     // Used to access the actual data object
-    // this.json = data;
+    this.json = data;
 
     // Create a wrapper
     const card = document.createElement('div');
@@ -140,6 +147,9 @@ class recipeCard extends HTMLElement {
     const imageUrl = data.image;
     const image = document.createElement('img');
     image.classList.add('img-fluid');
+
+    // ONLY SET THE SRC if the image was changed
+    //let imageWasChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)['data-changed'];
     image.setAttribute('src', imageUrl);
     image.setAttribute('alt', imageUrl);
     imgWrapper.appendChild(image);
@@ -187,7 +197,7 @@ class recipeCard extends HTMLElement {
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
             <div class="dropdown">
-                <button class="dropbtn">Actions</button>
+                <button id="dropDownBtn" class="dropbtn">Actions</button>
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" class="edit" id="edit">Edit</a>
                     <a href="#" class="delete" id="delete">Delete</a>
@@ -206,7 +216,8 @@ class recipeCard extends HTMLElement {
         event.target.id === 'edit' ||
         event.target.id === 'delete' ||
         event.target.id === 'edit' ||
-        event.target.id === 'share'
+        event.target.id === 'share' ||
+        event.target.id === 'dropDownBtn'
       ) {
         return;
       } else {
@@ -215,18 +226,19 @@ class recipeCard extends HTMLElement {
     });
 
     let edit = card.getElementsByClassName('edit').item(0);
-    let delete_recipe = card.getElementsByClassName('delete').item(0);
+    let deleteRecipe = card.getElementsByClassName('delete').item(0);
     let share = card.getElementsByClassName('share').item(0);
     // Edit recipe
     edit.addEventListener('click', (event) => {
-      let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
+      // let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
+      let recipeData = frontEndRecipeDict[data.name]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
       console.log(document.getElementById('add-recipe').classList);
       console.log(recipeData);
       fillData(recipeData);
       //clearData();
     });
 
-    delete_recipe.addEventListener('click', (event) => {
+    deleteRecipe.addEventListener('click', (event) => {
       if (!confirm('Are you sure you want to delete this recipe?')) {
         event.preventDefault();
       } else {
@@ -235,6 +247,7 @@ class recipeCard extends HTMLElement {
         let removeCard = document.querySelector(
           `recipe-card[class=${this.strStrip(title.textContent)}]`
         );
+        Reflect.deleteProperty(frontEndRecipeDict, data.name);
         parent.removeChild(removeCard);
       }
     });
@@ -252,13 +265,10 @@ function fillData(recipeData) {
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
   document.getElementById('add-recipe')['data-opened-from'] = recipeData.name.replace(/\s/g, '');
+  document.getElementById('output')['src'] = recipeData.image;
+  // give the image upload form a state saying that it was opened from "edit" and should only apply itself
+  // if the image was changed.
+  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = false;
 }
 
 customElements.define('recipe-card', recipeCard);
-
-//   get data() {
-//     // Stored in .json to avoid calling set data() recursively in a loop.
-//     // .json is also exposed so you can technically use that as well
-//     return this.json;
-//   }
-// }
