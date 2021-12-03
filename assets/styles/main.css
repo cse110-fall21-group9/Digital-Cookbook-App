@@ -11,6 +11,8 @@
   background: rgb(88 88 88);
   width: 100%;
   top: 0;
+  font-family: 'Courier New', Courier, monospace; 
+  color: white;
 }
 
 #logo {
