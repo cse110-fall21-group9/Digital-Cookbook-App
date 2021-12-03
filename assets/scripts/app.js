@@ -80,7 +80,7 @@ save.addEventListener('click', () => {
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   });
 
-  let json = createJSON();
+  let json = buildJSONFromForm();
   createRecipeCard(json);
 
   // add to front-end copy of dictionary
@@ -107,7 +107,7 @@ function createRecipeCard(data) {
 /**
  * Create a new JSON file on the data user enter
  */
-function createJSON() {
+function buildJSONFromForm() {
   const titleText = document.getElementById('recipe-name').value;
 
   let today = new Date();
