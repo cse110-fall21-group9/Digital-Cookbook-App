@@ -88,6 +88,7 @@ ipcMain.on('LOAD', (event) => {
 ipcMain.on('ADD', (event, recipeData, recipeName) => {
   try {
     IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeName}.json`);
+    IOSystem.indexRecipe(recipeName, recipeData);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     console.error(err);
