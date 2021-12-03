@@ -18,6 +18,7 @@ const JSON_EXT_LEN = 5;
  * @method dumpJSON takes a JS object and a file path, and writes it to that file path.
  * @method eraseFileAt takes a file path and erases the file found there. Dangerous; use with safety checks.
  * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
+ * @author @Lord-Scrubington-II
  */
 class IOSystem {
   static recipesDict = {};
@@ -45,6 +46,29 @@ class IOSystem {
     this.filesDict[name] = filePath;
   }
 
+  /**
+   * Removes an entry from the recipesDict that maps
+   * recipe names to JSON data.
+   * @param {string} name name of recipe.
+   */
+  static deIndexRecipe(name) {
+    Reflect.deleteProperty(this.recipesDict, name);
+  }
+
+  /**
+   * Removes an entry from the filesDict that maps
+   * recipe names to filePaths.
+   * @param {string} name name of recipe.
+   */
+  static deIndexFile(name) {
+    Reflect.deleteProperty(this.filesDict, name);
+  }
+
+  /**
+   * Is this filepath valid on this system?
+   * @param {string} dir the path to check
+   * @returns {boolean} true if the format is valid, false if not.
+   */
   static pathFormatValid(dir) {
     if ((dir.charAt(dir.length - 1) != '/' && dir.charAt(dir.length - 1) != '\\') || !dir) {
       return false;
@@ -69,10 +93,10 @@ class IOSystem {
 
     for (let fileName of fileNames) {
       // we need to ensure that the file extension is ".json" here
-      const fileNameNoExt = fileName
+      const fileNameExt = fileName
         .substring(fileName.length - JSON_EXT_LEN, fileName.length)
         .toLowerCase();
-      if (fileNameNoExt === '.json') {
+      if (fileNameExt === '.json') {
         let thisFilePath = `${dir}${fileName}`;
 
         // get file handle from file path
@@ -134,9 +158,6 @@ class IOSystem {
       fs.mkdirSync(dir);
     }
     const destination = `${dir}${fileName}`;
-    // fs.copyFile(origin, destination, () => {
-    //   console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
-    // });
     fs.copyFileSync(origin, destination);
     console.log(`File copied to ${destination} from ${origin} with name ${fileName}.`);
   }
@@ -166,34 +187,53 @@ class IOSystem {
   }
 
   /**
-   * Given a list of recipe JSON data, pack them into an array & return it.
+   * Given a list of recipe JSON data & a disk location, pack them into JSON & dump it to the disk.
    * @param {object[]} recipes the recipes to pack.
-   * @returns {object} an object containing a single array with the recipes inside.
+   * @param {string} dir directory to zip the .rcpkg file into.
+   * @param {string} fileName name of the .rcpkg file *WITHOUT THE EXTENSION!*
    */
-  static makeRCPackage(recipes) {
-    // TODO: implement RCPackage export
+  static zipRCPackage(recipes, dir, fileName) {
+    let toDump = {
+      recipeArray: recipes,
+    };
+
+    // .rcpkg files are really JSON with a single array inside.
+    dumpJSON(toDump, dir, fileName + '.rcpkg');
   }
 
   /**
-   * Reads & converts a file's contents into a string.
-   * Can be used for converting images & other Blob types into a JSON-compatible format.
-   * @param {File} file the file to convert into a string.
-   * @returns {Promise} a promise that passes the file as a string when it resolves.
+   * Given a filepath to a .rcpkg file, unpack the JSON and turn it into an array of objects.
+   * @param {string} dir the directory with the .rcpkg file.
+   * @param {string} fileName name of the .rcpkg file (including the extension).
+   * @returns {object[]} an object array with the recipe JSON objects inside.
    */
-  /*
-  async static encodeFileToStringPromise(file) {
-    // we can use Blob.arrayBuffer() to get something that the Node Buffer type can process
-    return new Promise((resolve, reject) => {
+  static unzipRCPackage(dir, fileName) {
+    let recArray = [];
 
-      file.arrayBuffer().then(buffer => {
+    // confirm that the file has the right extension
+    const fileNameExt = fileName
+      .substring(fileName.length - JSON_EXT_LEN, fileName.length)
+      .toLowerCase();
+    if (fileNameExt === '.rcpkg') {
+      let filePath = `${dir}${fileName}`;
 
-        const fileAsBuffer = Buffer.from(buffer);
-        const fileAsString = fileAsBuffer.toString(UTF8);
-        resolve(fileAsString);
+      // get file handle from file path
+      try {
+        // read into JSON object
+        let rcJSONAsString = fs.readFileSync(filePath, {encoding: UTF8});
+        let rcJSON = JSON.parse(rcJSONAsString);
 
-      });
-    });
-  } */
+        // extract the array of recipes
+        recArray = rcJSON.recipeArray;
+      } catch (error) {
+        throw new Error('This file path does not exist or is not available.');
+      }
+    } else {
+      console.error(`This file (named ${fileName}) is not a .rcpkg file!`);
+    }
+
+    return recArray;
+  }
 
   /**
    * Reads & converts a File's contents into a string.
@@ -201,20 +241,18 @@ class IOSystem {
    * @param {File} file the file to convert into a string.
    * @returns {string} the file's contents as a string.
    */
-  /* 
-  async static encodeFileToString(file) {
-    // we can use Blob.arrayBuffer() to get something that the Node Buffer type can process
-    const fileAsArrayBuffer = await file.arrayBuffer();
-    const fileAsBuffer = Buffer.from(fileAsArrayBuffer);
-    const fileAsString = fileAsBuffer.toString(UTF8);
-    return fileAsString;
-  } */
+  static encodeFileToString(file) {
+    const filePath = file.path;
+    let str = fs.readFileSync(filePath, {encoding: UTF8});
+    return str;
+  }
 
   /**
-   * Converts a string-encoded binary into an image.
+   * Converts a string-encoded binary into an image and then write it to disk at
+   * the specified location.
    * @param {string} jString The string to convert into an image.
    */
-  static decodeStringToImage(jString) {}
+  static decodeStringToImage(jString, dir, imageName) {}
 
   /**
    * Unpacks a JSON file into a JS object.

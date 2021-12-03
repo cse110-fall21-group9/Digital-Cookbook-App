@@ -1,4 +1,4 @@
-let frontEndRecipeDict = {};
+export var frontEndRecipeDict = {};
 
 /**
  * Strip the spaces from a given string
@@ -10,12 +10,15 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
+const IMAGE_CHANGED = 'data-changed';
 const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const RECIPE_FORM_ID = 'add-recipe';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
+  console.log('Received from back end:');
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     createRecipeCard(val);
@@ -30,6 +33,9 @@ addButton.addEventListener('click', () => {
 
   // tell the form that it was opened from the "add-recipe" button
   document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
+
+  // by default, the image for a new recipe has been "changed"
+  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
   console.log(document.getElementById(RECIPE_FORM_ID).classList);
   clearData();
 });
@@ -79,7 +85,7 @@ save.addEventListener('click', () => {
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   });
 
-  let json = createJSON();
+  let json = buildJSONFromForm();
   createRecipeCard(json);
 
   // add to front-end copy of dictionary
@@ -99,8 +105,6 @@ save.addEventListener('click', () => {
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.classList.add(strStrip(data.name));
-
-  // FIXME: newly-added recipe cards seem to be unable to access images that were just saved.
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
@@ -108,20 +112,26 @@ function createRecipeCard(data) {
 /**
  * Create a new JSON file on the data user enter
  */
-function createJSON() {
+function buildJSONFromForm() {
   const titleText = document.getElementById('recipe-name').value;
 
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   let tag = 'Gluten Free';
   let imgURL = '.png';
+  let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
   if (document.getElementById('output').src !== undefined) {
-    let imageInput = document.getElementById('file');
-    let imageFile = imageInput.files[0];
-    if (imageFile) {
-      imgURL = IMAGES_DIR + imageFile.name;
+    if (imgChanged) {
+      let imageInput = document.getElementById('file');
+      let imageFile = imageInput.files[0];
+      if (imageFile) {
+        imgURL = IMAGES_DIR + imageFile.name;
+      } else {
+        imgURL = './assets/images/default-image.jpg';
+      }
     } else {
-      imgURL = './assets/images/default-image.jpg';
+      let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+      imgURL = frontEndRecipeDict[recipeName].image; // restore original image URL it it was not changed
     }
   }
 
@@ -161,11 +171,12 @@ img.addEventListener('error', function (event) {
 let imageInput = document.getElementById('file');
 console.log(imageInput);
 imageInput.addEventListener('change', (event) => {
+  imageInput[IMAGE_CHANGED] = true;
   let image = document.getElementById('output');
   let imageFile = imageInput.files[0];
 
   // reference to this image for this session is only used to display the image preview
-  image.src = URL.createObjectURL(imageInput.files[0]);
+  if (imageFile) image.src = URL.createObjectURL(imageFile);
 
   // write image to local dir that we know the location of.
   // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
