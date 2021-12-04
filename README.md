@@ -2,7 +2,7 @@
 [![GitHub Super-Linter](https://github.com/cse110-fall21-group9/Digital-Cookbook-App/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 A digital cookbook created for UC San Diego CSE 110 - Software Engineering. We are group 9, the `import pandas`.  
-Our cookbook is a desktop app that runs using electron.js and other web technologies.
+This is a desktop app that runs using electron.js and other web technologies.
 
 ## Installation for Devs
 1. Fork or Clone this repository
