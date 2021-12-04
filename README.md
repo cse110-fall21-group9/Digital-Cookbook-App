@@ -22,7 +22,7 @@ A digital cookbook app by UC San Diego CSE 110 Group 9 - `import pandas`. A desk
 - [x] Jest Testing
 - [x] Build and packaging on every commit
 - [ ] JSDoc document generation
-- [ ] End to End testing
+- [ ] End-to-end testing
 
 ## Sprints Completed
 - [x] Sprint 1 (Completed 11/13/2021)
