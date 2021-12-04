@@ -1,3 +1,9 @@
+/**
+ * File: main.js
+ * This file is the entry point of our app and defines a fake server that contains an node.js environment.
+ * Node.js modules, the electron API (windowing methods, etc.) and message handlers live here.
+ */
+
 // Modules to control application life and create native browser window
 const {app, BrowserWindow} = require('electron');
 const path = require('path');

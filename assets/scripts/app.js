@@ -23,80 +23,108 @@ window.addEventListener('DOMContentLoaded', () => {
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     createRecipeCard(val);
   });
+  init();
 });
 
-// Save button for add new recipe
-let addButton = document.getElementById('add');
-addButton.addEventListener('click', () => {
-  document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
+/**
+ * Initialize all of our event handlers.
+ */
+function init() {
+  // Save button for add new recipe
+  let addButton = document.getElementById('add');
+  addButton.addEventListener('click', () => {
+    document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
 
-  // tell the form that it was opened from the "add-recipe" button
-  document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
+    // tell the form that it was opened from the "add-recipe" button
+    document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
 
-  // by default, the image for a new recipe has been "changed"
-  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
-  console.log(document.getElementById(RECIPE_FORM_ID).classList);
-  clearData();
-});
-
-// Close the add function
-let close = document.getElementById('close');
-close.addEventListener('click', () => {
-  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-  console.log(document.getElementById(RECIPE_FORM_ID).classList);
-});
-
-// Create JSON file when click "Save"
-let save = document.getElementById('save');
-save.addEventListener('click', () => {
-  // Collapse the window
-  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-  console.log(document.getElementById(RECIPE_FORM_ID).classList);
-
-  let recipeName = strStrip(document.getElementById('recipe-name').value);
-  let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
-
-  //Save image
-  let imageInput = document.getElementById('file');
-  let imageFile = imageInput.files[0];
-  console.log(imageFile);
-  if (imageFile) {
-    window.electron.saveImage(imageFile.path, imageFile.name);
-  }
-  if (oldRecipeName != '') {
-    //check if opened from edit
-    const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
-    let oldCard = document.querySelector(`recipe-card[class=${oldRecipeName}]`);
-    parent.removeChild(oldCard);
-    if (recipeName != oldRecipeName) {
-      console.log(oldRecipeName);
-      let status = window.electron.removeRecipe(oldRecipeName);
-      console.log(status);
-    }
-  }
-
-  let discard = document.getElementById('discard');
-  discard.addEventListener('click', (event) => {
+    // by default, the image for a new recipe has been "changed"
+    document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
     clearData();
-    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   });
 
-  let json = buildJSONFromForm();
-  createRecipeCard(json);
+  // Close the add function
+  let close = document.getElementById('close');
+  close.addEventListener('click', () => {
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
+  });
 
-  // add to front-end copy of dictionary
-  frontEndRecipeDict[json.name] = json;
+  // Create JSON file when click "Save"
+  let save = document.getElementById('save');
+  save.addEventListener('click', () => {
+    // Collapse the window
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
-  // Save file to local storage
-  recipeName = strStrip(json['name']);
-  let file = `${recipeName}.json`;
-  let status = window.electron.addRecipe(json, recipeName);
-  console.log(status);
-});
+    let recipeName = strStrip(document.getElementById('recipe-name').value);
+    let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+
+    //Save image
+    let imageInput = document.getElementById('file');
+    let imageFile = imageInput.files[0];
+    console.log(imageFile);
+    if (imageFile) {
+      window.electron.saveImage(imageFile.path, imageFile.name);
+    }
+    if (oldRecipeName != '') {
+      //check if opened from edit
+      const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
+      let oldCard = document.querySelector(`recipe-card[class=${oldRecipeName}]`);
+      parent.removeChild(oldCard);
+      if (recipeName != oldRecipeName) {
+        console.log(oldRecipeName);
+        let status = window.electron.removeRecipe(oldRecipeName);
+        console.log(status);
+      }
+    }
+
+    let discard = document.getElementById('discard');
+    discard.addEventListener('click', (event) => {
+      clearData();
+      document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+      document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    });
+
+    let json = buildJSONFromForm();
+    createRecipeCard(json);
+
+    // add to front-end copy of dictionary
+    frontEndRecipeDict[json.name] = json;
+
+    // Save file to local storage
+    recipeName = strStrip(json['name']);
+    let file = `${recipeName}.json`;
+    let status = window.electron.addRecipe(json, recipeName);
+    console.log(status);
+  });
+
+  //let imageInput = document.querySelector('input#file[type="file"][name="image]');
+  const img = document.getElementById('output');
+  img.addEventListener('error', function (event) {
+    event.target.src = './assets/images/default-image.jpg';
+    event.onerror = null;
+  });
+
+  let imageInput = document.getElementById('file');
+  console.log(imageInput);
+  imageInput.addEventListener('change', (event) => {
+    imageInput[IMAGE_CHANGED] = true;
+    let image = document.getElementById('output');
+    let imageFile = imageInput.files[0];
+
+    // reference to this image for this session is only used to display the image preview
+    if (imageFile) image.src = URL.createObjectURL(imageFile);
+
+    // write image to local dir that we know the location of.
+    // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
+    console.log(imageFile.path);
+  });
+}
 
 /**
  * Make a new `recipe-card` and prepend it to the list of cards in the front end
@@ -160,28 +188,6 @@ function buildJSONFromForm() {
   };
   return newRecipe;
 }
-
-//let imageInput = document.querySelector('input#file[type="file"][name="image]');
-const img = document.getElementById('output');
-img.addEventListener('error', function (event) {
-  event.target.src = './assets/images/default-image.jpg';
-  event.onerror = null;
-});
-
-let imageInput = document.getElementById('file');
-console.log(imageInput);
-imageInput.addEventListener('change', (event) => {
-  imageInput[IMAGE_CHANGED] = true;
-  let image = document.getElementById('output');
-  let imageFile = imageInput.files[0];
-
-  // reference to this image for this session is only used to display the image preview
-  if (imageFile) image.src = URL.createObjectURL(imageFile);
-
-  // write image to local dir that we know the location of.
-  // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
-  console.log(imageFile.path);
-});
 
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
