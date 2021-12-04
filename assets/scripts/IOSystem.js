@@ -18,7 +18,7 @@ const JSON_EXT_LEN = 5;
  * @method dumpJSON takes a JS object and a file path, and writes it to that file path.
  * @method eraseFileAt takes a file path and erases the file found there. Dangerous; use with safety checks.
  * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
- * @author @Lord-Scrubington-II
+ * @author Zane Wang: @Lord-Scrubington-II
  */
 class IOSystem {
   static recipesDict = {};
@@ -255,8 +255,8 @@ class IOSystem {
   }
 
   /**
-   * Converts a string-encoded binary into an image and then write it to disk at
-   * the specified location.
+   * Converts a string-encoded binary into an image by decoding using base64
+   * and then write it to disk at the specified location.
    * @param {string} jString The string to convert into an image.
    */
   static decodeStringToImage(jString, dir, imageName) {}

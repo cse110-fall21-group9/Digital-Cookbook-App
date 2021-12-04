@@ -1,3 +1,10 @@
+/**
+ * File: preload.js
+ * This file is used to expose ipcRenderer functions via the context bridge
+ * to front-end scripts that live in the DOM.
+ * These functions can be used to send messages to main.js via our
+ * established transmission protocols.
+ */
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
