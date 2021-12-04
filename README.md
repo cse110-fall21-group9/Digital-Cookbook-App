@@ -7,8 +7,8 @@ This is a desktop app that runs using electron.js and other web technologies.
 ## Installation for Devs
 1. Fork or Clone this repository
 2. Navigate to the root folder in your preferred shell
-3. Ensure that you have a recent LTS version of Node.js and NPM installed.
-4. Run `npm install`. NPM should install all of this app's dependencies for you.
+3. Ensure that you have a recent LTS version of Node.js and npm installed.
+4. Run `npm install`. npm should install all of this app's dependencies for you.
 5. Run `npm start`. This will invoke the electron runtime environment and open the app window on your desktop.
 
 ## Core Features
