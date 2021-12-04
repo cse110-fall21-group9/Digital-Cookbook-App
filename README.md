@@ -3,12 +3,17 @@
 
 A digital cookbook app by UC San Diego CSE 110 Group 9 - `import pandas`. A desktop app that uses electron and other web technologies.
 
-
+## Installation for Devs
+1. Fork or Clone this repository
+2. Navigate to the root folder in your preferred shell
+3. Ensure that you have a recent LTS version of Node.js and NPM installed.
+4. Run `npm install`. NPM should install all of this app's dependencies for you.
+5. Run `npm start`. This will invoke the electron runtime environment and open the app window on your desktop.
 
 ## Core Features
 - [x] Create
 - [x] Read
-- [x] update
+- [x] Update
 - [x] Delete
 - [x] Electron Desktop App
 - [x] Styling
