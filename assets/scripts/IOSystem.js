@@ -193,6 +193,7 @@ class IOSystem {
    * @param {string} fileName name of the .rcpkg file *WITHOUT THE EXTENSION!*
    */
   static zipRCPackage(recipes, dir, fileName) {
+    // TESTME: check for the existence of the file after the async op has been completed
     let toDump = {
       recipeArray: recipes,
     };
@@ -208,6 +209,10 @@ class IOSystem {
    * @returns {object[]} an object array with the recipe JSON objects inside.
    */
   static unzipRCPackage(dir, fileName) {
+    // TESTME: ensure that:
+    // 1. The JSON object has the correct array of items in it
+    // 2. The files with the wrong extension are rejected
+    // 3. No other items are in the JSON object
     let recArray = [];
 
     // confirm that the file has the right extension
@@ -235,6 +240,8 @@ class IOSystem {
     return recArray;
   }
 
+  // UNFINISHED METHODS:
+
   /**
    * Reads & converts a File's contents into a string.
    * Can be used for converting images & other Blob types into a JSON-compatible format.
@@ -254,6 +261,7 @@ class IOSystem {
    */
   static decodeStringToImage(jString, dir, imageName) {}
 
+  // DEPRECATED METHODS:
   /**
    * Unpacks a JSON file into a JS object.
    * TODO: may be unnecessary if we do not get JSON files directly from users.
