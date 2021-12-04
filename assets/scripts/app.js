@@ -148,18 +148,22 @@ function buildJSONFromForm() {
   let tag = 'Gluten Free';
   let imgURL = '.png';
   let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
+  let openedFromRecipe = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
   if (document.getElementById('output').src !== undefined) {
+    // only set a new image if it was changed by the user OR opened from the new recipe button
     if (imgChanged) {
       let imageInput = document.getElementById('file');
       let imageFile = imageInput.files[0];
-      if (imageFile) {
+
+      // we expect the image to be in a known directory pending a file operation request
+      if (!!imageFile && openedFromRecipe != '') {
         imgURL = IMAGES_DIR + imageFile.name;
       } else {
         imgURL = './assets/images/default-image.jpg';
       }
     } else {
-      let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
-      imgURL = frontEndRecipeDict[recipeName].image; // restore original image URL it it was not changed
+      // restore original image URL it it was not changed
+      imgURL = frontEndRecipeDict[openedFromRecipe].image;
     }
   }
 
