@@ -1,5 +1,5 @@
-import { frontEndRecipeDict } from './app.js';
-import { showRecipe } from './app.js';
+import {frontEndRecipeDict} from './app.js';
+import {showRecipe} from './app.js';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 
@@ -7,7 +7,7 @@ class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
     super();
-    this.attachShadow({ mode: 'open' });
+    this.attachShadow({mode: 'open'});
   }
 
   strStrip(name) {
