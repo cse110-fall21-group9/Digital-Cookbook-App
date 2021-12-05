@@ -332,6 +332,40 @@ function clearData() {
   document.getElementById('output').src = '';
 }
 
+async function exportRecipes() {
+  let recipeCardsContainer = document.querySelector('.recipe-card');
+  let recipeCardsDivs = Array.from(recipeCardsContainer.children);
+  let recipesToExport = [];
+  for (let div of recipeCardsDivs) {
+    if (isSelected(div)) {
+      recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
+    }
+  }
+  let recipesStrings = JSON.stringify(recipesToExport);
+  try {
+    let blob = new Blob(recipesStrings, {type: 'application/json'});
+    let fileHandle = Window.showSaveFilePicker({
+      types: [{description: 'JSON', accept: {'application/json': [',json']}}],
+    });
+    const writableStream = await fileHandle.createWritable();
+    await writableStream.write(blob);
+    await writableStream.close();
+  } catch (err) {
+    // AbortError is thrown if user didn't select a file.
+    if (!(err instanceof AbortError)) {
+      throw err;
+    }
+  }
+}
+
+function isSelected(recipeCardDiv) {
+  return false;
+}
+
+function getRecipeName(recipeCardDiv) {
+  return '';
+}
+
 /* <div class="container-fluid">
   <!-- View Ingredients/Directions Buttons  -->
   <div class="row">
