@@ -332,36 +332,34 @@ function clearData() {
   document.getElementById('output').src = '';
 }
 
-/* <div class="container-fluid">
-  <!-- View Ingredients/Directions Buttons  -->
-  <div class="row">
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-success btn-lg">View
-              Ingredients</button>
-      </div>
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-danger btn-lg">View Directions</button>
-      </div>
-      <div class="recipe-name col-6 text-center text-nowrap">Recipe Name Here</div>
-  </div>
-  <div class="row">
-      <div class="col-6 mt-4 border border-dark rounded">
-          <!-- This is where Ingredients/Directions should go -->
-          <div class="py-3 px-2" id="making-recipe">
-              Some default text...
-          </div>
-      </div>
-      <div class="col-6">
-          <img src="../images/burrito.jpeg" class="img-thumbnail mb-5" alt="stock image">
-          <ul class="list-unstyled border border-dark rounded px-3 py-3">
-              <li class="mb-2" id="prep"> Prep Time: </li>
-              <li class="mb-2" id="cook-time"> Cook Time: </li>
-              <li class="mb-2" id="servings"> Servings Yield: </li>
-              <li id="url"> URL: </li>
-          </ul>
-          <div class="border border-dark">
-              Future Timer coming soon...
-          </div>
-      </div>
-  </div>
-</div> */
+function exportRecipes() {
+  let recipeCardsContainer = document.querySelector('.recipe-cards');
+  let recipeCardsDivs = Array.from(recipeCardsContainer.children);
+  let recipesToExport = [];
+  for (let div of recipeCardsDivs) {
+    if (isSelected(div)) {
+      console.log(div);
+      recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
+    }
+  }
+
+  if (recipesToExport.length === 0) {
+    return;
+  }
+
+  try {
+    let path = window.electron.showFileDialog();
+    window.electron.export(recipesToExport, path);
+  } catch (err) {
+    console.log(err);
+  }
+}
+document.getElementById('export-button').addEventListener('click', exportRecipes);
+
+function isSelected(recipeCardDiv) {
+  return recipeCardDiv.getAttribute('data-selected') === 'true';
+}
+
+function getRecipeName(recipeCardDiv) {
+  return recipeCardDiv.classList[0];
+}

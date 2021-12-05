@@ -141,6 +141,7 @@ class recipeCard extends HTMLElement {
           
         `;
     card.classList.add('recipe');
+    card['data-selected'] = false;
 
     // Grab the thumbnail
     const imgWrapper = document.createElement('div');
@@ -175,6 +176,19 @@ class recipeCard extends HTMLElement {
     title.id = 'name';
     title.textContent = data.name;
     recipeContent.appendChild(title);
+
+    // Create checkbox
+    const select = document.createElement('div');
+    select.classList.add('check-box');
+    select.innerHTML = ` 
+         <input type="checkbox" id = "check-box">
+         `;
+    recipeContent.appendChild(select);
+    const select_callback = () => {
+      let div = document.querySelector(`recipe-card[class=${this.strStrip(title.textContent)}]`);
+      let before = div.getAttribute('data-selected');
+      div.setAttribute('data-selected', before !== 'true');
+    };
 
     // Get description
     const desc = document.createElement('p');
@@ -212,6 +226,10 @@ class recipeCard extends HTMLElement {
 
     // View Recipe
     card.addEventListener('click', (event) => {
+      if (event.target.id === 'check-box') {
+        select_callback();
+        return;
+      }
       if (
         event.target.id === 'fav' ||
         event.target.id === 'edit' ||

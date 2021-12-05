@@ -28,8 +28,8 @@
                 <nav class="nav-style">
                     <a id="add" href="#">Create Recipe</a>
                     <a href="#">Favorites</a>
-                    <a href="#">Meal Planner</a>
-                    <a href="#">Shopping List</a>
+                    <button type="button" id="import-button">Import</button>
+                    <button type="button" id="export-button">Export</button>
                 </nav>
             </div>
             <!-- 2nd Column Search Bar and MainLayout -->
@@ -39,11 +39,13 @@
                     <!-- Search Bar -->
                     <div class="row mt-4 mb-4">
                         <div class="col-1 col-md-1 col-lg-1">
-                            <a href="./index.html"><div class="btn btn-outline-primary">
-                                Home
-                            </div></a>               
+                            <a href="./index.html">
+                                <div class="btn btn-outline-primary">
+                                    Home
+                                </div>
+                            </a>
                         </div>
-                        <div class="col-10 offset-1 col-md-6 offset-md-4 col-lg-3 offset-lg-7"> 
+                        <div class="col-10 offset-1 col-md-6 offset-md-4 col-lg-3 offset-lg-7">
                             <!-- Borrowed from https://mdbootstrap.com/docs/standard/forms/search/ -->
                             <div class="input-group rounded">
                                 <input type="search" class="form-control rounded" placeholder="Search for Recipe"
@@ -57,7 +59,7 @@
                 </div>
                 <!-- First Recipe Card Row -->
                 <article class="recipe-cards"></article>
-                <div class="container-fluid" id="view-recipe"></div> 
+                <div class="container-fluid" id="view-recipe"></div>
                 <div id="footer"></div>
             </div>
         </div>
@@ -85,7 +87,8 @@
                         <button class="px-4" id="discard">Discard</button>
                     </div>
                     <p>
-                        <input type="file" accept="image/*" name="image" id="file" style="display: none" data-changed="true" />
+                        <input type="file" accept="image/*" name="image" id="file" style="display: none"
+                            data-changed="true" />
                     </p>
                     <p><label id="upload" for="file" style="cursor: pointer">Upload Image</label></p>
                 </div>
@@ -127,4 +130,5 @@
     <script src="assets/scripts/app.js" type="module"></script>
     <script src="assets/scripts/recipeCard.js" type="module"></script>
 </body>
+
 </html>
