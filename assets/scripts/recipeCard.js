@@ -3,6 +3,10 @@ import {showRecipe} from './app.js';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 
+function strStrip(name) {
+  return name.replace(/\s/g, '');
+}
+
 class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
@@ -10,9 +14,7 @@ class recipeCard extends HTMLElement {
     this.attachShadow({mode: 'open'});
   }
 
-  strStrip(name) {
-    return name.replace(/\s/g, '');
-  }
+
 
   get data() {
     return this.json;
@@ -40,7 +42,7 @@ class recipeCard extends HTMLElement {
             display: flex;
             flex-wrap: wrap;
             height: auto;
-            max-width: 300px;
+            width: 250px;
             margin-bottom: 30px
             column-gap: 10px;
             row-gap: 5px
@@ -74,26 +76,28 @@ class recipeCard extends HTMLElement {
             color: #fff;
             margin: 5px ;
             background-color: #BB5274;
-            padding: .125rem 1rem;
+            padding: .115rem 1rem;
             border-radius: 100px;
         }
         
         h1[id ^= "name"] {
             margin: .25rem .5rem .25rem 1rem;
-            font-size: 25px;
+            font-size: 20px;
             font-weight: 700;
             letter-spacing: -1px;
         }
         
         p[id ^= "info"] {
             margin: .5rem .5rem .5rem 1rem;
-            font-size: 20px;
+            font-size: 15px;
             color: inhereit;
+            height: 32px;
+            line-height: 16px;
+            overflow: hidden;
         }
         
         .recipe-time {
-          margin-left: 20px;
-          margin-bottom: 15px;
+          margin: .5rem .5rem .5rem 1rem
         }
         .recipe .buttons {
             display: flex;
@@ -231,8 +235,8 @@ class recipeCard extends HTMLElement {
     let share = card.getElementsByClassName('share').item(0);
     // Edit recipe
     edit.addEventListener('click', (event) => {
-      // let recipeData = window.electron.acquireRecipe(this.strStrip(title.textContent));
-      let recipeData = frontEndRecipeDict[data.name]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
+      // let recipeData = window.electron.acquireRecipe(strStrip(title.textContent));
+      let recipeData = frontEndRecipeDict[strStrip(data.name)]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
       console.log(document.getElementById('add-recipe').classList);
       console.log(recipeData);
       fillData(recipeData);
@@ -243,12 +247,12 @@ class recipeCard extends HTMLElement {
       if (!confirm('Are you sure you want to delete this recipe?')) {
         event.preventDefault();
       } else {
-        window.electron.removeRecipe(this.strStrip(title.textContent));
+        window.electron.removeRecipe(strStrip(title.textContent));
         const parent = document.querySelector('article.recipe-cards');
         let removeCard = document.querySelector(
-          `recipe-card[class=${this.strStrip(title.textContent)}]`
+          `recipe-card[class=${strStrip(title.textContent)}]`
         );
-        Reflect.deleteProperty(frontEndRecipeDict, data.name);
+        Reflect.deleteProperty(frontEndRecipeDict, strStrip(data.name));
         parent.removeChild(removeCard);
       }
     });
@@ -265,7 +269,7 @@ function fillData(recipeData) {
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
-  document.getElementById('add-recipe')['data-opened-from'] = recipeData.name.replace(/\s/g, '');
+  document.getElementById('add-recipe')['data-opened-from'] = strStrip(recipeData.name);
   document.getElementById('output')['src'] = recipeData.image;
   // give the image upload form a state saying that it was opened from "edit" and should only apply itself
   // if the image was changed.

@@ -1,4 +1,6 @@
+// import { doc } from "prettier";
 export var frontEndRecipeDict = {};
+var displayedList = []
 
 /**
  * Strip the spaces from a given string
@@ -15,14 +17,39 @@ const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGE
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const RECIPE_FORM_ID = 'add-recipe';
+const SEARCH_BAR = 'search-bar';
+
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log('Received from back end:');
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    displayedList.push(val);
     createRecipeCard(val);
   });
+});
+
+const removeChildren = (parent) => {
+  while (parent.lastChild) {
+      parent.removeChild(parent.lastChild);
+  }
+};
+
+// Search bar function
+let search = document.getElementById(SEARCH_BAR);
+search.addEventListener('keyup', (e) => {
+  const searchString = e.target.value.toLowerCase();
+  const filteredRecipes = displayedList.filter( recipe => {
+    return recipe.name.toLowerCase().includes(searchString);
+  });
+  
+  let container = document.querySelector('.recipe-cards');
+  removeChildren(container);
+
+  for (let i = 0; i < filteredRecipes.length; i++) {
+    createRecipeCard(filteredRecipes[i]);
+  }
 });
 
 // Save button for add new recipe
@@ -89,7 +116,7 @@ save.addEventListener('click', () => {
   createRecipeCard(json);
 
   // add to front-end copy of dictionary
-  frontEndRecipeDict[json.name] = json;
+  frontEndRecipeDict[strStrip(json.name)] = json;
 
   // Save file to local storage
   recipeName = strStrip(json['name']);
@@ -131,7 +158,8 @@ function buildJSONFromForm() {
       }
     } else {
       let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
-      imgURL = frontEndRecipeDict[recipeName].image; // restore original image URL it it was not changed
+      console.log(recipeName);
+      imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
     }
   }
 
@@ -185,7 +213,8 @@ imageInput.addEventListener('change', (event) => {
 
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
-  let jsonData = frontEndRecipeDict[recipe.name];
+  let jsonData = frontEndRecipeDict[strStrip(recipe.name)];
+  console.log(jsonData);
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name
