@@ -129,8 +129,9 @@ class IOSystem {
      */
     // Basic tests passed
     if (!this.pathFormatValid(dir) || !data || !fileName) {
-      throw `"${dir}" is not a valid directory format!`;
+      throw new Error(`"${dir}" is not a valid directory format!`);
     }
+    console.log(`LOC: ${fileName}`);
     if (!fs.existsSync(dir)) {
       // does the directory exist?
       fs.mkdirSync(dir);
@@ -192,14 +193,16 @@ class IOSystem {
    * @param {string} dir directory to zip the .rcpkg file into.
    * @param {string} fileName name of the .rcpkg file *WITHOUT THE EXTENSION!*
    */
-  static zipRCPackage(recipes, dir, fileName) {
+  static zipRCPackage(recipes, fullpath) {
     // TESTME: check for the existence of the file after the async op has been completed
     let toDump = {
       recipeArray: recipes,
     };
-
+    const fileName = path.basename(fullpath);
+    const dir = path.dirname(fullpath) + '/';
+    console.log(`BE: ${fullpath}`);
     // .rcpkg files are really JSON with a single array inside.
-    dumpJSON(toDump, dir, fileName + '.rcpkg');
+    this.dumpJSON(toDump, dir, fileName + '.rcpkg');
   }
 
   /**
@@ -208,12 +211,14 @@ class IOSystem {
    * @param {string} fileName name of the .rcpkg file (including the extension).
    * @returns {object[]} an object array with the recipe JSON objects inside.
    */
-  static unzipRCPackage(dir, fileName) {
+  static unzipRCPackage(fullpath) {
     // TESTME: ensure that:
     // 1. The JSON object has the correct array of items in it
     // 2. The files with the wrong extension are rejected
     // 3. No other items are in the JSON object
     let recArray = [];
+    const fileName = path.basename(fullpath);
+    const dir = path.dirname(fullpath) + '/';
 
     // confirm that the file has the right extension
     const fileNameExt = fileName

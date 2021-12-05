@@ -332,36 +332,34 @@ function clearData() {
   document.getElementById('output').src = '';
 }
 
-async function exportRecipes() {
-  let recipeCardsContainer = document.querySelector('.recipe-card');
+function exportRecipes() {
+  let recipeCardsContainer = document.querySelector('.recipe-cards');
   let recipeCardsDivs = Array.from(recipeCardsContainer.children);
   let recipesToExport = [];
   for (let div of recipeCardsDivs) {
     if (isSelected(div)) {
+      console.log(div);
       recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
     }
   }
-  let recipesStrings = JSON.stringify(recipesToExport);
+
+  if (recipesToExport.length === 0) {
+    return;
+  }
+
   try {
-    let blob = new Blob(recipesStrings, {type: 'application/json'});
-    let fileHandle = Window.showSaveFilePicker({
-      types: [{description: 'JSON', accept: {'application/json': [',json']}}],
-    });
-    const writableStream = await fileHandle.createWritable();
-    await writableStream.write(blob);
-    await writableStream.close();
+    let path = window.electron.showFileDialog();
+    window.electron.export(recipesToExport, path);
   } catch (err) {
-    // AbortError is thrown if user didn't select a file.
-    if (!(err instanceof AbortError)) {
-      throw err;
-    }
+    console.log(err);
   }
 }
+document.getElementById('export-button').addEventListener('click', exportRecipes);
 
 function isSelected(recipeCardDiv) {
-  return false;
+  return recipeCardDiv.getAttribute('data-selected') === 'true';
 }
 
 function getRecipeName(recipeCardDiv) {
-  return '';
+  return recipeCardDiv.classList[0];
 }
