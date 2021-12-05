@@ -1,8 +1,10 @@
 # The `import pandas` Cookbook
 [![GitHub Super-Linter](https://github.com/cse110-fall21-group9/Digital-Cookbook-App/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-A digital cookbook created for UC San Diego CSE 110 - Software Engineering. We are group 9, the `import pandas`.  
-This is a desktop app that runs using electron.js and other web technologies.
+[Documentation](https://cse110-fall21-group9.github.io/Digital-Cookbook-App/index.html)
+
+A digital cookbook created for UC San Diego CSE 110 - Software Engineering. We are Group 9, the `import pandas`!  
+This is a desktop app that runs using `electron.js` and other web technologies.
 
 ## Installation for Devs
 1. Fork or Clone this repository
@@ -18,15 +20,15 @@ This is a desktop app that runs using electron.js and other web technologies.
 - [x] Delete
 - [x] Electron Desktop App
 - [x] Styling
-- [x] Filesystem operations
-- [ ] offline import export
+- [x] Filesystem Operations
+- [ ] Offline Import/Export
 
 ## CI/CD Pipeline
 - [x] HTML5 Validation Complete
 - [x] JavaScript linting and styling
 - [x] CSS linting and styling
-- [x] Jest Testing
-- [x] Build and packaging on every commit
+- [x] Jest Unit Testing
+- [x] Automated Electron builds and packaging on every commit
 - [ ] JSDoc document generation
 - [ ] End-to-end testing
 

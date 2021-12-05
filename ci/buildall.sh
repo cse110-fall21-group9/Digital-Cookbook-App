@@ -22,7 +22,7 @@ esac
 mkdir electron-build
 cp -r assets electron-build/assets/
 cp index.html electron-build/index.html
-cp release-package.json electron-build/package.json
+cp ci/release-package.json electron-build/package.json
 
 npm run-script "build-${PLATFORM}"
 
