@@ -8,6 +8,8 @@
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
+  // Add a new lambda expression as a dictionary entry with the appropriate name
+  // to provide methods for sending messages from DOM scripts to main.js.
   // MUST USE SENDSYNC
   addRecipe: (recipeData, recipeName) => ipcRenderer.sendSync('ADD', recipeData, recipeName),
   saveImage: (imgPath, imgName) => ipcRenderer.sendSync('COPY_IMAGE', imgPath, imgName),
@@ -17,5 +19,7 @@ contextBridge.exposeInMainWorld('electron', {
   export: (recipeArray, dir, fileNameNoExtension) => {
     ipcRenderer.sendSync('RC_PACK', recipeArray, dir, fileNameNoExtension);
   },
-  import: (filePath) => ipcRenderer.sendSync('RC_UNPACK', dir, fileNameWithExtension),
+  import: (dir, fileNameWithExtension) => {
+    ipcRenderer.sendSync('RC_UNPACK', dir, fileNameWithExtension);
+  },
 });

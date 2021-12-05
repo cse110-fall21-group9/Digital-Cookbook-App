@@ -1,6 +1,6 @@
 /**
  * File: main.js
- * This file is the entry point of our app and defines a fake server that contains an node.js environment.
+ * This file is the entry point of our app and defines a fake server that contains a Node.js environment.
  * Node.js modules, the electron API (windowing methods, etc.) and message handlers live here.
  */
 
@@ -90,7 +90,6 @@ ipcMain.on('LOAD', (event) => {
  * If error occur 'FAILED' will be returned.
  * If success "SUCCESS" will be returned.
  */
-
 ipcMain.on('ADD', (event, recipeData, recipeName) => {
   try {
     IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeName}.json`);
@@ -133,13 +132,17 @@ ipcMain.on('DELETE', (event, recipeName) => {
   }
 });
 
+/**
+ * Used for acquiring a recipe directly from disk.
+ * Generally, this one probably should be avoided if possible.
+ */
 ipcMain.on('ACQUIRE', (event, recipeName) => {
   let fileDir = RECIPES_DIR + `${recipeName}.json`;
   event.returnValue = require(fileDir);
 });
 
 /**
- * Acquire the dictionary of recipes
+ * Acquire the dictionary of recipes from the backend.
  */
 ipcMain.on('CACHE_DICT', (event) => {
   event.returnValue = IOSystem.recipesDict;
