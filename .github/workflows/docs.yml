@@ -1,9 +1,6 @@
 name: GitHub pages
 
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
   deploy:
