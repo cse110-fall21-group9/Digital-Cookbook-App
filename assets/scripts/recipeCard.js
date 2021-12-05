@@ -1,5 +1,5 @@
-import {frontEndRecipeDict} from './app.js';
-import {showRecipe} from './app.js';
+import { frontEndRecipeDict } from './app.js';
+import { showRecipe } from './app.js';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 
@@ -7,7 +7,7 @@ class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
     super();
-    this.attachShadow({mode: 'open'});
+    this.attachShadow({ mode: 'open' });
   }
 
   strStrip(name) {
@@ -168,6 +168,14 @@ class recipeCard extends HTMLElement {
         <span class="recipe-tag">Breakfast</span>
         `;
     recipeContent.appendChild(tag);
+
+    // Create checkbox
+    const Select = document.createElement('div');
+    Select.classList.add('check-box');
+    Select.innerHTML = ` 
+         <input type="checkbox" id = "check-box">
+         `;
+    recipeContent.appendChild(Select);
 
     // Grab the title
     const title = document.createElement('h1');
