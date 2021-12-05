@@ -15,7 +15,6 @@ jobs:
           source_dir: ./assets
           output_dir: ./docs
           recurse: true
-          template: minami
           front_page: README.md
 
       - name: Deploy
