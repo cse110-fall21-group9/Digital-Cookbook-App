@@ -332,36 +332,36 @@ function clearData() {
   document.getElementById('output').src = '';
 }
 
-/* <div class="container-fluid">
-  <!-- View Ingredients/Directions Buttons  -->
-  <div class="row">
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-success btn-lg">View
-              Ingredients</button>
-      </div>
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-danger btn-lg">View Directions</button>
-      </div>
-      <div class="recipe-name col-6 text-center text-nowrap">Recipe Name Here</div>
-  </div>
-  <div class="row">
-      <div class="col-6 mt-4 border border-dark rounded">
-          <!-- This is where Ingredients/Directions should go -->
-          <div class="py-3 px-2" id="making-recipe">
-              Some default text...
-          </div>
-      </div>
-      <div class="col-6">
-          <img src="../images/burrito.jpeg" class="img-thumbnail mb-5" alt="stock image">
-          <ul class="list-unstyled border border-dark rounded px-3 py-3">
-              <li class="mb-2" id="prep"> Prep Time: </li>
-              <li class="mb-2" id="cook-time"> Cook Time: </li>
-              <li class="mb-2" id="servings"> Servings Yield: </li>
-              <li id="url"> URL: </li>
-          </ul>
-          <div class="border border-dark">
-              Future Timer coming soon...
-          </div>
-      </div>
-  </div>
-</div> */
+async function exportRecipes() {
+  let recipeCardsContainer = document.querySelector('.recipe-card');
+  let recipeCardsDivs = Array.from(recipeCardsContainer.children);
+  let recipesToExport = [];
+  for (let div of recipeCardsDivs) {
+    if (isSelected(div)) {
+      recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
+    }
+  }
+  let recipesStrings = JSON.stringify(recipesToExport);
+  try {
+    let blob = new Blob(recipesStrings, {type: 'application/json'});
+    let fileHandle = Window.showSaveFilePicker({
+      types: [{description: 'JSON', accept: {'application/json': [',json']}}],
+    });
+    const writableStream = await fileHandle.createWritable();
+    await writableStream.write(blob);
+    await writableStream.close();
+  } catch (err) {
+    // AbortError is thrown if user didn't select a file.
+    if (!(err instanceof AbortError)) {
+      throw err;
+    }
+  }
+}
+
+function isSelected(recipeCardDiv) {
+  return false;
+}
+
+function getRecipeName(recipeCardDiv) {
+  return '';
+}
