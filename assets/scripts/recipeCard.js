@@ -216,7 +216,6 @@ class recipeCard extends HTMLElement {
                 <div id="myDropdown" class="dropdown-content">
                     <a href="#" class="edit" id="edit">Edit</a>
                     <a href="#" class="delete" id="delete">Delete</a>
-                    <a href="#" class="share" id="share">Share</a>
                 </div>
             </div>
         </div>
