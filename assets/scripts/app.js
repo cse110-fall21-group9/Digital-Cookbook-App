@@ -29,6 +29,7 @@ window.addEventListener('DOMContentLoaded', () => {
     displayedList.push(val);
     createRecipeCard(val);
   });
+  init();
 });
 
 export const removeChildren = (parent) => {
@@ -96,41 +97,6 @@ function addTag(e) {
   });
 }
 
-let tagInput = document.querySelector('.tag-input input');
-// if open add-recipe button
-tagInput.addEventListener('keyup', addTag);
-
-// Save button for add new recipe
-let addButton = document.getElementById('add');
-addButton.addEventListener('click', () => {
-  document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
-
-  // tell the form that it was opened from the "add-recipe" button
-  document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
-
-  // by default, the image for a new recipe has been "changed"
-  document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
-  console.log(document.getElementById(RECIPE_FORM_ID).classList);
-  clearData();
-});
-
-// Close the add function
-let close = document.getElementById('close');
-close.addEventListener('click', () => {
-  document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-  document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-  console.log(document.getElementById(RECIPE_FORM_ID).classList);
-});
-
-// Discard button
-let discard = document.getElementById('discard');
-  discard.addEventListener('click', (event) => {
-    clearData();
-    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-  });
-
 // Create JSON file when click "Save"
 let save = document.getElementById('save');
 save.addEventListener('click', () => {
@@ -142,7 +108,7 @@ save.addEventListener('click', () => {
   let recipeName = strStrip(document.getElementById('recipe-name').value);
   let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
 
-  //Save image
+  // Save image
   let imageInput = document.getElementById('file');
   let imageFile = imageInput.files[0];
   console.log(imageFile);
@@ -160,19 +126,79 @@ save.addEventListener('click', () => {
       console.log(status);
     }
   }
-  
 
   let json = buildJSONFromForm();
   createRecipeCard(json);
 
   // add to front-end copy of dictionary
-  frontEndRecipeDict[strStrip(json.name)] = json;
+  frontEndRecipeDict[json.name] = json;
 
   // Save file to local storage
   recipeName = strStrip(json['name']);
   let file = `${recipeName}.json`;
   let status = window.electron.addRecipe(json, recipeName);
   console.log(status);
+});
+/**
+ * Initialize all of our event handlers.
+ */
+function init() {
+    // Tag function for recipe 
+  let tagInput = document.querySelector('.tag-input input');
+  tagInput.addEventListener('keyup', addTag);
+
+  // Save button for add new recipe
+  let addButton = document.getElementById('add');
+  addButton.addEventListener('click', () => {
+    document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
+
+    // tell the form that it was opened from the "add-recipe" button
+    document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
+
+    // by default, the image for a new recipe has been "changed"
+    document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
+    clearData();
+  });
+
+  // Close the add function
+  let close = document.getElementById('close');
+  close.addEventListener('click', () => {
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
+  });
+
+  // Discard button
+  let discard = document.getElementById('discard');
+    discard.addEventListener('click', (event) => {
+      clearData();
+      document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+      document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    });
+}
+
+//let imageInput = document.querySelector('input#file[type="file"][name="image]');
+const img = document.getElementById('output');
+img.addEventListener('error', function (event) {
+  event.target.src = './assets/images/default-image.jpg';
+  event.onerror = null;
+});
+
+let imageInput = document.getElementById('file');
+console.log(imageInput);
+imageInput.addEventListener('change', (event) => {
+  imageInput[IMAGE_CHANGED] = true;
+  let image = document.getElementById('output');
+  let imageFile = imageInput.files[0];
+
+  // reference to this image for this session is only used to display the image preview
+  if (imageFile) image.src = URL.createObjectURL(imageFile);
+
+  // write image to local dir that we know the location of.
+  // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
+  console.log(imageFile.path);
 });
 
 /**
@@ -197,19 +223,31 @@ function buildJSONFromForm() {
   let tag = tags;
   let imgURL = '.png';
   let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
+  let openedFromRecipe = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
   if (document.getElementById('output').src !== undefined) {
+    // only set a new image if it was changed by the user OR opened from the new recipe button
     if (imgChanged) {
       let imageInput = document.getElementById('file');
       let imageFile = imageInput.files[0];
-      if (imageFile) {
+
+      // we expect the image to be in a known directory pending a file operation request
+      if (!!imageFile && openedFromRecipe != '') {
         imgURL = IMAGES_DIR + imageFile.name;
       } else {
         imgURL = './assets/images/default-image.jpg';
       }
+      // if (imageFile) {
+      //   imgURL = IMAGES_DIR + imageFile.name;
+      // } else {
+      //   imgURL = './assets/images/default-image.jpg';
+      // }
+
     } else {
       let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
       console.log(recipeName);
-      imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
+      // imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
+      // restore original image URL it it was not changed
+      imgURL = frontEndRecipeDict[openedFromRecipe].image;
     }
   }
 
@@ -238,28 +276,6 @@ function buildJSONFromForm() {
   };
   return newRecipe;
 }
-
-//let imageInput = document.querySelector('input#file[type="file"][name="image]');
-const img = document.getElementById('output');
-img.addEventListener('error', function (event) {
-  event.target.src = './assets/images/default-image.jpg';
-  event.onerror = null;
-});
-
-let imageInput = document.getElementById('file');
-console.log(imageInput);
-imageInput.addEventListener('change', (event) => {
-  imageInput[IMAGE_CHANGED] = true;
-  let image = document.getElementById('output');
-  let imageFile = imageInput.files[0];
-
-  // reference to this image for this session is only used to display the image preview
-  if (imageFile) image.src = URL.createObjectURL(imageFile);
-
-  // write image to local dir that we know the location of.
-  // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
-  console.log(imageFile.path);
-});
 
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
@@ -404,36 +420,34 @@ function clearData() {
   tags = [];
 }
 
-/* <div class="container-fluid">
-  <!-- View Ingredients/Directions Buttons  -->
-  <div class="row">
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-success btn-lg">View
-              Ingredients</button>
-      </div>
-      <div class="col-3">
-          <button type="button" class="btn btn-outline-danger btn-lg">View Directions</button>
-      </div>
-      <div class="recipe-name col-6 text-center text-nowrap">Recipe Name Here</div>
-  </div>
-  <div class="row">
-      <div class="col-6 mt-4 border border-dark rounded">
-          <!-- This is where Ingredients/Directions should go -->
-          <div class="py-3 px-2" id="making-recipe">
-              Some default text...
-          </div>
-      </div>
-      <div class="col-6">
-          <img src="../images/burrito.jpeg" class="img-thumbnail mb-5" alt="stock image">
-          <ul class="list-unstyled border border-dark rounded px-3 py-3">
-              <li class="mb-2" id="prep"> Prep Time: </li>
-              <li class="mb-2" id="cook-time"> Cook Time: </li>
-              <li class="mb-2" id="servings"> Servings Yield: </li>
-              <li id="url"> URL: </li>
-          </ul>
-          <div class="border border-dark">
-              Future Timer coming soon...
-          </div>
-      </div>
-  </div>
-</div> */
+function exportRecipes() {
+  let recipeCardsContainer = document.querySelector('.recipe-cards');
+  let recipeCardsDivs = Array.from(recipeCardsContainer.children);
+  let recipesToExport = [];
+  for (let div of recipeCardsDivs) {
+    if (isSelected(div)) {
+      console.log(div);
+      recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
+    }
+  }
+
+  if (recipesToExport.length === 0) {
+    return;
+  }
+
+  try {
+    let path = window.electron.showFileDialog();
+    window.electron.export(recipesToExport, path);
+  } catch (err) {
+    console.log(err);
+  }
+}
+document.getElementById('export-button').addEventListener('click', exportRecipes);
+
+function isSelected(recipeCardDiv) {
+  return recipeCardDiv.getAttribute('data-selected') === 'true';
+}
+
+function getRecipeName(recipeCardDiv) {
+  return recipeCardDiv.classList[0];
+}
