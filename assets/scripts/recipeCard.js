@@ -7,7 +7,6 @@ const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 const TAG_LIST = 'tag-items';
 
-
 function strStrip(name) {
   return name.replace(/\s/g, '');
 }
@@ -18,7 +17,6 @@ class recipeCard extends HTMLElement {
     super();
     this.attachShadow({mode: 'open'});
   }
-
 
   get data() {
     return this.json;
@@ -171,7 +169,7 @@ class recipeCard extends HTMLElement {
 
     // Create tags
     const tag = document.createElement('p');
-    tag.classList.add('recipe-tags');      
+    tag.classList.add('recipe-tags');
 
     for (let i = 0; i < data.metadata.labels.length; i++) {
       tag.innerHTML += ` 
@@ -219,10 +217,10 @@ class recipeCard extends HTMLElement {
     recipeContent.appendChild(time);
     card.appendChild(recipeContent);
 
-     // Create checkbox (Added)
+    // Create checkbox (Added)
     //  const Select = document.createElement('label');
     //  Select.classList.add('check-box');
-    //  Select.innerHTML = ` 
+    //  Select.innerHTML = `
     //        <input type="checkbox">
     //        `;
     //  recipeContent.appendChild(Select);
@@ -242,7 +240,6 @@ class recipeCard extends HTMLElement {
         `;
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
-    
 
     // Select Recipe (added)
     // document.getElementById('check').addEventListener('click', (event) => {
@@ -297,7 +294,6 @@ class recipeCard extends HTMLElement {
         );
         Reflect.deleteProperty(frontEndRecipeDict, strStrip(data.name));
         parent.removeChild(removeCard);
-
       }
     });
   }
@@ -332,7 +328,7 @@ function fillData(recipeData) {
     `;
     document.getElementById(TAG_LIST).appendChild(tagItem);
   }
-  // Close button for new tag 
+  // Close button for new tag
   // let newTag = document.getElementById(`${tag}`);
   // newTag.addEventListener('click', function() {
   //   let parent = newTag.parentNode.parentNode;

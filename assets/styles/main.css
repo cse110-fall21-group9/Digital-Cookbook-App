@@ -130,6 +130,7 @@ body {
   border-radius: 10 px;
   cursor: pointer;
 }
+
 div .tag-list {
   display: flex;
   flex-wrap: wrap;
@@ -148,7 +149,7 @@ div .item {
 
 span .delete-btn {
   display: inline-block;
-  margin: 0px 2px;
+  margin: 1px 2px;
   width: 8px;
   text-align: center;
   color: #555;

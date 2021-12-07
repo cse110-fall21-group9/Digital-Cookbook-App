@@ -3,6 +3,7 @@ export var frontEndRecipeDict = {};
 export var displayedList = [];
 const TAG_LIST = 'tag-items';
 var tags = [];
+
 /**
  * Strip the spaces from a given string
  * @param {string} name a string to strip the spaces from
@@ -20,7 +21,6 @@ const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const RECIPE_FORM_ID = 'add-recipe';
 const SEARCH_BAR = 'search-bar';
 
-
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log('Received from back end:');
@@ -34,7 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 export const removeChildren = (parent) => {
   while (parent.lastChild) {
-      parent.removeChild(parent.lastChild);
+    parent.removeChild(parent.lastChild);
   }
 };
 
@@ -47,11 +47,11 @@ search.addEventListener('keyup', (e) => {
   Object.keys(frontEndRecipeDict).forEach((key) => {
     console.log(frontEndRecipeDict[key]);
     displayedList.push(frontEndRecipeDict[key]);
-  })
-  const filteredRecipes = displayedList.filter( recipe => {
+  });
+  const filteredRecipes = displayedList.filter((recipe) => {
     return recipe.name.toLowerCase().includes(searchString);
   });
-  
+
   let container = document.querySelector('.recipe-cards');
   removeChildren(container);
 
@@ -60,17 +60,17 @@ search.addEventListener('keyup', (e) => {
   }
 });
 
-// Tag function 
+// Tag function
 function addTag(e) {
-  let code = (e.keyCode ? e.keyCode: e.which);
+  let code = e.keyCode ? e.keyCode : e.which;
   // If user hit "Enter"
   if (code != 13) {
-    return
+    return;
   }
 
   let tag = e.target.value.trim();
   if (tag.length < 1 || tags.includes(tag) || tags.length >= 3) {
-    e.target.value = "";
+    e.target.value = '';
     return;
   }
 
@@ -85,11 +85,11 @@ function addTag(e) {
     <span>${tag}</span>
   `;
   document.getElementById(TAG_LIST).appendChild(tagItem);
-  e.target.value = "";
+  e.target.value = '';
 
-  // Close button for new tag 
+  // Close button for new tag
   let newTag = document.getElementById(`${tag}`);
-  newTag.addEventListener('click', function() {
+  newTag.addEventListener('click', function () {
     let parent = newTag.parentNode.parentNode;
     parent.removeChild(newTag.parentNode);
     let index = tags.indexOf(`${tag}`);
@@ -143,7 +143,7 @@ save.addEventListener('click', () => {
  * Initialize all of our event handlers.
  */
 function init() {
-    // Tag function for recipe 
+  // Tag function for recipe
   let tagInput = document.querySelector('.tag-input input');
   tagInput.addEventListener('keyup', addTag);
 
@@ -172,11 +172,11 @@ function init() {
 
   // Discard button
   let discard = document.getElementById('discard');
-    discard.addEventListener('click', (event) => {
-      clearData();
-      document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-      document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-    });
+  discard.addEventListener('click', (event) => {
+    clearData();
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+  });
 }
 
 //let imageInput = document.querySelector('input#file[type="file"][name="image]');
@@ -241,7 +241,6 @@ function buildJSONFromForm() {
       // } else {
       //   imgURL = './assets/images/default-image.jpg';
       // }
-
     } else {
       let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
       console.log(recipeName);
@@ -385,7 +384,6 @@ export function showRecipe(recipe) {
   date.innerHTML = `Date Created: ${jsonData.metadata.time_added}`;
   metaData.appendChild(date);
   row2.appendChild(finalCol);
-
 
   // Attach the whole container to the shadow DOM
   container.appendChild(row2);
