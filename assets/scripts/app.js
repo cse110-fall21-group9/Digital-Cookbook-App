@@ -1,7 +1,8 @@
 // import { doc } from "prettier";
 export var frontEndRecipeDict = {};
-var displayedList = []
-
+var displayedList = [];
+const TAG_LIST = 'tag-items';
+var tags = [];
 /**
  * Strip the spaces from a given string
  * @param {string} name a string to strip the spaces from
@@ -30,7 +31,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-const removeChildren = (parent) => {
+export const removeChildren = (parent) => {
   while (parent.lastChild) {
       parent.removeChild(parent.lastChild);
   }
@@ -51,6 +52,50 @@ search.addEventListener('keyup', (e) => {
     createRecipeCard(filteredRecipes[i]);
   }
 });
+
+// Tag function 
+function addTag(e) {
+  let code = (e.keyCode ? e.keyCode: e.which);
+  // If user hit "Enter"
+  if (code != 13) {
+    return
+  }
+
+  let tag = e.target.value.trim();
+  if (tag.length < 1 || tags.includes(tag) || tags.length >= 3) {
+    e.target.value = "";
+    return;
+  }
+
+  // Add tag
+  let index = tags.push(tag);
+  let tagItem = document.createElement('div');
+  tagItem.classList.add('item');
+  tagItem.innerHTML = `
+    <span class="delete-btn" id='${tag}'>
+    &times;
+    </span>
+    <span>${tag}</span>
+  `;
+  document.getElementById(TAG_LIST).appendChild(tagItem);
+  e.target.value = "";
+
+  // Close button for new tag 
+  let newTag = document.getElementById(`${tag}`);
+  newTag.addEventListener('click', function() {
+    let parent = newTag.parentNode.parentNode;
+    parent.removeChild(newTag.parentNode);
+    let index = tags.indexOf(`${tag}`);
+    tags.splice(index);
+  });
+}
+
+let tagInput = document.querySelector('.tag-input input');
+let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+// if open add-recipe button
+if (oldRecipeName == '') {
+  tagInput.addEventListener('keyup', addTag);
+}
 
 // Save button for add new recipe
 let addButton = document.getElementById('add');
@@ -74,6 +119,14 @@ close.addEventListener('click', () => {
   document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   console.log(document.getElementById(RECIPE_FORM_ID).classList);
 });
+
+// Discard button
+let discard = document.getElementById('discard');
+  discard.addEventListener('click', (event) => {
+    clearData();
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+  });
 
 // Create JSON file when click "Save"
 let save = document.getElementById('save');
@@ -104,13 +157,6 @@ save.addEventListener('click', () => {
       console.log(status);
     }
   }
-
-  let discard = document.getElementById('discard');
-  discard.addEventListener('click', (event) => {
-    clearData();
-    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-  });
 
   let json = buildJSONFromForm();
   createRecipeCard(json);
@@ -144,7 +190,7 @@ function buildJSONFromForm() {
 
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  let tag = 'Gluten Free';
+  let tag = tags;
   let imgURL = '.png';
   let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
   if (document.getElementById('output').src !== undefined) {
@@ -320,6 +366,7 @@ export function showRecipe(recipe) {
   metaData.appendChild(date);
   row2.appendChild(finalCol);
 
+
   // Attach the whole container to the shadow DOM
   container.appendChild(row2);
   // Change what is displaying
@@ -349,6 +396,8 @@ function clearData() {
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
   document.getElementById('output').src = '';
+  removeChildren(document.getElementById('tag-items'));
+  tags = [];
 }
 
 /* <div class="container-fluid">

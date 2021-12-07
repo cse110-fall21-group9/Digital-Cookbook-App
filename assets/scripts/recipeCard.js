@@ -1,7 +1,10 @@
 import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
+import {removeChildren} from './app.js';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
+const TAG_LIST = 'tag-items';
+
 
 function strStrip(name) {
   return name.replace(/\s/g, '');
@@ -13,7 +16,6 @@ class recipeCard extends HTMLElement {
     super();
     this.attachShadow({mode: 'open'});
   }
-
 
 
   get data() {
@@ -166,11 +168,15 @@ class recipeCard extends HTMLElement {
 
     // Create tags
     const tag = document.createElement('p');
-    tag.classList.add('recipe-tags');
-    tag.innerHTML = ` 
-        <span class="recipe-tag">Gluten Free</span>
-        <span class="recipe-tag">Breakfast</span>
-        `;
+    tag.classList.add('recipe-tags');      
+    console.log(data.metadata.labels);
+
+    for (let i = 0; i < data.metadata.labels.length; i++) {
+      tag.innerHTML += ` 
+      <span class="recipe-tag">${data.metadata.labels[i]}</span>
+      `;
+    }
+    console.log(tag);
     recipeContent.appendChild(tag);
 
     // Grab the title
@@ -198,6 +204,15 @@ class recipeCard extends HTMLElement {
     recipeContent.appendChild(time);
     card.appendChild(recipeContent);
 
+     // Create checkbox (Added)
+    //  const Select = document.createElement('label');
+    //  Select.classList.add('check-box');
+    //  Select.innerHTML = ` 
+    //        <input type="checkbox">
+    //        `;
+    //  recipeContent.appendChild(Select);
+
+    // Button
     card.innerHTML += `
         <div class="buttons">
             <button type="button" class="btn" id="fav">Favorite</button>
@@ -213,6 +228,16 @@ class recipeCard extends HTMLElement {
         `;
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
+    
+
+    // Select Recipe (added)
+    // document.getElementById('check').addEventListener('click', (event) => {
+    //   if () {
+    //     document.getElementById('check').innerHTML = 'Selected';
+    //   } else {
+    //     return;
+    //   }
+    // });
 
     // View Recipe
     card.addEventListener('click', (event) => {
@@ -274,6 +299,28 @@ function fillData(recipeData) {
   // give the image upload form a state saying that it was opened from "edit" and should only apply itself
   // if the image was changed.
   document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = false;
+  // Populate the tags
+
+  removeChildren(document.getElementById('tag-items'));
+  for (let i = 0; i < recipeData.metadata.labels.length; i++) {
+    let tagItem = document.createElement('div');
+    tagItem.classList.add('item');
+    tagItem.innerHTML = `
+      <span class="delete-btn" id='${recipeData.metadata.labels[i]}'>
+      &times;
+      </span>
+      <span>${recipeData.metadata.labels[i]}</span>
+    `;
+    document.getElementById(TAG_LIST).appendChild(tagItem);
+  }
+  // Close button for new tag 
+  // let newTag = document.getElementById(`${tag}`);
+  // newTag.addEventListener('click', function() {
+  //   let parent = newTag.parentNode.parentNode;
+  //   parent.removeChild(newTag.parentNode);
+  //   let index = tags.indexOf(`${tag}`);
+  //   tags.splice(index);
+  // });
 }
 
 customElements.define('recipe-card', recipeCard);
