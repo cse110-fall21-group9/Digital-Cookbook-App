@@ -21,7 +21,7 @@ const IMAGES_DIR = path.join(__dirname, '../recipes/images/');
  * @param {string} name a string to strip the spaces from
  * @returns the stripped string
  */
- function strStrip(name) {
+function strStrip(name) {
   return name.replace(/\s/g, '');
 }
 
