@@ -131,7 +131,7 @@ class IOSystem {
     if (!this.pathFormatValid(dir) || !data || !fileName) {
       throw new Error(`"${dir}" is not a valid directory format!`);
     }
-    console.log(`LOC: ${fileName}`);
+    console.log(`Name of file to dump: ${fileName}`);
     if (!fs.existsSync(dir)) {
       // does the directory exist?
       fs.mkdirSync(dir);

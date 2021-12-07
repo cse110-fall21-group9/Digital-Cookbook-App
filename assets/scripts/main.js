@@ -125,15 +125,22 @@ ipcMain.on('COPY_IMAGE', (event, imgPath, imgName) => {
  */
 ipcMain.on('DELETE', (event, recipeId) => {
   try {
+    // NOTE: Depending on whether we make the file names the recipe name
+    // or the uuid, this statement might need to be changed.
     IOSystem.eraseFileAt(RECIPES_DIR, `${recipeId}.json`);
 
     // also delete the corresponding image.
-    let imgName = IOSystem.recipesDict[recipeId].image;
-    IOSystem.eraseFileAt(imgName);
+    /*
+    let imgName = path.basename(IOSystem.recipesDict[recipeId].image);
+    let imgPath = path.join(__dirname, IMAGES_DIR);
+    IOSystem.eraseFileAt(`${imgPath}${imgName}`);
+    */
 
     // de-index the recipe from our dictionary in the backend.
     IOSystem.deIndexFile(recipeId);
     IOSystem.deIndexRecipe(recipeId);
+
+    console.log(IOSystem.recipesDict);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
