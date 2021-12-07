@@ -1,6 +1,8 @@
 // import { doc } from "prettier";
 export var frontEndRecipeDict = {};
-var displayedList = [];
+export var displayedList = [];
+const TAG_LIST = 'tag-items';
+var tags = [];
 
 /**
  * Strip the spaces from a given string
@@ -31,10 +33,20 @@ window.addEventListener('DOMContentLoaded', () => {
   init();
 });
 
+export const removeChildren = (parent) => {
+  while (parent.lastChild) {
+    parent.removeChild(parent.lastChild);
+  }
+};
+
 /**
  * Initialize all of our event handlers.
  */
 function init() {
+  // Tag function for recipe
+  let tagInput = document.querySelector('.tag-input input');
+  tagInput.addEventListener('keyup', addTag);
+
   // Save button for add new recipe
   let addButton = document.getElementById('add');
   addButton.addEventListener('click', () => {
@@ -49,16 +61,16 @@ function init() {
     clearData();
   });
 
-  const removeChildren = (parent) => {
-    while (parent.lastChild) {
-      parent.removeChild(parent.lastChild);
-    }
-  };
-
   // Search bar function
   let search = document.getElementById(SEARCH_BAR);
   search.addEventListener('keyup', (e) => {
     const searchString = e.target.value.toLowerCase();
+    // Reset displayed list for search after deleting
+    displayedList.splice(0, displayedList.length);
+    Object.keys(frontEndRecipeDict).forEach((key) => {
+      console.log(frontEndRecipeDict[key]);
+      displayedList.push(frontEndRecipeDict[key]);
+    });
     const filteredRecipes = displayedList.filter((recipe) => {
       return recipe.name.toLowerCase().includes(searchString);
     });
@@ -79,6 +91,15 @@ function init() {
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
   });
 
+  // Discard button
+  let discard = document.getElementById('discard');
+  discard.addEventListener('click', (event) => {
+    clearData();
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
+  });
+
   // Create JSON file when click "Save"
   let save = document.getElementById('save');
   save.addEventListener('click', () => {
@@ -87,12 +108,13 @@ function init() {
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
-    let recipeName = document.getElementById('recipe-name').value;
+    let recipeName = strStrip(document.getElementById('recipe-name').value);
     let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
 
-    //Save image
+    // Save image
     let imageInput = document.getElementById('file');
     let imageFile = imageInput.files[0];
+    console.log(imageFile);
     if (imageFile) {
       window.electron.saveImage(imageFile.path, imageFile.name);
     }
@@ -119,13 +141,6 @@ function init() {
     let file = `${recipeName}.json`;
     let status = window.electron.addRecipe(json, recipeName);
     console.log(status);
-  });
-
-  let discard = document.getElementById('discard');
-  discard.addEventListener('click', (event) => {
-    clearData();
-    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   });
 
   //let imageInput = document.querySelector('input#file[type="file"][name="image]');
@@ -170,7 +185,7 @@ function buildJSONFromForm() {
 
   let today = new Date();
   let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  let tag = 'Gluten Free';
+  let tag = tags;
   let imgURL = '.png';
   let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
   let openedFromRecipe = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
@@ -186,10 +201,17 @@ function buildJSONFromForm() {
       } else {
         imgURL = IMAGES_DIR + imageFile.name;
       }
+      // if (imageFile) {
+      //   imgURL = IMAGES_DIR + imageFile.name;
+      // } else {
+      //   imgURL = './assets/images/default-image.jpg';
+      // }
     } else {
       let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
       console.log(recipeName);
-      imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
+      // imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
+      // restore original image URL it it was not changed
+      imgURL = frontEndRecipeDict[openedFromRecipe].image;
     }
   }
 
@@ -357,6 +379,8 @@ function clearData() {
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
   document.getElementById('output').src = '';
+  removeChildren(document.getElementById('tag-items'));
+  tags = [];
 }
 
 function exportRecipes() {
@@ -389,4 +413,41 @@ function isSelected(recipeCardDiv) {
 
 function getRecipeName(recipeCardDiv) {
   return recipeCardDiv.classList[0];
+}
+
+// Tag function
+function addTag(e) {
+  let code = e.keyCode ? e.keyCode : e.which;
+  // If user hit "Enter"
+  if (code != 13) {
+    return;
+  }
+
+  let tag = e.target.value.trim();
+  if (tag.length < 1 || tags.includes(tag) || tags.length >= 3) {
+    e.target.value = '';
+    return;
+  }
+
+  // Add tag
+  let index = tags.push(tag);
+  let tagItem = document.createElement('div');
+  tagItem.classList.add('item');
+  tagItem.innerHTML = `
+    <span class="delete-btn" id='${tag}'>
+    &times;
+    </span>
+    <span>${tag}</span>
+  `;
+  document.getElementById(TAG_LIST).appendChild(tagItem);
+  e.target.value = '';
+
+  // Close button for new tag
+  let newTag = document.getElementById(`${tag}`);
+  newTag.addEventListener('click', function () {
+    let parent = newTag.parentNode.parentNode;
+    parent.removeChild(newTag.parentNode);
+    let index = tags.indexOf(`${tag}`);
+    tags.splice(index);
+  });
 }
