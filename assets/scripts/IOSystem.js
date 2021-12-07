@@ -26,42 +26,42 @@ class IOSystem {
 
   /**
    * Adds an entry to the recipesDict that maps
-   * recipe names to JSON data.
-   * @param {string} name name of recipe.
+   * recipe uuid v4's to JSON data.
+   * @param {string} id id of recipe.
    * @param {object} data JSON data backing the recipe.
    */
-  static indexRecipe(name, data) {
+  static indexRecipe(id, data) {
     // REMARKS: after some reconsideration it is probably better to map a uuid to the JSON data.
     // however, we can just check for file existence for now.
     // Note that this is fairly expensive as filesystem calls are rather slow.
-    this.recipesDict[name] = data;
+    this.recipesDict[id] = data;
   }
 
   /**
-   * Adds an entry to the filesDict that maps recipe names to file paths.
-   * @param {string} name name of recipe.
+   * Adds an entry to the filesDict that maps recipe uuid v4's to file paths.
+   * @param {string} id id of recipe.
    * @param {string} filePath path to recipe JSON on disk.
    */
-  static indexFile(name, filePath) {
-    this.filesDict[name] = filePath;
+  static indexFile(id, filePath) {
+    this.filesDict[id] = filePath;
   }
 
   /**
    * Removes an entry from the recipesDict that maps
-   * recipe names to JSON data.
-   * @param {string} name name of recipe.
+   * recipe uuid v4's to JSON data.
+   * @param {string} id id of recipe.
    */
-  static deIndexRecipe(name) {
-    Reflect.deleteProperty(this.recipesDict, name);
+  static deIndexRecipe(id) {
+    Reflect.deleteProperty(this.recipesDict, id);
   }
 
   /**
    * Removes an entry from the filesDict that maps
-   * recipe names to filePaths.
-   * @param {string} name name of recipe.
+   * recipe uuid v4's to filePaths.
+   * @param {string} id id of recipe.
    */
-  static deIndexFile(name) {
-    Reflect.deleteProperty(this.filesDict, name);
+  static deIndexFile(id) {
+    Reflect.deleteProperty(this.filesDict, id);
   }
 
   /**
@@ -193,14 +193,14 @@ class IOSystem {
    * @param {string} dir directory to zip the .rcpkg file into.
    * @param {string} fileName name of the .rcpkg file *WITHOUT THE EXTENSION!*
    */
-  static zipRCPackage(recipes, fullpath) {
+  static zipRCPackage(recipes, filePath) {
     // TESTME: check for the existence of the file after the async op has been completed
     let toDump = {
       recipeArray: recipes,
     };
-    const fileName = path.basename(fullpath);
-    const dir = path.dirname(fullpath) + '/';
-    console.log(`BE: ${fullpath}`);
+    const fileName = path.basename(filePath);
+    const dir = path.dirname(filePath) + '/';
+    console.log(`BE: ${filePath}`);
     // .rcpkg files are really JSON with a single array inside.
     this.dumpJSON(toDump, dir, fileName + '.rcpkg');
   }
@@ -211,14 +211,14 @@ class IOSystem {
    * @param {string} fileName name of the .rcpkg file (including the extension).
    * @returns {object[]} an object array with the recipe JSON objects inside.
    */
-  static unzipRCPackage(fullpath) {
+  static unzipRCPackage(filePath) {
     // TESTME: ensure that:
     // 1. The JSON object has the correct array of items in it
     // 2. The files with the wrong extension are rejected
     // 3. No other items are in the JSON object
     let recArray = [];
-    const fileName = path.basename(fullpath);
-    const dir = path.dirname(fullpath) + '/';
+    const fileName = path.basename(filePath);
+    const dir = path.dirname(filePath) + '/';
 
     // confirm that the file has the right extension
     const fileNameExt = fileName

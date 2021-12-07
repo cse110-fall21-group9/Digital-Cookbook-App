@@ -2,6 +2,7 @@ export var frontEndRecipeDict = {};
 
 /**
  * Strip the spaces from a given string
+ * TODO: Our goal is to update our code base to use UUIDv4, hence deprecating this function and others like it.
  * @param {string} name a string to strip the spaces from
  * @returns the stripped string
  */
@@ -174,7 +175,7 @@ function buildJSONFromForm() {
   let serving = document.getElementById('serving').value;
 
   let newRecipe = {
-    recipe_id: 12313,
+    recipe_id: 12313, //TODO: request a new uuidv4 here ONLY IF the recipe is new.
     name: titleText,
     image: imgURL,
     metadata: {
