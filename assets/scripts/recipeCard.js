@@ -1,6 +1,8 @@
 import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
 import {removeChildren} from './app.js';
+import {displayedList} from './app.js';
+
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 const TAG_LIST = 'tag-items';
@@ -169,7 +171,6 @@ class recipeCard extends HTMLElement {
     // Create tags
     const tag = document.createElement('p');
     tag.classList.add('recipe-tags');      
-    console.log(data.metadata.labels);
 
     for (let i = 0; i < data.metadata.labels.length; i++) {
       tag.innerHTML += ` 
@@ -279,6 +280,7 @@ class recipeCard extends HTMLElement {
         );
         Reflect.deleteProperty(frontEndRecipeDict, strStrip(data.name));
         parent.removeChild(removeCard);
+
       }
     });
   }

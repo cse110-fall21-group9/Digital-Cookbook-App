@@ -1,6 +1,6 @@
 // import { doc } from "prettier";
 export var frontEndRecipeDict = {};
-var displayedList = [];
+export var displayedList = [];
 const TAG_LIST = 'tag-items';
 var tags = [];
 /**
@@ -41,6 +41,12 @@ export const removeChildren = (parent) => {
 let search = document.getElementById(SEARCH_BAR);
 search.addEventListener('keyup', (e) => {
   const searchString = e.target.value.toLowerCase();
+  // Reset displayed list for search after deleting
+  displayedList.splice(0, displayedList.length);
+  Object.keys(frontEndRecipeDict).forEach((key) => {
+    console.log(frontEndRecipeDict[key]);
+    displayedList.push(frontEndRecipeDict[key]);
+  })
   const filteredRecipes = displayedList.filter( recipe => {
     return recipe.name.toLowerCase().includes(searchString);
   });
@@ -91,11 +97,8 @@ function addTag(e) {
 }
 
 let tagInput = document.querySelector('.tag-input input');
-let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
 // if open add-recipe button
-if (oldRecipeName == '') {
-  tagInput.addEventListener('keyup', addTag);
-}
+tagInput.addEventListener('keyup', addTag);
 
 // Save button for add new recipe
 let addButton = document.getElementById('add');
@@ -157,6 +160,7 @@ save.addEventListener('click', () => {
       console.log(status);
     }
   }
+  
 
   let json = buildJSONFromForm();
   createRecipeCard(json);
