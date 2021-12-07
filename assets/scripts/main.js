@@ -5,7 +5,7 @@
  */
 
 // Modules to control application life and create native browser window
-const {app, BrowserWindow} = require('electron');
+const {app, BrowserWindow, dialog} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
 const {ipcMain} = require('electron');
@@ -151,9 +151,9 @@ ipcMain.on('CACHE_DICT', (event) => {
 /**
  * Zip an array of recipe data JSON objects into an rc package and dump to disk at specified location.
  */
-ipcMain.on('RC_PACK', (event, recipeArray, dir, fileNameNoExtension) => {
+ipcMain.on('RC_PACK', (event, recipeArray, fullpath) => {
   try {
-    IOSystem.zipRCPackage(recipeArray, dir, fileNameNoExtension);
+    IOSystem.zipRCPackage(recipeArray, fullpath);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
@@ -163,10 +163,22 @@ ipcMain.on('RC_PACK', (event, recipeArray, dir, fileNameNoExtension) => {
 /**
  * Unzip the RC Package at the specified dir into an array of JSON objects.
  */
-ipcMain.on('RC_UNPACK', (event, dir, fileName) => {
+ipcMain.on('RC_UNPACK', (event, fullpath) => {
   try {
-    let recipeArray = IOSystem.unzipRCPackage(dir, fileName);
+    let recipeArray = IOSystem.unzipRCPackage(fullpath);
     event.returnValue = recipeArray;
+  } catch (err) {
+    event.returnValue = `FAILED: ${err}`;
+  }
+});
+
+/**
+ * Unzip the RC Package at the specified dir into an array of JSON objects.
+ */
+ipcMain.on('SAVE_DIALOG', (event) => {
+  try {
+    let path = dialog.showSaveDialogSync(null);
+    event.returnValue = path;
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
   }

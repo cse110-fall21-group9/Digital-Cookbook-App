@@ -16,10 +16,11 @@ contextBridge.exposeInMainWorld('electron', {
   removeRecipe: (recipeName) => ipcRenderer.sendSync('DELETE', recipeName),
   acquireRecipe: (recipeName) => ipcRenderer.sendSync('ACQUIRE', recipeName),
   acquireRecipesDictionary: () => ipcRenderer.sendSync('CACHE_DICT'),
-  export: (recipeArray, dir, fileNameNoExtension) => {
-    ipcRenderer.sendSync('RC_PACK', recipeArray, dir, fileNameNoExtension);
+  export: (recipeArray, path) => {
+    ipcRenderer.sendSync('RC_PACK', recipeArray, path);
   },
-  import: (dir, fileNameWithExtension) => {
-    ipcRenderer.sendSync('RC_UNPACK', dir, fileNameWithExtension);
+  import: (path) => {
+    ipcRenderer.sendSync('RC_UNPACK', fullpath);
   },
+  showFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
 });
