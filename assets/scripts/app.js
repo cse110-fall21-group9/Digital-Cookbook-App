@@ -62,13 +62,12 @@ function init() {
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
-    let recipeName = strStrip(document.getElementById('recipe-name').value);
+    let recipeName = document.getElementById('recipe-name').value;
     let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
 
     //Save image
     let imageInput = document.getElementById('file');
     let imageFile = imageInput.files[0];
-    console.log(imageFile);
     if (imageFile) {
       window.electron.saveImage(imageFile.path, imageFile.name);
     }
@@ -84,13 +83,6 @@ function init() {
       }
     }
 
-    let discard = document.getElementById('discard');
-    discard.addEventListener('click', (event) => {
-      clearData();
-      document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-      document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-    });
-
     let json = buildJSONFromForm();
     createRecipeCard(json);
 
@@ -102,6 +94,13 @@ function init() {
     let file = `${recipeName}.json`;
     let status = window.electron.addRecipe(json, recipeName);
     console.log(status);
+  });
+
+  let discard = document.getElementById('discard');
+  discard.addEventListener('click', (event) => {
+    clearData();
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
   });
 
   //let imageInput = document.querySelector('input#file[type="file"][name="image]');
@@ -157,10 +156,10 @@ function buildJSONFromForm() {
       let imageFile = imageInput.files[0];
 
       // we expect the image to be in a known directory pending a file operation request
-      if (!!imageFile && openedFromRecipe != '') {
-        imgURL = IMAGES_DIR + imageFile.name;
-      } else {
+      if (!imageFile) {
         imgURL = './assets/images/default-image.jpg';
+      } else {
+        imgURL = IMAGES_DIR + imageFile.name;
       }
     } else {
       // restore original image URL it it was not changed
