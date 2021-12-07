@@ -1,4 +1,6 @@
+// import { doc } from "prettier";
 export var frontEndRecipeDict = {};
+var displayedList = [];
 
 /**
  * Strip the spaces from a given string
@@ -16,12 +18,14 @@ const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGE
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const RECIPE_FORM_ID = 'add-recipe';
+const SEARCH_BAR = 'search-bar';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log('Received from back end:');
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    displayedList.push(val);
     createRecipeCard(val);
   });
   init();
@@ -36,7 +40,6 @@ function init() {
   addButton.addEventListener('click', () => {
     document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
     document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
-
     // tell the form that it was opened from the "add-recipe" button
     document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
 
@@ -44,6 +47,28 @@ function init() {
     document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
     clearData();
+  });
+
+  const removeChildren = (parent) => {
+    while (parent.lastChild) {
+      parent.removeChild(parent.lastChild);
+    }
+  };
+
+  // Search bar function
+  let search = document.getElementById(SEARCH_BAR);
+  search.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    const filteredRecipes = displayedList.filter((recipe) => {
+      return recipe.name.toLowerCase().includes(searchString);
+    });
+
+    let container = document.querySelector('.recipe-cards');
+    removeChildren(container);
+
+    for (let i = 0; i < filteredRecipes.length; i++) {
+      createRecipeCard(filteredRecipes[i]);
+    }
   });
 
   // Close the add function
@@ -162,8 +187,9 @@ function buildJSONFromForm() {
         imgURL = IMAGES_DIR + imageFile.name;
       }
     } else {
-      // restore original image URL it it was not changed
-      imgURL = frontEndRecipeDict[openedFromRecipe].image;
+      let recipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+      console.log(recipeName);
+      imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
     }
   }
 
@@ -195,7 +221,8 @@ function buildJSONFromForm() {
 
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
-  let jsonData = frontEndRecipeDict[recipe.name];
+  let jsonData = frontEndRecipeDict[strStrip(recipe.name)];
+  console.log(jsonData);
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name

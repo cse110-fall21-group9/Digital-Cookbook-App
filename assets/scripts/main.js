@@ -17,6 +17,15 @@ const IMAGES_DIR = path.join(__dirname, '../recipes/images/');
 // const indexDir = path.join(__dirname, '../../'); // directory with index.html
 
 /**
+ * Strip the spaces from a given string
+ * @param {string} name a string to strip the spaces from
+ * @returns the stripped string
+ */
+function strStrip(name) {
+  return name.replace(/\s/g, '');
+}
+
+/**
  * Initializes the Window.
  */
 function createWindow() {
@@ -75,8 +84,8 @@ function cacheRecipesFromDisk() {
     const fileData = fileObj.data;
     const fileAsJSON = JSON.parse(fileData);
 
-    IOSystem.indexRecipe(fileAsJSON.name, fileAsJSON);
-    IOSystem.indexFile(fileAsJSON.name, filePath);
+    IOSystem.indexRecipe(strStrip(fileAsJSON.name), fileAsJSON);
+    IOSystem.indexFile(strStrip(fileAsJSON.name), filePath);
   }
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
@@ -93,9 +102,9 @@ ipcMain.on('LOAD', (event) => {
 ipcMain.on('ADD', (event, recipeData, recipeId) => {
   try {
     IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeId}.json`);
-
     // index or update the recipe in our backend dictionary.
     IOSystem.indexRecipe(recipeId, recipeData);
+
     event.returnValue = 'SUCCESS';
   } catch (err) {
     console.error(err);
@@ -140,7 +149,6 @@ ipcMain.on('DELETE', (event, recipeId) => {
     IOSystem.deIndexFile(recipeId);
     IOSystem.deIndexRecipe(recipeId);
 
-    console.log(IOSystem.recipesDict);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
