@@ -5,16 +5,25 @@
  */
 
 // Modules to control application life and create native browser window
-const {app, BrowserWindow, dialog} = require('electron');
+const {app, BrowserWindow, dialog, ipcMain} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
-const {ipcMain} = require('electron');
+const {v4: uuidv4} = require('uuid');
 
 // directory with recipes
 const RECIPES_DIR = path.join(__dirname, '../recipes/');
 // directory with *recipe images*, NOT app images
 const IMAGES_DIR = path.join(__dirname, '../recipes/images/');
 // const indexDir = path.join(__dirname, '../../'); // directory with index.html
+
+/**
+ * Strip the spaces from a given string
+ * @param {string} name a string to strip the spaces from
+ * @returns the stripped string
+ */
+function strStrip(name) {
+  return name.replace(/\s/g, '');
+}
 
 /**
  * Initializes the Window.
@@ -75,9 +84,10 @@ function cacheRecipesFromDisk() {
     const fileData = fileObj.data;
     const fileAsJSON = JSON.parse(fileData);
 
-    IOSystem.indexRecipe(fileAsJSON.name, fileAsJSON);
-    IOSystem.indexFile(fileAsJSON.name, filePath);
+    IOSystem.indexRecipe(fileAsJSON.recipe_id, fileAsJSON);
+    IOSystem.indexFile(fileAsJSON.recipe_id, filePath);
   }
+  console.log(`Backend Dictionary Databases:`);
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
 }
@@ -90,10 +100,12 @@ ipcMain.on('LOAD', (event) => {
  * If error occur 'FAILED' will be returned.
  * If success "SUCCESS" will be returned.
  */
-ipcMain.on('ADD', (event, recipeData, recipeName) => {
+ipcMain.on('ADD', (event, recipeData, recipeId) => {
   try {
-    IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeName}.json`);
-    IOSystem.indexRecipe(recipeName, recipeData);
+    IOSystem.dumpJSON(recipeData, RECIPES_DIR, `${recipeId}.json`);
+    // index or update the recipe in our backend dictionary.
+    IOSystem.indexRecipe(recipeId, recipeData);
+
     event.returnValue = 'SUCCESS';
   } catch (err) {
     console.error(err);
@@ -121,11 +133,23 @@ ipcMain.on('COPY_IMAGE', (event, imgPath, imgName) => {
  * If error occur 'FAILED' will be returned.
  *  If success "SUCCESS" will be returned.
  */
-ipcMain.on('DELETE', (event, recipeName) => {
+ipcMain.on('DELETE', (event, recipeId) => {
   try {
-    IOSystem.eraseFileAt(RECIPES_DIR, `${recipeName}.json`);
-    IOSystem.deIndexFile(recipeName);
-    IOSystem.deIndexRecipe(recipeName);
+    // NOTE: Depending on whether we make the file names the recipe name
+    // or the uuid, this statement might need to be changed.
+    IOSystem.eraseFileAt(RECIPES_DIR, `${recipeId}.json`);
+
+    // also delete the corresponding image.
+    /*
+    let imgName = path.basename(IOSystem.recipesDict[recipeId].image);
+    let imgPath = path.join(__dirname, IMAGES_DIR);
+    IOSystem.eraseFileAt(`${imgPath}${imgName}`);
+    */
+
+    // de-index the recipe from our dictionary in the backend.
+    IOSystem.deIndexFile(recipeId);
+    IOSystem.deIndexRecipe(recipeId);
+
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
@@ -136,8 +160,8 @@ ipcMain.on('DELETE', (event, recipeName) => {
  * Used for acquiring a recipe directly from disk.
  * Generally, this one probably should be avoided if possible.
  */
-ipcMain.on('ACQUIRE', (event, recipeName) => {
-  let fileDir = RECIPES_DIR + `${recipeName}.json`;
+ipcMain.on('ACQUIRE', (event, recipeId) => {
+  let fileDir = RECIPES_DIR + `${recipeId}.json`;
   event.returnValue = require(fileDir);
 });
 
@@ -151,9 +175,9 @@ ipcMain.on('CACHE_DICT', (event) => {
 /**
  * Zip an array of recipe data JSON objects into an rc package and dump to disk at specified location.
  */
-ipcMain.on('RC_PACK', (event, recipeArray, fullpath) => {
+ipcMain.on('RC_PACK', (event, recipeArray, filePath) => {
   try {
-    IOSystem.zipRCPackage(recipeArray, fullpath);
+    IOSystem.zipRCPackage(recipeArray, filePath);
     event.returnValue = 'SUCCESS';
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
@@ -163,9 +187,9 @@ ipcMain.on('RC_PACK', (event, recipeArray, fullpath) => {
 /**
  * Unzip the RC Package at the specified dir into an array of JSON objects.
  */
-ipcMain.on('RC_UNPACK', (event, fullpath) => {
+ipcMain.on('RC_UNPACK', (event, filePath) => {
   try {
-    let recipeArray = IOSystem.unzipRCPackage(fullpath);
+    let recipeArray = IOSystem.unzipRCPackage(filePath);
     event.returnValue = recipeArray;
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
@@ -182,4 +206,12 @@ ipcMain.on('SAVE_DIALOG', (event) => {
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
   }
+});
+
+/**
+ * Generate a new uuidv4 on-demand.
+ * This one should ONLY be called when a *new* recipe card is created.
+ */
+ipcMain.on('MAKE_ID', (event) => {
+  event.returnValue = uuidv4();
 });

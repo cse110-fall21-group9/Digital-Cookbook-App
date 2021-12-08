@@ -48,7 +48,7 @@
                         <div class="col-10 offset-1 col-md-6 offset-md-4 col-lg-3 offset-lg-7">
                             <!-- Borrowed from https://mdbootstrap.com/docs/standard/forms/search/ -->
                             <div class="input-group rounded">
-                                <input type="search" class="form-control rounded" placeholder="Search for Recipe"
+                                <input type="search" id="search-bar" class="form-control rounded" placeholder="Search for Recipe"
                                     aria-label="Search" aria-describedby="search-addon" />
                                 <span class="input-group-text border-0" id="search-addon">
                                     <i class="fas fa-search"></i>
@@ -106,12 +106,23 @@
                         <br />
                         <input class="w-100" type="number" id="serving" />
                         <br />
+                        <div class="tag-input">  
+                            <label for="tag-ip">
+                                Enter tags (up to 3 tags)
+                            </label>
+                            <div>
+                                <i class="fa fa-tags"></i>
+                                <input type="text" id="tag-ip" placeholder="Enter tags">
+                            </div>
+                            <div id="tag-items" class="tag-list"></div>
+                        </div>
+                        <br />
                         <img id="output" width="200" src="./assets/images/default-image.jpg" alt="output img" />
                     </div>
                 </div>
             </div>
         </div>
-        <!-- <form id='file' action="action_page.php">
+        <!-- <form id="file" action="action_page.php">
             <input type="file" id="myFile" name="filename">
             <input type="submit">
         </form> -->

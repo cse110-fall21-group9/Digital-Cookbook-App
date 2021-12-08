@@ -1,4 +1,5 @@
 /* Apply an overall font and size */
+
 * {
   font-family: verdana, sans-serif;
   font-size: 1.2vw;
@@ -61,11 +62,14 @@ nav {
   column-gap: 25px;
   display: flex;
   flex-wrap: wrap;
-  height: auto;
+  max-height: 70%;
+  height: inherit;
   margin: 30px 0 30px 30px;
-  max-width: 1000px;
+  max-width: 1200px;
   row-gap: 20px;
-  width: 100%;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  width: inherit;
 }
 
 body {
@@ -126,6 +130,30 @@ body {
   box-shadow: 2px 2px 5px 5px rgba(0 0 0 0 10);
   border-radius: 10 px;
   cursor: pointer;
+}
+
+div .tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+div .item {
+  padding: 5px 8px;
+  margin-top: 5px;
+  background: #fff;
+  border: 1px solid #888;
+  border-radius: 3px;
+  color: #111;
+  user-select: none;
+}
+
+span .delete-btn {
+  display: inline-block;
+  margin: 1px 2px;
+  width: 8px;
+  text-align: center;
+  color: #555;
 }
 
 #recipe-name {
