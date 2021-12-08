@@ -29,8 +29,9 @@ window.addEventListener('DOMContentLoaded', () => {
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     displayedList.push(val);
-    createRecipeCard(val);
+    // createRecipeCard(val);
   });
+  refreshRecipeCards(displayedList);
   init();
 });
 
@@ -84,9 +85,7 @@ function init() {
     let container = document.querySelector('.recipe-cards');
     removeChildren(container);
 
-    for (let i = 0; i < filteredRecipes.length; i++) {
-      createRecipeCard(filteredRecipes[i]);
-    }
+    refreshRecipeCards(filteredRecipes);
   });
 
   // Close the add function
@@ -189,6 +188,17 @@ function createRecipeCard(data) {
   recipeCard.id = data.recipe_id;
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
+}
+
+/**
+ * Takes the list of recipes to display and makes the corresponding recipe cards.
+ * Currently, this is done in reverse order because we push to the end of the list
+ * when making new/editing new cards. Change this one when sorting is implemented.
+ */
+function refreshRecipeCards(cardList) {
+  for (let i = cardList.length - 1; i >= 0; i--) {
+    createRecipeCard(cardList[i]);
+  }
 }
 
 /**
