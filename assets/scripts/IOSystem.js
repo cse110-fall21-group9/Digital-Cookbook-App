@@ -26,19 +26,16 @@ class IOSystem {
 
   /**
    * Adds an entry to the recipesDict that maps
-   * recipe uuid v4's to JSON data.
+   * recipe IDs to JSON data.
    * @param {string} id id of recipe.
    * @param {object} data JSON data backing the recipe.
    */
   static indexRecipe(id, data) {
-    // REMARKS: after some reconsideration it is probably better to map a uuid to the JSON data.
-    // however, we can just check for file existence for now.
-    // Note that this is fairly expensive as filesystem calls are rather slow.
     this.recipesDict[id] = data;
   }
 
   /**
-   * Adds an entry to the filesDict that maps recipe uuid v4's to file paths.
+   * Adds an entry to the filesDict that maps recipe IDs to file paths.
    * @param {string} id id of recipe.
    * @param {string} filePath path to recipe JSON on disk.
    */
@@ -48,7 +45,7 @@ class IOSystem {
 
   /**
    * Removes an entry from the recipesDict that maps
-   * recipe uuid v4's to JSON data.
+   * recipe IDs to JSON data.
    * @param {string} id id of recipe.
    */
   static deIndexRecipe(id) {
@@ -57,7 +54,7 @@ class IOSystem {
 
   /**
    * Removes an entry from the filesDict that maps
-   * recipe uuid v4's to filePaths.
+   * recipe IDs to filePaths.
    * @param {string} id id of recipe.
    */
   static deIndexFile(id) {
