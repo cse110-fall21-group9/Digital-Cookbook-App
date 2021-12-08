@@ -64,6 +64,9 @@ function init() {
     document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
     // by default, the image for a new recipe has been "changed"
     document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
+
+    document.querySelector(IMAGE_UPLOAD_SELECTOR).value = null;
+
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
     clearRecipeComposeForm();
   });
@@ -114,7 +117,7 @@ function init() {
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
     // get stateful information from the form's data.
-    let recipeName = strStrip(document.getElementById('recipe-name').value);
+    // let recipeName = strStrip(document.getElementById('recipe-name').value);
     let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
     let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
 
@@ -222,6 +225,7 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   if (document.getElementById('output').src !== undefined) {
     // only set a new image if it was changed by the user OR opened from the new recipe button
+    let openedFromNewRecipe = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] === '';
     if (imgChanged) {
       let imageInput = document.getElementById('file');
       let imageFile = imageInput.files[0];
@@ -232,11 +236,6 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
       } else {
         imgURL = IMAGES_DIR + imageFile.name;
       }
-      // if (imageFile) {
-      //   imgURL = IMAGES_DIR + imageFile.name;
-      // } else {
-      //   imgURL = './assets/images/default-image.jpg';
-      // }
     } else {
       console.log(`This form was opened from: ${openedFromRecipeId}`);
       // imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
