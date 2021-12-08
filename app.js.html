@@ -26,10 +26,15 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>export var frontEndRecipeDict = {};
+            <pre class="prettyprint source linenums"><code>// import { doc } from "prettier";
+export var frontEndRecipeDict = {};
+export var displayedList = [];
+const TAG_LIST = 'tag-items';
+var tags = [];
 
 /**
  * Strip the spaces from a given string
+ * TODO: Our goal is to update our code base to use UUIDv4, hence largely deprecating this function and others like it.
  * @param {string} name a string to strip the spaces from
  * @returns the stripped string
  */
@@ -38,44 +43,92 @@ function strStrip(name) {
 }
 
 const OPENED_FROM = 'data-opened-from';
+const RECIPE_FORM_ID = 'add-recipe';
 const IMAGE_CHANGED = 'data-changed';
+const RECIPE_ID_PROPERTY = 'data-recipe-id';
 const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
 const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
-const RECIPE_FORM_ID = 'add-recipe';
+const SEARCH_BAR = 'search-bar';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
   console.log('Received from back end:');
   console.log(frontEndRecipeDict);
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    displayedList.push(val);
     createRecipeCard(val);
   });
   init();
 });
 
 /**
+ * Delete the children of a given DOM node.
+ * Orphaned grandchildren do not need to be dealt with.
+ * @param {Node} parent the parent whose children to destroy.
+ */
+export const removeChildren = (parent) => {
+  while (parent.lastChild) {
+    parent.removeChild(parent.lastChild);
+  }
+};
+
+/**
  * Initialize all of our event handlers.
  */
 function init() {
-  // Save button for add new recipe
+  // Tag function for recipe
+  let tagInput = document.querySelector('.tag-input input');
+  tagInput.addEventListener('keyup', addTag);
+
+  // Retrieve reference to the button for *composing a new recipe*
   let addButton = document.getElementById('add');
   addButton.addEventListener('click', () => {
     document.getElementById(RECIPE_FORM_ID).classList.remove('hidden');
     document.getElementById(RECIPE_FORM_ID).style.display = 'grid';
 
-    // tell the form that it was opened from the "add-recipe" button
+    // tell the form that it was opened from the "add-recipe" button and is not bound to an existing card.
     document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
-
     // by default, the image for a new recipe has been "changed"
     document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
-    clearData();
+    clearRecipeComposeForm();
+  });
+
+  // Search bar function
+  let search = document.getElementById(SEARCH_BAR);
+  search.addEventListener('keyup', (e) => {
+    const searchString = e.target.value.toLowerCase();
+    // Reset displayed list for search after deleting
+    displayedList.splice(0, displayedList.length);
+    Object.keys(frontEndRecipeDict).forEach((key) => {
+      console.log(frontEndRecipeDict[key]);
+      displayedList.push(frontEndRecipeDict[key]);
+    });
+    const filteredRecipes = displayedList.filter((recipe) => {
+      return recipe.name.toLowerCase().includes(searchString);
+    });
+
+    let container = document.querySelector('.recipe-cards');
+    removeChildren(container);
+
+    for (let i = 0; i &lt; filteredRecipes.length; i++) {
+      createRecipeCard(filteredRecipes[i]);
+    }
   });
 
   // Close the add function
   let close = document.getElementById('close');
   close.addEventListener('click', () => {
+    document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
+    document.getElementById(RECIPE_FORM_ID).style.display = 'none';
+    console.log(document.getElementById(RECIPE_FORM_ID).classList);
+  });
+
+  // Discard button
+  let discard = document.getElementById('discard');
+  discard.addEventListener('click', (event) => {
+    clearRecipeComposeForm();
     document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
@@ -89,45 +142,46 @@ function init() {
     document.getElementById(RECIPE_FORM_ID).style.display = 'none';
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
+    // get stateful information from the form's data.
     let recipeName = strStrip(document.getElementById('recipe-name').value);
-    let oldRecipeName = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+    let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+    let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
 
-    //Save image
+    // Save image
     let imageInput = document.getElementById('file');
     let imageFile = imageInput.files[0];
     console.log(imageFile);
     if (imageFile) {
       window.electron.saveImage(imageFile.path, imageFile.name);
     }
-    if (oldRecipeName != '') {
-      //check if opened from edit
+    //check if opened from edit
+    if (oldRecipeId != '') {
+      // delete the current version of the card &amp; overwrite
       const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
-      let oldCard = document.querySelector(`recipe-card[class=${oldRecipeName}]`);
+      let oldCard = document.querySelector(`recipe-card[id="${oldRecipeId}"]`); // this better work gdi
       parent.removeChild(oldCard);
-      if (recipeName != oldRecipeName) {
-        console.log(oldRecipeName);
-        let status = window.electron.removeRecipe(oldRecipeName);
+      /*
+      if (recipeName != oldRecipeId) {
+        //TODO: if we save using UUID, there is no need to do this. just delete the file with the same name as the ID.
+        console.log(oldRecipeId);
+        let status = window.electron.removeRecipe(oldRecipeId);
         console.log(status);
-      }
+      } */
     }
 
-    let discard = document.getElementById('discard');
-    discard.addEventListener('click', (event) => {
-      clearData();
-      document.getElementById(RECIPE_FORM_ID).classList.add('hidden');
-      document.getElementById(RECIPE_FORM_ID).style.display = 'none';
-    });
-
-    let json = buildJSONFromForm();
+    let json = buildJSONFromForm(imgChanged, oldRecipeId);
     createRecipeCard(json);
 
+    // debug directives
+    console.log('JSON built from form:');
+    console.log(json);
     // add to front-end copy of dictionary
-    frontEndRecipeDict[json.name] = json;
+    frontEndRecipeDict[json.recipe_id] = json;
 
     // Save file to local storage
-    recipeName = strStrip(json['name']);
-    let file = `${recipeName}.json`;
-    let status = window.electron.addRecipe(json, recipeName);
+    // recipeName = strStrip(json['name']);
+    // let file = `${recipeName}.json`;
+    let status = window.electron.addRecipe(json, json.recipe_id);
     console.log(status);
   });
 
@@ -160,23 +214,30 @@ function init() {
  */
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
-  recipeCard.classList.add(strStrip(data.name));
+  recipeCard.id = data.recipe_id;
   recipeCard.data = data;
   document.querySelector('.recipe-cards').appendChild(recipeCard);
 }
 
 /**
- * Create a new JSON file on the data user enter
+ * Create a new JSON file on the data entered by the user.
+ * @param {boolean} imgChanged was the image changed?
+ * @param {string} openedFromRecipeId the UUID of the recipe that the form was opened from, if any. Empty if opened from new recipe button.
+ * @returns {object} the JSON object representing the saved recipe.
  */
-function buildJSONFromForm() {
+function buildJSONFromForm(imgChanged, openedFromRecipeId) {
+  // name of recipe as entered
   const titleText = document.getElementById('recipe-name').value;
 
+  // DateTime
   let today = new Date();
-  let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-  let tag = 'Gluten Free';
-  let imgURL = '.png';
-  let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
-  let openedFromRecipe = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+  // let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  let date = today.toString();
+
+  // List of Tags
+  let tag = tags;
+  let imgURL = '.png'; // placeholder
+
   if (document.getElementById('output').src !== undefined) {
     // only set a new image if it was changed by the user OR opened from the new recipe button
     if (imgChanged) {
@@ -184,14 +245,21 @@ function buildJSONFromForm() {
       let imageFile = imageInput.files[0];
 
       // we expect the image to be in a known directory pending a file operation request
-      if (!!imageFile &amp;&amp; openedFromRecipe != '') {
-        imgURL = IMAGES_DIR + imageFile.name;
-      } else {
+      if (!imageFile) {
         imgURL = './assets/images/default-image.jpg';
+      } else {
+        imgURL = IMAGES_DIR + imageFile.name;
       }
+      // if (imageFile) {
+      //   imgURL = IMAGES_DIR + imageFile.name;
+      // } else {
+      //   imgURL = './assets/images/default-image.jpg';
+      // }
     } else {
+      console.log(`This form was opened from: ${openedFromRecipeId}`);
+      // imgURL = frontEndRecipeDict[strStrip(recipeName)].image; // restore original image URL it it was not changed
       // restore original image URL it it was not changed
-      imgURL = frontEndRecipeDict[openedFromRecipe].image;
+      imgURL = frontEndRecipeDict[openedFromRecipeId].image;
     }
   }
 
@@ -201,8 +269,13 @@ function buildJSONFromForm() {
   let timePrep = document.getElementById('time-prep').value;
   let serving = document.getElementById('serving').value;
 
+  // request a new uuidv4 here ONLY IF the recipe is new.
+  console.log(`Opened from recipe with ID ${openedFromRecipeId}`);
+  let recID = openedFromRecipeId === '' ? window.electron.generateNewId() : openedFromRecipeId;
+  console.log(`Recipe ID: ${recID}`);
+
   let newRecipe = {
-    recipe_id: 12313,
+    recipe_id: recID,
     name: titleText,
     image: imgURL,
     metadata: {
@@ -223,7 +296,8 @@ function buildJSONFromForm() {
 
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
-  let jsonData = frontEndRecipeDict[recipe.name];
+  let jsonData = frontEndRecipeDict[recipe.recipe_id];
+  console.log(jsonData);
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name
@@ -347,7 +421,7 @@ export function showRecipe(recipe) {
   });
 }
 
-function clearData() {
+function clearRecipeComposeForm() {
   if (document.getElementById('recipe-name') == null) {
     return;
   }
@@ -358,6 +432,8 @@ function clearData() {
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
   document.getElementById('output').src = '';
+  removeChildren(document.getElementById('tag-items'));
+  tags = [];
 }
 
 function exportRecipes() {
@@ -367,7 +443,7 @@ function exportRecipes() {
   for (let div of recipeCardsDivs) {
     if (isSelected(div)) {
       console.log(div);
-      recipesToExport.push(frontEndRecipeDict[getRecipeName(div)]);
+      recipesToExport.push(frontEndRecipeDict[getRecipeIdFromDOM(div)]);
     }
   }
 
@@ -388,8 +464,45 @@ function isSelected(recipeCardDiv) {
   return recipeCardDiv.getAttribute('data-selected') === 'true';
 }
 
-function getRecipeName(recipeCardDiv) {
+function getRecipeIdFromDOM(recipeCardDiv) {
   return recipeCardDiv.classList[0];
+}
+
+// Tag function
+function addTag(e) {
+  let code = e.keyCode ? e.keyCode : e.which;
+  // If user hit "Enter"
+  if (code != 13) {
+    return;
+  }
+
+  let tag = e.target.value.trim();
+  if (tag.length &lt; 1 || tags.includes(tag) || tags.length >= 3) {
+    e.target.value = '';
+    return;
+  }
+
+  // Add tag
+  let index = tags.push(tag);
+  let tagItem = document.createElement('div');
+  tagItem.classList.add('item');
+  tagItem.innerHTML = `
+    &lt;span class="delete-btn" id='${tag}'>
+    &amp;times;
+    &lt;/span>
+    &lt;span>${tag}&lt;/span>
+  `;
+  document.getElementById(TAG_LIST).appendChild(tagItem);
+  e.target.value = '';
+
+  // Close button for new tag
+  let newTag = document.getElementById(`${tag}`);
+  newTag.addEventListener('click', function () {
+    let parent = newTag.parentNode.parentNode;
+    parent.removeChild(newTag.parentNode);
+    let index = tags.indexOf(`${tag}`);
+    tags.splice(index);
+  });
 }
 </code></pre>
         </article>
@@ -401,13 +514,13 @@ function getRecipeName(recipeCardDiv) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#buildJSONFromForm">buildJSONFromForm</a></li><li><a href="global.html#cacheRecipesFromDisk">cacheRecipesFromDisk</a></li><li><a href="global.html#createRecipeCard">createRecipeCard</a></li><li><a href="global.html#createWindow">createWindow</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#strStrip">strStrip</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#acquireRecipe">acquireRecipe</a></li><li><a href="global.html#acquireRecipesDictionary">acquireRecipesDictionary</a></li><li><a href="global.html#addRecipe">addRecipe</a></li><li><a href="global.html#buildJSONFromForm">buildJSONFromForm</a></li><li><a href="global.html#cacheRecipesFromDisk">cacheRecipesFromDisk</a></li><li><a href="global.html#createRecipeCard">createRecipeCard</a></li><li><a href="global.html#createWindow">createWindow</a></li><li><a href="global.html#export">export</a></li><li><a href="global.html#generateNewId">generateNewId</a></li><li><a href="global.html#import">import</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#removeChildren">removeChildren</a></li><li><a href="global.html#removeRecipe">removeRecipe</a></li><li><a href="global.html#saveImage">saveImage</a></li><li><a href="global.html#showFileDialog">showFileDialog</a></li><li><a href="global.html#strStrip">strStrip</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 21:21:00 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 08 2021 04:03:47 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>

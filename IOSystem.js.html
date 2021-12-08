@@ -54,42 +54,39 @@ class IOSystem {
 
   /**
    * Adds an entry to the recipesDict that maps
-   * recipe names to JSON data.
-   * @param {string} name name of recipe.
+   * recipe IDs to JSON data.
+   * @param {string} id id of recipe.
    * @param {object} data JSON data backing the recipe.
    */
-  static indexRecipe(name, data) {
-    // REMARKS: after some reconsideration it is probably better to map a uuid to the JSON data.
-    // however, we can just check for file existence for now.
-    // Note that this is fairly expensive as filesystem calls are rather slow.
-    this.recipesDict[name] = data;
+  static indexRecipe(id, data) {
+    this.recipesDict[id] = data;
   }
 
   /**
-   * Adds an entry to the filesDict that maps recipe names to file paths.
-   * @param {string} name name of recipe.
+   * Adds an entry to the filesDict that maps recipe IDs to file paths.
+   * @param {string} id id of recipe.
    * @param {string} filePath path to recipe JSON on disk.
    */
-  static indexFile(name, filePath) {
-    this.filesDict[name] = filePath;
+  static indexFile(id, filePath) {
+    this.filesDict[id] = filePath;
   }
 
   /**
    * Removes an entry from the recipesDict that maps
-   * recipe names to JSON data.
-   * @param {string} name name of recipe.
+   * recipe IDs to JSON data.
+   * @param {string} id id of recipe.
    */
-  static deIndexRecipe(name) {
-    Reflect.deleteProperty(this.recipesDict, name);
+  static deIndexRecipe(id) {
+    Reflect.deleteProperty(this.recipesDict, id);
   }
 
   /**
    * Removes an entry from the filesDict that maps
-   * recipe names to filePaths.
-   * @param {string} name name of recipe.
+   * recipe IDs to filePaths.
+   * @param {string} id id of recipe.
    */
-  static deIndexFile(name) {
-    Reflect.deleteProperty(this.filesDict, name);
+  static deIndexFile(id) {
+    Reflect.deleteProperty(this.filesDict, id);
   }
 
   /**
@@ -159,7 +156,7 @@ class IOSystem {
     if (!this.pathFormatValid(dir) || !data || !fileName) {
       throw new Error(`"${dir}" is not a valid directory format!`);
     }
-    console.log(`LOC: ${fileName}`);
+    console.log(`Name of file to dump: ${fileName}`);
     if (!fs.existsSync(dir)) {
       // does the directory exist?
       fs.mkdirSync(dir);
@@ -221,14 +218,14 @@ class IOSystem {
    * @param {string} dir directory to zip the .rcpkg file into.
    * @param {string} fileName name of the .rcpkg file *WITHOUT THE EXTENSION!*
    */
-  static zipRCPackage(recipes, fullpath) {
+  static zipRCPackage(recipes, filePath) {
     // TESTME: check for the existence of the file after the async op has been completed
     let toDump = {
       recipeArray: recipes,
     };
-    const fileName = path.basename(fullpath);
-    const dir = path.dirname(fullpath) + '/';
-    console.log(`BE: ${fullpath}`);
+    const fileName = path.basename(filePath);
+    const dir = path.dirname(filePath) + '/';
+    console.log(`BE: ${filePath}`);
     // .rcpkg files are really JSON with a single array inside.
     this.dumpJSON(toDump, dir, fileName + '.rcpkg');
   }
@@ -239,14 +236,14 @@ class IOSystem {
    * @param {string} fileName name of the .rcpkg file (including the extension).
    * @returns {object[]} an object array with the recipe JSON objects inside.
    */
-  static unzipRCPackage(fullpath) {
+  static unzipRCPackage(filePath) {
     // TESTME: ensure that:
     // 1. The JSON object has the correct array of items in it
     // 2. The files with the wrong extension are rejected
     // 3. No other items are in the JSON object
     let recArray = [];
-    const fileName = path.basename(fullpath);
-    const dir = path.dirname(fullpath) + '/';
+    const fileName = path.basename(filePath);
+    const dir = path.dirname(filePath) + '/';
 
     // confirm that the file has the right extension
     const fileNameExt = fileName
@@ -335,13 +332,13 @@ module.exports = IOSystem;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#buildJSONFromForm">buildJSONFromForm</a></li><li><a href="global.html#cacheRecipesFromDisk">cacheRecipesFromDisk</a></li><li><a href="global.html#createRecipeCard">createRecipeCard</a></li><li><a href="global.html#createWindow">createWindow</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#strStrip">strStrip</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#acquireRecipe">acquireRecipe</a></li><li><a href="global.html#acquireRecipesDictionary">acquireRecipesDictionary</a></li><li><a href="global.html#addRecipe">addRecipe</a></li><li><a href="global.html#buildJSONFromForm">buildJSONFromForm</a></li><li><a href="global.html#cacheRecipesFromDisk">cacheRecipesFromDisk</a></li><li><a href="global.html#createRecipeCard">createRecipeCard</a></li><li><a href="global.html#createWindow">createWindow</a></li><li><a href="global.html#export">export</a></li><li><a href="global.html#generateNewId">generateNewId</a></li><li><a href="global.html#import">import</a></li><li><a href="global.html#init">init</a></li><li><a href="global.html#removeChildren">removeChildren</a></li><li><a href="global.html#removeRecipe">removeRecipe</a></li><li><a href="global.html#saveImage">saveImage</a></li><li><a href="global.html#showFileDialog">showFileDialog</a></li><li><a href="global.html#strStrip">strStrip</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.4</a> on Mon Dec 06 2021 21:21:00 GMT+0000 (Coordinated Universal Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Wed Dec 08 2021 04:03:47 GMT+0000 (Coordinated Universal Time)
 </footer>
 
 <script> prettyPrint(); </script>
