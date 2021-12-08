@@ -6,6 +6,9 @@ import {displayedList} from './app.js';
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
 const TAG_LIST = 'tag-items';
+const OPENED_FROM = 'data-opened-from';
+const RECIPE_FORM_ID = 'add-recipe';
+const RECIPE_ID_PROPERTY = 'data-recipe-id';
 
 function strStrip(name) {
   return name.replace(/\s/g, '');
@@ -194,7 +197,7 @@ class recipeCard extends HTMLElement {
          `;
     recipeContent.appendChild(select);
     const select_callback = () => {
-      let div = document.querySelector(`recipe-card[class=${strStrip(title.textContent)}]`);
+      let div = document.querySelector(`recipe-card[id="${this.json.recipe_id}"]`);
       let before = div.getAttribute('data-selected');
       div.setAttribute('data-selected', before !== 'true');
     };
@@ -276,30 +279,31 @@ class recipeCard extends HTMLElement {
     // Edit recipe
     edit.addEventListener('click', (event) => {
       // let recipeData = window.electron.acquireRecipe(strStrip(title.textContent));
-      let recipeData = frontEndRecipeDict[strStrip(data.name)]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
+      let recipeData = frontEndRecipeDict[data.recipe_id]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
       console.log(document.getElementById('add-recipe').classList);
-      console.log(recipeData);
-      fillData(recipeData);
-      //clearData();
+      fillComposeRecipeFormData(recipeData);
+      //clearData();`
     });
 
     deleteRecipe.addEventListener('click', (event) => {
       if (!confirm('Are you sure you want to delete this recipe?')) {
         event.preventDefault();
       } else {
-        window.electron.removeRecipe(strStrip(title.textContent));
+        window.electron.removeRecipe(data.recipe_id);
         const parent = document.querySelector('article.recipe-cards');
-        let removeCard = document.querySelector(
-          `recipe-card[class=${strStrip(title.textContent)}]`
-        );
-        Reflect.deleteProperty(frontEndRecipeDict, strStrip(data.name));
+        let removeCard = document.querySelector(`recipe-card[id="${this.json.recipe_id}"]`);
+
+        console.log('Card Element to remove: ');
+        console.log(removeCard);
+
+        Reflect.deleteProperty(frontEndRecipeDict, data.recipe_id);
         parent.removeChild(removeCard);
       }
     });
   }
 }
 
-function fillData(recipeData) {
+function fillComposeRecipeFormData(recipeData) {
   document.getElementById('add-recipe').classList.remove('hidden');
   document.getElementById('add-recipe').style.display = 'grid';
   document.getElementById('recipe-name').value = recipeData.name;
@@ -309,13 +313,13 @@ function fillData(recipeData) {
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;
   // give the add-recipe form a state saying that it was opened from the "edit" option
-  document.getElementById('add-recipe')['data-opened-from'] = strStrip(recipeData.name);
+  document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = recipeData.recipe_id;
   document.getElementById('output')['src'] = recipeData.image;
   // give the image upload form a state saying that it was opened from "edit" and should only apply itself
   // if the image was changed.
   document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = false;
-  // Populate the tags
 
+  // Populate the tags
   removeChildren(document.getElementById('tag-items'));
   for (let i = 0; i < recipeData.metadata.labels.length; i++) {
     let tagItem = document.createElement('div');
@@ -336,6 +340,8 @@ function fillData(recipeData) {
   //   let index = tags.indexOf(`${tag}`);
   //   tags.splice(index);
   // });
+  console.log('Form Data filled with: ');
+  console.log(recipeData);
 }
 
 customElements.define('recipe-card', recipeCard);
