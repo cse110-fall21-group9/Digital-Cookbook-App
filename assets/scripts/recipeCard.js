@@ -263,7 +263,6 @@ class recipeCard extends HTMLElement {
         event.target.id === 'fav' ||
         event.target.id === 'edit' ||
         event.target.id === 'delete' ||
-        event.target.id === 'edit' ||
         event.target.id === 'share' ||
         event.target.id === 'dropDownBtn'
       ) {

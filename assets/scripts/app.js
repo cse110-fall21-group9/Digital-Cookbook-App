@@ -203,7 +203,8 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   // DateTime
   let today = new Date();
-  let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  // let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+  let date = today.toString();
 
   // List of Tags
   let tag = tags;

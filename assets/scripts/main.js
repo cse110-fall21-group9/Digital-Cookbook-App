@@ -84,9 +84,10 @@ function cacheRecipesFromDisk() {
     const fileData = fileObj.data;
     const fileAsJSON = JSON.parse(fileData);
 
-    IOSystem.indexRecipe(strStrip(fileAsJSON.name), fileAsJSON);
-    IOSystem.indexFile(strStrip(fileAsJSON.name), filePath);
+    IOSystem.indexRecipe(fileAsJSON.recipe_id, fileAsJSON);
+    IOSystem.indexFile(fileAsJSON.recipe_id, filePath);
   }
+  console.log(`Backend Dictionary Databases:`);
   console.log(IOSystem.recipesDict);
   console.log(IOSystem.filesDict);
 }
