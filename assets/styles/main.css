@@ -14,7 +14,7 @@
   background: rgb(88 88 88);
   top: 0;
   width: 100%;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   color: white;
 }
 
@@ -39,6 +39,7 @@ nav {
   padding-top: 60px; /* Place content 60px from the top */
   overflow-x: scroll;
 }
+
 #add {
   margin-top: 50px;
 }
@@ -75,8 +76,8 @@ nav {
   width: 100px;
   background: #f8f4e5;
   border: 2px solid #111;
-  box-shadow: 
-    3px 3px 1px #95a4ff, 
+  box-shadow:
+    3px 3px 1px #95a4ff,
     3px 3px 1px 1px #111;
 }
 
@@ -93,7 +94,7 @@ nav {
 }
 
 #tab {
-  font-family: 'Fjalla One', sans-serif;
+  font-family: "Fjalla One", sans-serif;
   margin-left: 40px;
 }
 
@@ -141,8 +142,8 @@ div#add-recipe.popup {
   background-color: rgb(255 255 255);
   border-radius: var(--size-radius);
   border: 2px solid #111;
-  box-shadow: 
-    3px 3px 1px #95a4ff, 
+  box-shadow:
+    3px 3px 1px #95a4ff,
     3px 3px 1px 1px #111;
 }
 
@@ -214,9 +215,8 @@ textarea {
   font-size: 17px;
   background: #f8f4e5;
   border: 2px solid #111;
-  border: 2px solid #111;
-  box-shadow: 
-    3px 3px 1px #95a4ff, 
+  box-shadow:
+    3px 3px 1px #95a4ff,
     3px 3px 1px 1px #111;
 }
 
@@ -288,8 +288,8 @@ input:focus {
 div.box-style {
   background: #f8f4e5;
   border: 2px solid #111;
-  box-shadow: 
-    15px 15px 1px #ffa580, 
+  box-shadow:
+    15px 15px 1px #ffa580,
     15px 15px 1px 2px #111;
 }
 
