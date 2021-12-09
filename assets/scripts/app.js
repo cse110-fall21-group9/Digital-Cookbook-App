@@ -127,7 +127,6 @@ function init() {
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
     // get stateful information from the form's data.
-    // let recipeName = strStrip(document.getElementById('recipe-name').value);
     let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
     let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
 
@@ -151,7 +150,6 @@ function init() {
     console.log(status);
   });
 
-  //let imageInput = document.querySelector('input#file[type="file"][name="image]');
   const img = document.getElementById('output');
   img.addEventListener('error', function (event) {
     event.target.src = './assets/images/default-image.jpg';
@@ -219,7 +217,6 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   // DateTime
   let today = new Date();
-  // let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   let date = today.toString();
 
   // List of Tags
@@ -277,16 +274,6 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
   };
   return newRecipe;
 }
-
-// Mark Favorite Button
-// function markFavorite() {
-//   let favList = JSON.parse(localStorage.getItem('favorites'));
-//   for (let i = 0; i < favList.length; i++) {
-//     let favBtn = document.querySelector(`.btn [id=${favList[i]}]`);
-//     console.log(favBtn);
-//     // btn.style.backgroundColor = '#ddca7e';
-//   }
-// }
 
 export function showFavorite() {
   document.querySelector('div.input-group.rounded').classList.add('hidden');

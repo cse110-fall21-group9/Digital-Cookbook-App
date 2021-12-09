@@ -242,23 +242,6 @@ class recipeCard extends HTMLElement {
     desc.textContent = data.steps;
     recipeContent.appendChild(desc);
 
-    // Get time
-    // const time = document.createElement('div');
-    // time.classList.add('recipe-time');
-    // let cookingTime = data.metrics.cook_time;
-    // if (cookingTime === '') {
-    //   time.innerHTML = `
-    //     <i class="fa fa-clock-o"></i>
-    //     <time></time>
-    //     `;
-    // } else {
-    //   time.innerHTML = `
-    //     <i class="fa fa-clock-o"></i>
-    //     <time>${cookingTime}</time>
-    //     `;
-    // }
-    // recipeContent.appendChild(time);
-
     card.appendChild(recipeContent);
 
     // Button
@@ -277,15 +260,6 @@ class recipeCard extends HTMLElement {
 
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
-
-    // Select Recipe (added)
-    // document.getElementById('check').addEventListener('click', (event) => {
-    //   if () {
-    //     document.getElementById('check').innerHTML = 'Selected';
-    //   } else {
-    //     return;
-    //   }
-    // });
 
     // View Recipe
     card.addEventListener('click', (event) => {
@@ -328,7 +302,6 @@ class recipeCard extends HTMLElement {
 
     // Edit recipe
     edit.addEventListener('click', (event) => {
-      // let recipeData = window.electron.acquireRecipe(strStrip(title.textContent));
       let recipeData = frontEndRecipeDict[data.recipe_id]; // this shouldn't cause any bugs as the data should get updated whenever the name is changed
       console.log(document.getElementById('add-recipe').classList);
       fillComposeRecipeFormData(recipeData);
