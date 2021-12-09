@@ -249,6 +249,7 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
   let instruction = document.getElementById('instructions').value.split('\n');
+  instruction = instruction.filter((e) => e);
   let cookTime = document.getElementById('time-cook').value;
   let timePrep = document.getElementById('time-prep').value;
   let serving = document.getElementById('serving').value;

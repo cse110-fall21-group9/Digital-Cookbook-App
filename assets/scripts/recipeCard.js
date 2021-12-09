@@ -114,6 +114,9 @@ class recipeCard extends HTMLElement {
           font-size: 20px;
           font-weight: 700;
           letter-spacing: -1px;
+          height: 32px;
+          line-height: 16px;
+          word-break: keep-all;
         }
         
         p[id ^= "info"] {
@@ -372,8 +375,13 @@ function fillComposeRecipeFormData(recipeData) {
   document.getElementById('add-recipe').style.display = 'grid';
   document.getElementById('recipe-name').value = recipeData.name;
   document.getElementById('ingredients').value = recipeData.ingredients;
+  document.getElementById('instructions').value = '';
   for (let i = 0; i < recipeData.steps.length; i++) {
-    document.getElementById('instructions').value += `${recipeData.steps[i]} \n`;
+    if (recipeData.steps[i] === '') {
+      continue;
+    } else {
+      document.getElementById('instructions').value += `${recipeData.steps[i]} \n`;
+    }
   }
   document.getElementById('time-cook').value = recipeData.metrics.cook_time;
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
