@@ -24,7 +24,9 @@
     "url": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App/issues"
   },
   "homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
-  "dependencies": {},
+  "dependencies": {
+    "bootstrap-icons": "^1.7.2"
+  },
   "devDependencies": {
     "@babel/core": "^7.16.0",
     "@babel/eslint-parser": "^7.16.3",

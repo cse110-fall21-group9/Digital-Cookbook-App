@@ -1,8 +1,17 @@
 // import { doc } from "prettier";
-export var frontEndRecipeDict = {};
-export var displayedList = [];
+const OPENED_FROM = 'data-opened-from';
+const RECIPE_FORM_ID = 'add-recipe';
+const IMAGE_CHANGED = 'data-changed';
+const RECIPE_ID_PROPERTY = 'data-recipe-id';
+const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
+const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
+const SEARCH_BAR = 'search-bar';
 const TAG_LIST = 'tag-items';
-var tags = [];
+
+export var frontEndRecipeDict = {};
+var displayedList = []; // used for search bar
+var tags = []; // used to store tags for each recipe
 
 /**
  * Strip the spaces from a given string
@@ -13,15 +22,6 @@ var tags = [];
 function strStrip(name) {
   return name.replace(/\s/g, '');
 }
-
-const OPENED_FROM = 'data-opened-from';
-const RECIPE_FORM_ID = 'add-recipe';
-const IMAGE_CHANGED = 'data-changed';
-const RECIPE_ID_PROPERTY = 'data-recipe-id';
-const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
-const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
-const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
-const SEARCH_BAR = 'search-bar';
 
 window.addEventListener('DOMContentLoaded', () => {
   frontEndRecipeDict = window.electron.acquireRecipesDictionary();
@@ -64,7 +64,6 @@ function init() {
     document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
     // by default, the image for a new recipe has been "changed"
     document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
-
     document.querySelector(IMAGE_UPLOAD_SELECTOR).value = null;
 
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
@@ -73,7 +72,30 @@ function init() {
 
   // Search bar function
   let search = document.getElementById(SEARCH_BAR);
+  let container = document.querySelector('.recipe-cards');
+
+  // Favorite Recipe Search
+  // let favContainer = document.getElementById('fav-recipe');
+  // search.addEventListener('keyup', (e) => {
+  //   const searchString = e.target.value.toLowerCase();
+  //   // Reset displayed list for search after deleting
+  //   displayedList.splice(0, displayedList.length);
+  //   let favList = JSON.parse(localStorage.getItem('favorites'));
+  //   for (let i = 0; i < favList.length; i++) {
+  //     displayedList.push(favList[i]);
+  //   }
+  //   console.log(displayedList);
+  //   const filteredRecipes = displayedList.filter((recipe) => {
+  //     return recipe.name.toLowerCase().includes(searchString);
+  //   });
+  //   removeChildren(container);
+  //   removeChildren(favContainer);
+  //   refreshRecipeCards(filteredRecipes);
+  // });
+
+  // Normal Search
   search.addEventListener('keyup', (e) => {
+    console.log(document.getElementById('tab').textContent.toLowerCase() === 'favorite');
     const searchString = e.target.value.toLowerCase();
     // Reset displayed list for search after deleting
     displayedList.splice(0, displayedList.length);
@@ -84,12 +106,13 @@ function init() {
     const filteredRecipes = displayedList.filter((recipe) => {
       return recipe.name.toLowerCase().includes(searchString);
     });
-
-    let container = document.querySelector('.recipe-cards');
     removeChildren(container);
-
     refreshRecipeCards(filteredRecipes);
   });
+
+  // Favorite List
+  let favBtn = document.getElementById('fav-btn');
+  favBtn.addEventListener('click', showFavorite);
 
   // Close the add function
   let close = document.getElementById('close');
@@ -275,11 +298,40 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
   return newRecipe;
 }
 
+// Mark Favorite Button
+// function markFavorite() {
+//   let favList = JSON.parse(localStorage.getItem('favorites'));
+//   for (let i = 0; i < favList.length; i++) {
+//     let favBtn = document.querySelector(`.btn [id=${favList[i]}]`);
+//     console.log(favBtn);
+//     // btn.style.backgroundColor = '#ddca7e';
+//   }
+// }
+
+export function showFavorite() {
+  document.querySelector('div.input-group.rounded').classList.add('hidden');
+  document.querySelector('h1').textContent = 'Favorite';
+  document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  const container = document.getElementById('fav-recipe');
+  removeChildren(container);
+  console.log(container);
+  let favList = JSON.parse(localStorage.getItem('favorites'));
+  for (let i = 0; i < favList.length; i++) {
+    const recipeCard = document.createElement('recipe-card');
+    recipeCard.id = favList[i];
+    recipeCard.data = frontEndRecipeDict[favList[i]];
+    container.appendChild(recipeCard);
+  }
+  container.style.display = 'flex';
+  console.log(container);
+}
+
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
   let jsonData = frontEndRecipeDict[recipe.recipe_id];
   console.log(jsonData);
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  document.getElementById('tab').textContent = '';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name
   const row1 = document.createElement('div');
@@ -290,11 +342,11 @@ export function showRecipe(recipe) {
   col1.className = 'col-3';
   col1.classList.add('col-3');
   const viewIngredients = document.createElement('button');
-  viewIngredients.className = 'btn btn-outline-success btn-lg';
-  viewIngredients.classList.add('btn', 'btn-outline-success', 'btn-lg');
+  viewIngredients.className = 'btn ingre';
+  viewIngredients.classList.add('btn', 'ingre');
   viewIngredients.type = 'button';
   viewIngredients.innerHTML = 'View Ingredients';
-  viewIngredients.id = 'view-directions';
+  viewIngredients.id = 'view-ingredients';
   col1.appendChild(viewIngredients);
   row1.appendChild(col1);
 
@@ -303,8 +355,8 @@ export function showRecipe(recipe) {
   col2.className = 'col-3';
   col2.classList.add('col-3');
   const viewDirections = document.createElement('button');
-  viewDirections.className = 'btn btn-outline-danger btn-lg';
-  viewDirections.classList.add('btn', 'btn-outline-danger', 'btn-lg');
+  viewDirections.className = 'btn direct';
+  viewDirections.classList.add('btn', 'direct');
   viewDirections.type = 'button';
   viewDirections.innerHTML = 'View Directions';
   viewDirections.id = 'view-directions';
@@ -325,8 +377,8 @@ export function showRecipe(recipe) {
   row2.classList.add('row');
   // Border
   const border = document.createElement('div');
-  border.className = 'col-6 mt-4 border border-dark rounded';
-  border.classList.add('col-6', 'mt-4', 'border', 'border-dark', 'rounded');
+  border.className = 'col-6 mt-4 box-style';
+  border.classList.add('col-6', 'mt-4', 'box-style');
   // Recipe Inside Text
   const recipeText = document.createElement('div');
   recipeText.className = 'py-3 px-2';
@@ -350,14 +402,14 @@ export function showRecipe(recipe) {
   finalCol.appendChild(img);
   // Recipe Meta Data UL
   const metaData = document.createElement('ul');
-  metaData.className = 'list-unstyled border border-dark rounded px-3 py-3';
-  metaData.classList.add('list-unstyled', 'border', 'border-dark', 'rounded', 'px-3', 'py-3');
+  metaData.className = 'meta-style px-3 py-3';
+  metaData.classList.add('meta-style', 'px-3', 'py-3');
   // Prep Time
   const prepTime = document.createElement('li');
   prepTime.className = 'mb-2';
   prepTime.classList.add('mb-2');
   prepTime.id = 'prep';
-  prepTime.innerHTML = `Prep Time: ${jsonData.metrics.prep_time}`;
+  prepTime.innerHTML = `<b>Prep Time:</b> ${jsonData.metrics.prep_time} mins`;
   metaData.appendChild(prepTime);
   finalCol.appendChild(metaData);
   // Cook Time
@@ -365,7 +417,7 @@ export function showRecipe(recipe) {
   cookTime.className = 'mb-2';
   cookTime.classList.add('mb-2');
   cookTime.id = 'cook-time';
-  cookTime.innerHTML = `Cook Time: ${jsonData.metrics.cook_time}`;
+  cookTime.innerHTML = `<b>Cook Time:</b> ${jsonData.metrics.cook_time} mins`;
   metaData.appendChild(cookTime);
   row2.appendChild(finalCol);
   // Servings
@@ -373,14 +425,27 @@ export function showRecipe(recipe) {
   servings.className = 'mb-2';
   servings.classList.add('mb-2');
   servings.id = 'servings';
-  servings.innerHTML = `Servings: ${jsonData.metrics.servings}`;
+  servings.innerHTML = `<b>Serving:</b> ${jsonData.metrics.servings}`;
   metaData.appendChild(servings);
+  // Tags
+  const tagItems = document.createElement('li');
+  tagItems.className = 'mb-2';
+  tagItems.classList.add('mb-2');
+  tagItems.id = 'tag-items-view';
+  let stringTag = '';
+  for (const element of jsonData.metadata.labels) {
+    stringTag += element.toUpperCase() + ' ';
+  }
+  tagItems.innerHTML = `<b>Tags:</b> ${stringTag}`;
+  metaData.appendChild(tagItems);
+  row2.appendChild(finalCol);
+
   // Date Created
   const date = document.createElement('li');
   date.className = 'mb-2';
   date.classList.add('mb-2');
   date.id = 'date';
-  date.innerHTML = `Date Created: ${jsonData.metadata.time_added}`;
+  date.innerHTML = `<b>Date Created:</b> ${jsonData.metadata.time_added}`;
   metaData.appendChild(date);
   row2.appendChild(finalCol);
 
@@ -413,6 +478,7 @@ function clearRecipeComposeForm() {
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
   document.getElementById('output').src = '';
+  document.getElementById('tag-ip').value = '';
   removeChildren(document.getElementById('tag-items'));
   tags = [];
 }
@@ -449,7 +515,20 @@ function getRecipeIdFromDOM(recipeCardDiv) {
   return recipeCardDiv.classList[0];
 }
 
-// Tag function
+function deleteTag(t) {
+  // Add functionality for close button functions
+  let newTag = document.getElementById(`${t}`);
+  newTag.addEventListener('click', function () {
+    let parent = newTag.parentNode.parentNode;
+    parent.removeChild(newTag.parentNode);
+    let index = tags.indexOf(`${t}`);
+    tags.splice(index, 1);
+    console.log('after delete');
+    console.log(tags);
+  });
+}
+
+// Add new tag function
 function addTag(e) {
   let code = e.keyCode ? e.keyCode : e.which;
   // If user hit "Enter"
@@ -475,13 +554,22 @@ function addTag(e) {
   `;
   document.getElementById(TAG_LIST).appendChild(tagItem);
   e.target.value = '';
+  console.log(tags);
 
   // Close button for new tag
-  let newTag = document.getElementById(`${tag}`);
-  newTag.addEventListener('click', function () {
-    let parent = newTag.parentNode.parentNode;
-    parent.removeChild(newTag.parentNode);
-    let index = tags.indexOf(`${tag}`);
-    tags.splice(index);
-  });
+  deleteTag(tag);
+}
+
+export function populateTags(recipeLabels) {
+  // if not new recipe, then populate tag list with old one
+  let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+  if (oldRecipeId != '') {
+    tags = recipeLabels;
+  }
+  console.log('before delete');
+  console.log(tags);
+  for (let i = 0; i < tags.length; i++) {
+    // Add delete functionality for the tags that are just populated
+    deleteTag(tags[i]);
+  }
 }
