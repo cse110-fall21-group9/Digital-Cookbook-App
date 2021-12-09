@@ -24,16 +24,23 @@ function strStrip(name) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  frontEndRecipeDict = window.electron.acquireRecipesDictionary();
+  let backendRecipes = window.electron.acquireRecipesDictionary();
+  refreshFrontend(backendRecipes);
+  init();
+});
+
+function refreshFrontend(newList) {
+  removeChildren(document.querySelector(CARD_CONTAINER_SELECTOR));
+  frontEndRecipeDict = newList;
   console.log('Received from back end:');
   console.log(frontEndRecipeDict);
+  displayedList = [];
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     displayedList.push(val);
     // createRecipeCard(val);
   });
   refreshRecipeCards(displayedList);
-  init();
-});
+}
 
 /**
  * Delete the children of a given DOM node.
@@ -73,25 +80,6 @@ function init() {
   // Search bar function
   let search = document.getElementById(SEARCH_BAR);
   let container = document.querySelector('.recipe-cards');
-
-  // Favorite Recipe Search
-  // let favContainer = document.getElementById('fav-recipe');
-  // search.addEventListener('keyup', (e) => {
-  //   const searchString = e.target.value.toLowerCase();
-  //   // Reset displayed list for search after deleting
-  //   displayedList.splice(0, displayedList.length);
-  //   let favList = JSON.parse(localStorage.getItem('favorites'));
-  //   for (let i = 0; i < favList.length; i++) {
-  //     displayedList.push(favList[i]);
-  //   }
-  //   console.log(displayedList);
-  //   const filteredRecipes = displayedList.filter((recipe) => {
-  //     return recipe.name.toLowerCase().includes(searchString);
-  //   });
-  //   removeChildren(container);
-  //   removeChildren(favContainer);
-  //   refreshRecipeCards(filteredRecipes);
-  // });
 
   // Normal Search
   search.addEventListener('keyup', (e) => {
@@ -157,13 +145,6 @@ function init() {
       const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
       let oldCard = document.querySelector(`recipe-card[id="${oldRecipeId}"]`); // this better work gdi
       parent.removeChild(oldCard);
-      /*
-      if (recipeName != oldRecipeId) {
-        //TODO: if we save using UUID, there is no need to do this. just delete the file with the same name as the ID.
-        console.log(oldRecipeId);
-        let status = window.electron.removeRecipe(oldRecipeId);
-        console.log(status);
-      } */
     }
 
     let json = buildJSONFromForm(imgChanged, oldRecipeId);
@@ -203,6 +184,8 @@ function init() {
     // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
     console.log(imageFile.path);
   });
+  document.getElementById('export-button').addEventListener('click', exportRecipes);
+  document.getElementById('import-button').addEventListener('click', importRecipes);
 }
 
 /**
@@ -502,13 +485,15 @@ function exportRecipes() {
   }
 
   try {
-    let path = window.electron.showFileDialog();
+    let path = window.electron.showSaveFileDialog();
+    if (!path) {
+      return;
+    }
     window.electron.export(recipesToExport, path);
   } catch (err) {
     console.log(err);
   }
 }
-document.getElementById('export-button').addEventListener('click', exportRecipes);
 
 function isSelected(recipeCardDiv) {
   return recipeCardDiv.getAttribute('data-selected') === 'true';
@@ -516,6 +501,22 @@ function isSelected(recipeCardDiv) {
 
 function getRecipeIdFromDOM(recipeCardDiv) {
   return recipeCardDiv.getAttribute('id');
+}
+
+function importRecipes() {
+  try {
+    let paths = window.electron.showOpenFileDialog();
+    if (!paths || paths.length == 0) {
+      return;
+    }
+    for (let path of paths) {
+      window.electron.import(path);
+    }
+    let newBackendRecipes = window.electron.acquireRecipesDictionary();
+    refreshFrontend(newBackendRecipes);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 function deleteTag(t) {

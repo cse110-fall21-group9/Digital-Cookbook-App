@@ -70,7 +70,13 @@ contextBridge.exposeInMainWorld('electron', {
    * Request that the file dialogue be shown.
    * @returns SUCCESS if succeeded, FAILURE if not.
    */
-  showFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
+  showSaveFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
+
+  /**
+   * Request that the file dialogue be shown.
+   * @returns SUCCESS if succeeded, FAILURE if not.
+   */
+  showOpenFileDialog: () => ipcRenderer.sendSync('OPEN_DIALOG'),
 
   /**
    * Request a new uuidv4 from the back end.

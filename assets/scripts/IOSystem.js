@@ -218,9 +218,7 @@ class IOSystem {
     const dir = path.dirname(filePath) + '/';
 
     // confirm that the file has the right extension
-    const fileNameExt = fileName
-      .substring(fileName.length - JSON_EXT_LEN, fileName.length)
-      .toLowerCase();
+    const fileNameExt = path.extname(fileName);
     if (fileNameExt === '.rcpkg') {
       let filePath = `${dir}${fileName}`;
 
