@@ -221,6 +221,7 @@ class IOSystem {
     const fileNameExt = path.extname(fileName);
     if (fileNameExt === '.rcpkg') {
       let filePath = `${dir}${fileName}`;
+      console.log(`Importing from ${filePath}`);
 
       // get file handle from file path
       try {

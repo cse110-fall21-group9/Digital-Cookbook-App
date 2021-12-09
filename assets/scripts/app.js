@@ -37,7 +37,6 @@ function refreshFrontend(newList) {
   displayedList = [];
   Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
     displayedList.push(val);
-    // createRecipeCard(val);
   });
   refreshRecipeCards(displayedList);
 }
@@ -148,18 +147,7 @@ function init() {
     }
 
     let json = buildJSONFromForm(imgChanged, oldRecipeId);
-    createRecipeCard(json);
-
-    // debug directives
-    console.log('JSON built from form:');
-    console.log(json);
-    // add to front-end copy of dictionary
-    frontEndRecipeDict[json.recipe_id] = json;
-
-    // Save file to local storage
-    // recipeName = strStrip(json['name']);
-    // let file = `${recipeName}.json`;
-    let status = window.electron.addRecipe(json, json.recipe_id);
+    let status = createAddRecipeFromJSON(json);
     console.log(status);
   });
 
@@ -196,7 +184,16 @@ function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.id = data.recipe_id;
   recipeCard.data = data;
-  document.querySelector('.recipe-cards').appendChild(recipeCard);
+  return recipeCard;
+}
+
+/**
+ * Appends the recipe card to the DOM
+ * @param {recipe-card} recipeCardElem recipeCard element to add to the DOM
+ */
+function addRecipeCardToDOM(recipeCardElem) {
+  console.log(`Adding to dom: ${recipeCardElem}`);
+  document.querySelector('.recipe-cards').appendChild(recipeCardElem);
 }
 
 /**
@@ -206,7 +203,7 @@ function createRecipeCard(data) {
  */
 function refreshRecipeCards(cardList) {
   for (let i = cardList.length - 1; i >= 0; i--) {
-    createRecipeCard(cardList[i]);
+    createAddRecipeFromJSON(cardList[i]);
   }
 }
 
@@ -509,11 +506,14 @@ function importRecipes() {
     if (!paths || paths.length == 0) {
       return;
     }
+    console.log(paths);
     for (let path of paths) {
-      window.electron.import(path);
+      let importedRecs = window.electron.import(path);
+      for (let recipeJSON of importedRecs) {
+        recipeJSON.recipe_id = window.electron.generateNewId();
+        createAddRecipeFromJSON(recipeJSON);
+      }
     }
-    let newBackendRecipes = window.electron.acquireRecipesDictionary();
-    refreshFrontend(newBackendRecipes);
   } catch (err) {
     console.log(err);
   }
@@ -576,4 +576,13 @@ export function populateTags(recipeLabels) {
     // Add delete functionality for the tags that are just populated
     deleteTag(tags[i]);
   }
+}
+
+function createAddRecipeFromJSON(json) {
+  let id = json.recipe_id;
+  let card = createRecipeCard(json); // returns the HTMLElement recipe-card
+  addRecipeCardToDOM(card);
+  frontEndRecipeDict[id] = json;
+  let status = window.electron.addRecipe(json, id);
+  return status;
 }

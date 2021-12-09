@@ -4,15 +4,16 @@
 	"description": "The Pandas Cookbook app",
 	"main": "./assets/scripts/main.js",
 	"repository": {
-	  "type": "git",
-	  "url": "git+https://github.com/cse110-fall21-group9/Digital-Cookbook-App.git"
+		"type": "git",
+		"url": "git+https://github.com/cse110-fall21-group9/Digital-Cookbook-App.git"
 	},
 	"author": "The Import Pandas Team",
 	"license": "ISC",
 	"bugs": {
-	  "url": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App/issues"
+		"url": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App/issues"
 	},
 	"homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
-	"dependencies": {}
-  }
-  
+	"dependencies": {
+		"uuid": "^8.3.2"
+	}
+}

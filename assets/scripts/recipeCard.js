@@ -341,10 +341,12 @@ class recipeCard extends HTMLElement {
       } else {
         // Remove from fav List
         let favList = JSON.parse(localStorage.getItem('favorites'));
-        let index = favList.indexOf(data.recipe_id);
-        if (index !== -1) {
-          favList.splice(index, 1);
-          localStorage.setItem('favorites', JSON.stringify(favList));
+        if (favList) {
+          let index = favList.indexOf(data.recipe_id);
+          if (index !== -1) {
+            favList.splice(index, 1);
+            localStorage.setItem('favorites', JSON.stringify(favList));
+          }
         }
         // Remve recipe from current list
         window.electron.removeRecipe(data.recipe_id);

@@ -62,9 +62,7 @@ contextBridge.exposeInMainWorld('electron', {
    * an array of objects.
    * @param {string} path the location of the `.rcpkg` file.
    */
-  import: (path) => {
-    ipcRenderer.sendSync('RC_UNPACK', path);
-  },
+  import: (path) => ipcRenderer.sendSync('RC_UNPACK', path),
 
   /**
    * Request that the file dialogue be shown.
