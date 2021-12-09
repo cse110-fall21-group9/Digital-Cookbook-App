@@ -1,7 +1,8 @@
 import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
 import {removeChildren} from './app.js';
-import {displayedList} from './app.js';
+import {populateTags} from './app.js';
+import {showFavorite} from './app.js';
 
 const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
 const IMAGE_CHANGED = 'data-changed';
@@ -9,6 +10,8 @@ const TAG_LIST = 'tag-items';
 const OPENED_FROM = 'data-opened-from';
 const RECIPE_FORM_ID = 'add-recipe';
 const RECIPE_ID_PROPERTY = 'data-recipe-id';
+
+export var recipeLabels = [];
 
 function strStrip(name) {
   return name.replace(/\s/g, '');
@@ -40,114 +43,139 @@ class recipeCard extends HTMLElement {
     const style = document.createElement('style');
     style.innerHTML = `
         .recipe {
-            background-color: #eeeee4;
-            border-radius: 16px;
-            color: v#070705;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-wrap: wrap;
-            height: auto;
-            width: 250px;
-            margin-bottom: 30px
-            column-gap: 10px;
-            row-gap: 5px
-            box-sizing: border-box;
-            padding: 2px;
-            overflow: visible
+          background-color: #f2eee2;
+          border: 2px solid rgba(0,0,0,1);
+          border-radius: 16px;
+          color: v#070705;
+          font-family: 'Poppins', sans-serif;
+          display: flex;
+          flex-wrap: wrap;
+          height: auto;
+          width: 250px;
+          margin-bottom: 30px
+          column-gap: 10px;
+          row-gap: 5px;
+          box-sizing: border-box;
+          overflow: visible;
+          word-break: break-all;
         }
+        
         .recipe:hover {
           cursor: pointer;
-          transform:scale(1.05);
+          box-shadow: .5rem .5rem .1rem rgb(243, 195, 131);
+          transform: scale(1.05);
         }
         
         .image {
-            width: 100%;
-            height: 10rem;
-            overflow: hidden;
-            border-radius: 16px 16px 0 0;
-            margin-bottom: 0.025 rem;
+          width: 100%;
+          height: 10rem;
+          overflow: hidden;
+          border-radius: 16px 16px 0 0;
+          margin-bottom: 0.025 rem;
         }
 
         img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .empty-recipe-tag {
+          color: none;
+          margin: .25rem .5rem .25rem .5rem;
         }
 
         .recipe-tag {
-            font-weight: 550;
-            font-size: 15px;
-            letter-spacing: -0.25px;
-            color: #fff;
-            margin: 5px ;
-            background-color: #BB5274;
-            padding: .115rem 1rem;
-            border-radius: 100px;
+          font-weight: 550;
+          font-size: 13px;
+          letter-spacing: -0.25px;
+          color: #fff;
+          margin: .25rem .05rem .25rem .05rem;
+          background-color: #BB5274;
+          padding: .15rem 1rem;
+          border-radius: 100px;
+        }
+
+        p.recipe-tags {
+          margin: .25rem .5rem .25rem .9rem;
+        }
+
+        input[id ^= check-box] {
+          width: 1rem;
+          height: 1rem;
+          border-radius: 10%;
+          border-style: solid;
+          border-width: 0.1rem;
+          margin: .25rem .5rem .25rem 1rem;
         }
         
         h1[id ^= "name"] {
-            margin: .25rem .5rem .25rem 1rem;
-            font-size: 20px;
-            font-weight: 700;
-            letter-spacing: -1px;
+          margin: .25rem .5rem .05rem 1rem;
+          font-size: 20px;
+          font-weight: 700;
+          letter-spacing: -1px;
         }
         
         p[id ^= "info"] {
-            margin: .5rem .5rem .5rem 1rem;
-            font-size: 15px;
-            color: inhereit;
-            height: 32px;
-            line-height: 16px;
-            overflow: hidden;
+          margin: .5rem 1rem .5rem 1rem;
+          font-size: 15px;
+          color: inhereit;
+          height: 32px;
+          line-height: 16px;
+          overflow: hidden;
         }
         
         .recipe-time {
           margin: .5rem .5rem .5rem 1rem
         }
+
         .recipe .buttons {
-            display: flex;
-            flex-wrap: wrap;;
+          display: flex;
+          flex-wrap: wrap;;
         }
+
+        #fav:hover {
+          background-color: #ddca7e;
+        }
+
         .recipe .btn,  .recipe .dropbtn {
-            display: inline-block;
-            font-weight: 600;
-            letter-spacing: -0.25px;
-            color: #fff;
-            padding:0.45em 1.5em;
-            border:0.1em solid #FFFFFF;
-            margin:0 0.3em 0.7em 0.9em;
-            border-radius:0.12em;
-            box-sizing: border-box;
-            background-color: #2B3044;
-            cursor: pointer;
+          display: inline-block;
+          font-weight: 600;
+          letter-spacing: -0.25px;
+          color: #fff;
+          padding:0.45em 1.5em;
+          border:0.1em solid #FFFFFF;
+          margin:0 0.3em 0.7em 0.9em;
+          border-radius:0.12em;
+          box-sizing: border-box;
+          background-color: #2B3044;
+          cursor: pointer;
         }
 
-          .dropdown {
-            position: relative;
-            display: inline-block;
-          }
-          
-          .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f1f1f1;
-            min-width: 100px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-          }
+        .dropdown {
+          display: inline-block;
+        }
+        
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f1f1f1;
+          min-width: 100px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+        }
 
-          .dropdown:hover .dropdown-content {display: block;}
+        .dropdown:hover .dropdown-content {display: block;}
 
-          .dropdown:hover .dropbtn {background-color: #3e8e41;}
-          
-          .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            display: block;
-          }
-          
-          .dropdown-content a:hover {background-color: #ddd}
-          
+        .dropdown:hover .dropbtn {background-color: #3e8e41;}
+        
+        .dropdown-content a {
+          color: black;
+          padding: 12px 16px;
+          display: block;
+        }
+        
+        .dropdown-content a:hover {background-color: #ddd}
         `;
     card.classList.add('recipe');
     card['data-selected'] = false;
@@ -173,11 +201,16 @@ class recipeCard extends HTMLElement {
     // Create tags
     const tag = document.createElement('p');
     tag.classList.add('recipe-tags');
-
-    for (let i = 0; i < data.metadata.labels.length; i++) {
+    if (data.metadata.labels.length === 0) {
       tag.innerHTML += ` 
-      <span class="recipe-tag">${data.metadata.labels[i]}</span>
+      <span class="empty-recipe-tag"></span>
       `;
+    } else {
+      for (let i = 0; i < data.metadata.labels.length; i++) {
+        tag.innerHTML += ` 
+        <span class="recipe-tag">${data.metadata.labels[i]}</span>
+        `;
+      }
     }
     console.log(tag);
     recipeContent.appendChild(tag);
@@ -210,23 +243,23 @@ class recipeCard extends HTMLElement {
     recipeContent.appendChild(desc);
 
     // Get time
-    const time = document.createElement('div');
-    time.classList.add('recipe-time');
-    let cookingTime = data.metrics.cook_time;
-    time.innerHTML = `
-        <i class="fas fa-clock"></i>
-        <time>Cook time: ${cookingTime}</time>
-        `;
-    recipeContent.appendChild(time);
-    card.appendChild(recipeContent);
+    // const time = document.createElement('div');
+    // time.classList.add('recipe-time');
+    // let cookingTime = data.metrics.cook_time;
+    // if (cookingTime === '') {
+    //   time.innerHTML = `
+    //     <i class="fa fa-clock-o"></i>
+    //     <time></time>
+    //     `;
+    // } else {
+    //   time.innerHTML = `
+    //     <i class="fa fa-clock-o"></i>
+    //     <time>${cookingTime}</time>
+    //     `;
+    // }
+    // recipeContent.appendChild(time);
 
-    // Create checkbox (Added)
-    //  const Select = document.createElement('label');
-    //  Select.classList.add('check-box');
-    //  Select.innerHTML = `
-    //        <input type="checkbox">
-    //        `;
-    //  recipeContent.appendChild(Select);
+    card.appendChild(recipeContent);
 
     // Button
     card.innerHTML += `
@@ -241,6 +274,7 @@ class recipeCard extends HTMLElement {
             </div>
         </div>
         `;
+
     this.DOMRef = card;
     this.shadowRoot.append(style, card);
 
@@ -274,7 +308,24 @@ class recipeCard extends HTMLElement {
 
     let edit = card.getElementsByClassName('edit').item(0);
     let deleteRecipe = card.getElementsByClassName('delete').item(0);
-    let share = card.getElementsByClassName('share').item(0);
+    let fav = card.getElementsByClassName('btn').item(0);
+
+    // Favorite a recipe
+    fav.addEventListener('click', () => {
+      let favList = JSON.parse(localStorage.getItem('favorites')) || [];
+      let index = favList.indexOf(data.recipe_id);
+
+      // Not in fav yet
+      if (index == -1) {
+        fav.style.backgroundColor = '#ddca7e';
+        favList.push(data.recipe_id);
+      } else {
+        fav.style.backgroundColor = '#2B3044';
+        favList.splice(index, 1);
+      }
+      localStorage.setItem('favorites', JSON.stringify(favList));
+    });
+
     // Edit recipe
     edit.addEventListener('click', (event) => {
       // let recipeData = window.electron.acquireRecipe(strStrip(title.textContent));
@@ -288,6 +339,16 @@ class recipeCard extends HTMLElement {
       if (!confirm('Are you sure you want to delete this recipe?')) {
         event.preventDefault();
       } else {
+        // Remove from fav List
+        let favList = JSON.parse(localStorage.getItem('favorites'));
+        if (favList) {
+          let index = favList.indexOf(data.recipe_id);
+          if (index !== -1) {
+            favList.splice(index, 1);
+            localStorage.setItem('favorites', JSON.stringify(favList));
+          }
+        }
+        // Remve recipe from current list
         window.electron.removeRecipe(data.recipe_id);
         const parent = document.querySelector('article.recipe-cards');
         let removeCard = document.querySelector(`recipe-card[id="${this.json.recipe_id}"]`);
@@ -297,6 +358,10 @@ class recipeCard extends HTMLElement {
 
         Reflect.deleteProperty(frontEndRecipeDict, data.recipe_id);
         parent.removeChild(removeCard);
+        if (document.getElementsByClassName('recipe-cards').classList === 2) {
+          console.log('in-here');
+          showFavorite();
+        }
       }
     });
   }
@@ -307,7 +372,9 @@ function fillComposeRecipeFormData(recipeData) {
   document.getElementById('add-recipe').style.display = 'grid';
   document.getElementById('recipe-name').value = recipeData.name;
   document.getElementById('ingredients').value = recipeData.ingredients;
-  document.getElementById('instructions').value = recipeData.steps;
+  for (let i = 0; i < recipeData.steps.length; i++) {
+    document.getElementById('instructions').value += `${recipeData.steps[i]} \n`;
+  }
   document.getElementById('time-cook').value = recipeData.metrics.cook_time;
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;
@@ -320,25 +387,19 @@ function fillComposeRecipeFormData(recipeData) {
 
   // Populate the tags
   removeChildren(document.getElementById('tag-items'));
-  for (let i = 0; i < recipeData.metadata.labels.length; i++) {
+  recipeLabels = recipeData.metadata.labels;
+  for (let i = 0; i < recipeLabels.length; i++) {
     let tagItem = document.createElement('div');
     tagItem.classList.add('item');
     tagItem.innerHTML = `
-      <span class="delete-btn" id='${recipeData.metadata.labels[i]}'>
+      <span class="delete-btn" id='${recipeLabels[i]}'>
       &times;
       </span>
-      <span>${recipeData.metadata.labels[i]}</span>
+      <span>${recipeLabels[i]}</span>
     `;
     document.getElementById(TAG_LIST).appendChild(tagItem);
   }
-  // Close button for new tag
-  // let newTag = document.getElementById(`${tag}`);
-  // newTag.addEventListener('click', function() {
-  //   let parent = newTag.parentNode.parentNode;
-  //   parent.removeChild(newTag.parentNode);
-  //   let index = tags.indexOf(`${tag}`);
-  //   tags.splice(index);
-  // });
+  populateTags(recipeLabels);
   console.log('Form Data filled with: ');
   console.log(recipeData);
 }
