@@ -1,6 +1,7 @@
 /* Apply an overall font and size */
 @import url('https://rsms.me/inter/inter.css');
 @import url('https://fonts.googleapis.com/css?family=Fjalla+One&display=swap');
+
 * {
   font-size: 1.2vw;
 }
@@ -36,14 +37,7 @@ nav {
   left: 0;
   background-color: rgb(243 195 131);
   padding-top: 60px; /* Place content 60px from the top */
-  overflow-x: scroll;  
-  /* 0.5 second transition effect to slide in the sidebar */
-  /* height: 100vh;
-  position: fixed;
-  font-family: 'Roboto', sans-serif;
-  padding-right: 1px;
-  font-weight: bold;
-  text-align: left; */
+  overflow-x: scroll;
 }
 #add {
   margin-top: 50px;
@@ -59,7 +53,6 @@ nav {
   padding: 8px 8px 8px 32px;
   margin-bottom: 20px;
   letter-spacing: 0.1em;
-  
 }
 
 .nav-style ul {
@@ -77,13 +70,13 @@ nav {
 .open-sidebar {
   margin-left: 10px;
   background-color: #f8f4e5;
-  border: 2px solid rgba(0,0,0,1);
-  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0,0,0,1);
+  border: 2px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0, 0, 0, 1);
 }
 
 .open-sidebar:hover {
   color: #95a4ff;
-} 
+}
 
 .close-sidebar {
   text-align: right;
@@ -98,8 +91,8 @@ nav {
   text-align: center;
   width: 100px;
   background: #f8f4e5;
-  border: 2px solid rgba(0,0,0,1);
-  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0,0,0,1);
+  border: 2px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0, 0, 0, 1);
 }
 
 #fav-recipe {
@@ -117,8 +110,8 @@ nav {
 #tab {
   font-family: 'Fjalla One';
   margin-left: 40px;
-
 }
+
 /* INDIVIDUAL RECIPE CARDS */
 .recipe-cards {
   column-gap: 25px;
@@ -136,7 +129,7 @@ body {
   --primary: #e05d26;
   --grey: #857171;
   --lightgrey: #666;
-  --size-bezel: .5rem;
+  --size-bezel: 0.5rem;
   --size-radius: 4px;
 
   color: var(--grey);
@@ -163,8 +156,9 @@ div#add-recipe.popup {
   background-color: rgb(255, 255, 255);
   border-radius: var(--size-radius);
   border: 2px solid #111;
-  box-shadow: .5rem .5rem .1rem rgb(41, 40, 40);
-  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms, transform 20ms ease-in-out 0ms;
+  box-shadow: 0.5rem 0.5rem 0.1rem rgb(41, 40, 40);
+  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms,
+    transform 20ms ease-in-out 0ms;
 }
 
 .popup::-webkit-scrollbar {
@@ -224,30 +218,33 @@ textarea {
   border: 2px solid #111;
 }
 
-#time-cook, #time-prep, #serving {
+#time-cook,
+#time-prep,
+#serving {
   margin-bottom: 20px;
 }
 
-#view-directions, #view-ingredients {
+#view-directions,
+#view-ingredients {
   font-size: 17px;
   background: #f8f4e5;
-  border: 2px solid rgba(0,0,0,1);
-  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0,0,0,1);
+  border: 2px solid rgba(0, 0, 0, 1);
+  box-shadow: 3px 3px 1px #95a4ff, 3px 3px 1px 1px rgba(0, 0, 0, 1);
 }
 
 input {
   border: none;
-  border-bottom: 3px solid rgba(0,0,0,1);
+  border-bottom: 3px solid rgba(0, 0, 0, 1);
   margin-top: 10px;
   height: 30px;
   margin-bottom: 20px;
   outline: none;
   font-size: 17px;
 }
+
 input:focus {
   border-bottom: 4px solid #ffa580;
 }
-
 
 #recipe-name {
   margin-bottom: 20px;
@@ -302,14 +299,14 @@ input:focus {
 
 div.box-style {
   background: #f8f4e5;
-  border: 2px solid rgba(0,0,0,1);
-  box-shadow: 15px 15px 1px #ffa580, 15px 15px 1px 2px rgba(0,0,0,1);
+  border: 2px solid rgba(0, 0, 0, 1);
+  box-shadow: 15px 15px 1px #ffa580, 15px 15px 1px 2px rgba(0, 0, 0, 1);
 }
 
 ul.meta-style {
   margin-left: 30px;
   background: #f8f4e5;
-  border: 2px solid rgba(0,0,0,1);
+  border: 2px solid rgba(0, 0, 0, 1);
 }
 
 li {
@@ -317,15 +314,14 @@ li {
   margin-right: 5px;
 }
 
-
-div #make-recipe  {
+div #make-recipe {
   margin-left: -100px;
   font-size: 30px;
 }
 
 img.img-thumbnail.mb-5 {
   width: 500px;
-  margin: 18px ;
+  margin: 18px;
 }
 
 @media screen and (min-width: 800px) {
@@ -335,10 +331,11 @@ img.img-thumbnail.mb-5 {
 }
 
 @media screen and (max-width: 800px) {
-  .recipe-cards, #fav-recipe {
+  .recipe-cards,
+  #fav-recipe {
     margin-left: 300px;
   }
-  
+
   body {
     overflow-x: visible;
   }
@@ -349,10 +346,11 @@ img.img-thumbnail.mb-5 {
 }
 
 @media screen and (max-width: 700px) {
-  .recipe-cards, #fav-recipe {
+  .recipe-cards,
+  #fav-recipe {
     margin-left: 280px;
   }
-  
+
   body {
     overflow-x: visible;
   }
@@ -360,7 +358,6 @@ img.img-thumbnail.mb-5 {
   .recipe-cards {
     margin-left: 280px;
   }
-  
 
   .popup {
     min-width: 420px;
@@ -376,10 +373,11 @@ img.img-thumbnail.mb-5 {
 }
 
 @media screen and (max-width: 600px) {
-  .recipe-cards, #fav-recipe {
+  .recipe-cards,
+  #fav-recipe {
     margin-left: 280px;
   }
-  
+
   body {
     overflow-x: visible;
   }
@@ -413,7 +411,8 @@ img.img-thumbnail.mb-5 {
 }
 
 @media screen and (max-width: 550px) {
-  .recipe-cards, #fav-recipe {
+  .recipe-cards,
+  #fav-recipe {
     margin-left: 280px;
   }
 
@@ -446,8 +445,8 @@ img.img-thumbnail.mb-5 {
     width: 22%;
   }
 
-
-  .recipe-cards, #fav-recipe {
+  .recipe-cards,
+  #fav-recipe {
     margin-left: 280px;
   }
 
