@@ -25,7 +25,8 @@
   },
   "homepage": "https://github.com/cse110-fall21-group9/Digital-Cookbook-App#readme",
   "dependencies": {
-    "bootstrap-icons": "^1.7.2"
+    "bootstrap-icons": "^1.7.2",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
