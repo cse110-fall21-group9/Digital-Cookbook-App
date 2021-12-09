@@ -312,6 +312,7 @@ export function showFavorite() {
   document.querySelector('div.input-group.rounded').classList.add('hidden');
   document.querySelector('h1').textContent = 'Favorite';
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  removeChildren(document.getElementById('view-recipe'));
   const container = document.getElementById('fav-recipe');
   removeChildren(container);
   console.log(container);
@@ -330,7 +331,9 @@ export function showFavorite() {
 export function showRecipe(recipe) {
   let jsonData = frontEndRecipeDict[recipe.recipe_id];
   console.log(jsonData);
+  document.querySelector('div.input-group.rounded').classList.add('hidden');
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  removeChildren(document.getElementById('fav-recipe'));
   document.getElementById('tab').textContent = '';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name
