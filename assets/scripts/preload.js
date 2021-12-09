@@ -1,10 +1,11 @@
 /**
- * File: preload.js
- * This file is used to expose ipcRenderer functions via the context bridge
+ * @module preload
+ * @description This file is used to expose ipcRenderer functions via the context bridge
  * to front-end scripts that live in the DOM.
  * These functions can be used to send messages to main.js via our
  * established transmission protocols.
  */
+
 const {contextBridge, ipcRenderer} = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
@@ -37,13 +38,13 @@ contextBridge.exposeInMainWorld('electron', {
   /**
    * Retrieve the JSON data of a recipe on disk.
    * @param {string} recipeId the ID of the recipe.
-   * @returns the JSON data of the recipe on success, FAILURE on failure.
+   * @returns {string} the JSON data of the recipe on success, FAILURE on failure.
    */
   acquireRecipe: (recipeId) => ipcRenderer.sendSync('ACQUIRE', recipeId),
 
   /**
    * Retrieve a full copy of our "database," which is the dictionary of recipes in the backend.
-   * @returns the backend dictionary on success, FAILURE on failure.
+   * @returns {object} the backend dictionary on success, FAILURE on failure.
    */
   acquireRecipesDictionary: () => ipcRenderer.sendSync('CACHE_DICT'),
 
@@ -61,6 +62,7 @@ contextBridge.exposeInMainWorld('electron', {
    * Send an order to the backend to unpack a `.rcpkg` file into
    * an array of objects.
    * @param {string} path the location of the `.rcpkg` file.
+   * @returns {[object]}
    */
   import: (path) => {
     ipcRenderer.sendSync('RC_UNPACK', path);
@@ -68,7 +70,7 @@ contextBridge.exposeInMainWorld('electron', {
 
   /**
    * Request that the file dialogue be shown.
-   * @returns SUCCESS if succeeded, FAILURE if not.
+   * @returns {string} returns the selected path
    */
   showFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
 
