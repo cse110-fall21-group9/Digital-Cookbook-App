@@ -515,7 +515,7 @@ function isSelected(recipeCardDiv) {
 }
 
 function getRecipeIdFromDOM(recipeCardDiv) {
-  return recipeCardDiv.classList[0];
+  return recipeCardDiv.getAttribute('id');
 }
 
 function deleteTag(t) {
