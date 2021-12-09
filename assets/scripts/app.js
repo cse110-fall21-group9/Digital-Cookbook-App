@@ -367,6 +367,14 @@ export function showRecipe(recipe) {
   recipeText.className = 'py-3 px-2';
   recipeText.classList.add('py-3', 'px-2');
   recipeText.id = 'making-recipe';
+  if (jsonData.ingredients.length === 1) {
+    const str = jsonData.ingredients[0];
+    jsonData.ingredients = str.split(',');
+  }
+  if (jsonData.steps.length === 1) {
+    const str = jsonData.steps[0];
+    jsonData.steps = str.split(',');
+  }
   for (let i = 0; i < jsonData.ingredients.length; i++) {
     recipeText.innerHTML += `${jsonData.ingredients[i]}<br>`;
   }
