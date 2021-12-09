@@ -372,7 +372,9 @@ function fillComposeRecipeFormData(recipeData) {
   document.getElementById('add-recipe').style.display = 'grid';
   document.getElementById('recipe-name').value = recipeData.name;
   document.getElementById('ingredients').value = recipeData.ingredients;
-  document.getElementById('instructions').value = recipeData.steps;
+  for (let i = 0; i < recipeData.steps.length; i++) {
+    document.getElementById('instructions').value += `${recipeData.steps[i]} \n`;
+  }
   document.getElementById('time-cook').value = recipeData.metrics.cook_time;
   document.getElementById('time-prep').value = recipeData.metrics.prep_time;
   document.getElementById('serving').value = recipeData.metrics.servings;

@@ -367,8 +367,16 @@ export function showRecipe(recipe) {
   recipeText.className = 'py-3 px-2';
   recipeText.classList.add('py-3', 'px-2');
   recipeText.id = 'making-recipe';
+  if (jsonData.ingredients.length === 1) {
+    const str = jsonData.ingredients[0];
+    jsonData.ingredients = str.split(',');
+  }
+  if (jsonData.steps.length === 1) {
+    const str = jsonData.steps[0];
+    jsonData.steps = str.split(',');
+  }
   for (let i = 0; i < jsonData.ingredients.length; i++) {
-    recipeText.innerHTML += `${jsonData.ingredients[i]}<br>`;
+    recipeText.innerHTML += `<p>${jsonData.ingredients[i]}<p><br>`;
   }
   border.appendChild(recipeText);
   row2.appendChild(border);
@@ -438,14 +446,15 @@ export function showRecipe(recipe) {
   viewIngredients.addEventListener('click', (event) => {
     recipeText.innerHTML = '';
     for (let i = 0; i < jsonData.ingredients.length; i++) {
-      recipeText.innerHTML += `${jsonData.ingredients[i]}<br>`;
+      recipeText.innerHTML += `<p>${jsonData.ingredients[i]}<p><br>`;
     }
   });
   // console.log(viewDirections);
   viewDirections.addEventListener('click', (event) => {
     recipeText.innerHTML = '';
     for (let i = 0; i < jsonData.steps.length; i++) {
-      recipeText.innerHTML += `${i + 1}. ${jsonData.steps[i]}<br>`;
+      recipeText.innerHTML += `<h5>Step ${i + 1}</h5>`;
+      recipeText.innerHTML += `<p>${jsonData.steps[i]}<p><br>`;
     }
   });
 }
@@ -541,7 +550,7 @@ function addTag(e) {
   }
 
   let tag = e.target.value.trim();
-  if (tag.length < 1 || tags.includes(tag) || tags.length >= 3) {
+  if (tag.length < 1 || tags.includes(tag) || tags.length >= 2) {
     e.target.value = '';
     return;
   }
