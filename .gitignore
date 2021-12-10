@@ -1,7 +1,4 @@
 node_modules/
 actionlint*
 import-pandas-cookbook-app-*/
-assets/recipes/**
-assets/recipes/images/**
-!assets/recipes/images
 .vscode/
