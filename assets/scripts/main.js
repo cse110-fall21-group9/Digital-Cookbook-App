@@ -1,7 +1,7 @@
 /**
- * File: main.js
- * This file is the entry point of our app and defines a fake server that contains a Node.js environment.
- * Node.js modules, the electron API (windowing methods, etc.) and message handlers live here.
+ * @module main
+ * @author import pandas: cse110-fall21-group9
+ * @description This file is the entry point of our app and defines a fake server that contains a Node.js environment. Node.js modules, the electron API (windowing methods, etc.) and message handlers live here.
  */
 
 // Modules to control application life and create native browser window
