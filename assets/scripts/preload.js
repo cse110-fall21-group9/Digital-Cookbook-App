@@ -62,19 +62,19 @@ contextBridge.exposeInMainWorld('electron', {
    * Send an order to the backend to unpack a `.rcpkg` file into
    * an array of objects.
    * @param {string} path the location of the `.rcpkg` file.
-   * @returns {[object]}
+   * @returns {object[]} the objects from the file saved at path
    */
   import: (path) => ipcRenderer.sendSync('RC_UNPACK', path),
 
   /**
    * Request that the file dialogue be shown.
-   * @returns SUCCESS if succeeded, FAILURE if not.
+   * @returns {string} the path the user selected to save the file at
    */
   showSaveFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
 
   /**
    * Request that the file dialogue be shown.
-   * @returns {string} returns the selected path
+   * @returns {string[]} returns the selected paths
    */
   showOpenFileDialog: () => ipcRenderer.sendSync('OPEN_DIALOG'),
 

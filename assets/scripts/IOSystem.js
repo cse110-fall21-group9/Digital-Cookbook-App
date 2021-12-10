@@ -1,7 +1,6 @@
 /**
  * @module IOSystem
  * @author Zane Wang @Lord-Scrubington-II
- * @description The IOSystem class provides the data structures & methods for reading and writing JSON files to the disk, as well as caching recipe information at runtime.
  */
 const fs = require('fs');
 const fsPromises = require('fs/promises');
@@ -12,15 +11,8 @@ const BINARY = 'base64'; // for encoding & decoding binary data to/from Blob typ
 const JSON_EXT_LEN = 5;
 
 /**
- * @member recipesDict a dictionary that maps recipe names to their JSON data.
- * @member filesDict a dictionary that maps recipe names to their file paths.
- * @method indexRecipe indexes recipes by name & maps them to JSON data.
- * @method indexFile indexes recipes by name & maps them to file locations.
- * @method scanFiles scans a dir for files and returns a list of objects containing the files' data.
- * @method dumpJSON takes a JS object and a file path, and writes it to that file path.
- * @method eraseFileAt takes a file path and erases the file found there. Dangerous; use with safety checks.
- * @method makeRCPackage takes a list of JS objects and packs them into a `.rcpkg` file.
- * @alias module: IOSystem.IOSystem
+ * @class IOSystem
+ * @classdesc The IOSystem class provides the data structures & methods for reading and writing JSON files to the disk, as well as caching recipe information at runtime.
  */
 class IOSystem {
   static recipesDict = {};
