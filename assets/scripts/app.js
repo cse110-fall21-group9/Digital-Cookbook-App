@@ -282,7 +282,6 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
   return newRecipe;
 }
 
-
 export function showFavorite() {
   document.querySelector('div.input-group.rounded').classList.add('hidden');
   document.querySelector('h1').textContent = 'Favorite';
