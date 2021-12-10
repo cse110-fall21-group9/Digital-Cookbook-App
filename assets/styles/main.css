@@ -1,7 +1,8 @@
 /* Apply an overall font and size */
+@import url("https://rsms.me/inter/inter.css");
+@import url("https://fonts.googleapis.com/css?family=Fjalla+One&display=swap");
 
 * {
-  font-family: verdana, sans-serif;
   font-size: 1.2vw;
 }
 
@@ -9,9 +10,10 @@
 
 /* top-bar Elements */
 .top-bar {
+  margin-left: 210px;
   background: rgb(88 88 88);
-  width: 100%;
   top: 0;
+  width: 100%;
   font-family: "Courier New", Courier, monospace;
   color: white;
 }
@@ -28,21 +30,30 @@
 
 /* Nav Bar Styling */
 nav {
-  height: 100%;
-  padding-right: 1px;
+  position: fixed;
+  height: 100%; /* 100% Full-height */
+  width: 210px; /* 0 width - change this with JavaScript */
+  top: 0;
+  left: 0;
   background-color: rgb(243 195 131);
-  font-weight: bold;
-  text-align: left;
+  padding-top: 60px; /* Place content 60px from the top */
+  overflow-x: scroll;
+}
+
+#add {
+  margin-top: 50px;
 }
 
 .nav-style a:link,
 .nav-style a:visited {
   background-color: rgb(243 195 131);
-  border-bottom: 1px solid rgb(88 88 88);
   color: rgb(88 88 88);
   display: block;
   text-decoration: none;
-  padding: 20px 10px;
+  font-size: 15px;
+  padding: 8px 8px 8px 32px;
+  margin-bottom: 20px;
+  letter-spacing: 0.1em;
 }
 
 .nav-style ul {
@@ -57,25 +68,55 @@ nav {
   background-color: #f3efbf;
 }
 
+.btn-home {
+  margin-top: 1px;
+  margin-bottom: 1px;
+  font-size: 17px;
+  text-align: center;
+  width: 100px;
+  background: #f8f4e5;
+  border: 2px solid #111;
+  box-shadow:
+    3px 3px 1px #95a4ff,
+    3px 3px 1px 1px #111;
+}
+
+#fav-recipe {
+  column-gap: 25px;
+  display: none;
+  flex-wrap: wrap;
+  max-height: 70%;
+  height: auto;
+  margin: 50px 1px 30px;
+  max-width: 100%;
+  row-gap: 30px;
+  width: 100%;
+}
+
+#tab {
+  font-family: "Fjalla One", sans-serif;
+  margin-left: 40px;
+}
+
 /* INDIVIDUAL RECIPE CARDS */
 .recipe-cards {
   column-gap: 25px;
   display: flex;
   flex-wrap: wrap;
   max-height: 70%;
-  height: inherit;
-  margin: 30px 0 30px 30px;
-  max-width: 1200px;
-  row-gap: 20px;
-  overflow-y: scroll;
-  scrollbar-width: thin;
-  width: inherit;
+  height: auto;
+  margin: 50px 1px 30px 30px;
+  max-width: 100%;
+  row-gap: 30px;
+  width: 100%;
 }
 
 body {
   --primary: #e05d26;
   --grey: #857171;
   --lightgrey: #666;
+  --size-bezel: 0.5rem;
+  --size-radius: 4px;
 
   color: var(--grey);
   line-height: 1.55;
@@ -83,14 +124,14 @@ body {
   margin: 0;
   padding: 0;
   width: 100%;
-  font-family: Raleway, sans-serif;
+  overflow-x: hidden;
 }
 
 .hidden {
   display: none !important;
 }
 
-.popup {
+div#add-recipe.popup {
   position: absolute;
   grid-gap: 10px;
   max-width: 750px;
@@ -98,10 +139,12 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: whitesmoke;
-  box-shadow: 2px 2px 5px 5px gray;
-  border-radius: 15px;
-  transition: top 0ms ease-in-out 200ms, opacity 200ms ease-in-out 0ms, transform 20ms ease-in-out 0ms;
+  background-color: rgb(255 255 255);
+  border-radius: var(--size-radius);
+  border: 2px solid #111;
+  box-shadow:
+    3px 3px 1px #95a4ff,
+    3px 3px 1px 1px #111;
 }
 
 .popup::-webkit-scrollbar {
@@ -140,9 +183,9 @@ div .tag-list {
 
 div .item {
   padding: 5px 8px;
-  margin-top: 5px;
-  background: #fff;
-  border: 1px solid #888;
+  margin-top: 10px;
+  background: #f8f4e5;
+  border: 2px solid #111;
   border-radius: 3px;
   color: #111;
   user-select: none;
@@ -156,57 +199,119 @@ span .delete-btn {
   color: #555;
 }
 
+textarea {
+  border-radius: var(--size-radius);
+  border: 2px solid #111;
+}
+
+#time-cook,
+#time-prep,
+#serving {
+  margin-bottom: 20px;
+}
+
+#view-directions,
+#view-ingredients {
+  font-size: 17px;
+  background: #f8f4e5;
+  border: 2px solid #111;
+  box-shadow:
+    3px 3px 1px #95a4ff,
+    3px 3px 1px 1px #111;
+}
+
+input {
+  border: none;
+  border-bottom: 3px solid #111;
+  margin-top: 10px;
+  height: 30px;
+  margin-bottom: 20px;
+  outline: none;
+  font-size: 17px;
+}
+
+input:focus {
+  border-bottom: 4px solid #ffa580;
+}
+
 #recipe-name {
   margin-bottom: 20px;
-  border-radius: 10px;
   padding: 10px;
-  background: #c4c4c4;
+  background: #f8f8f8;
 }
 
 #ingredients {
   height: calc(25vh - 50px);
-  border-radius: 10px;
   margin-bottom: 20px;
   padding: 10px;
-  background: #c4c4c4;
+  background: #f8f8f8;
 }
 
 #instructions {
   margin-bottom: 20px;
   height: calc(40vh - 50px);
-  border-radius: 10px;
   padding: 10px;
-  background: #c4c4c4;
+  background: #f8f8f8;
 }
 
 #output {
-  margin-top: 2rem;
+  margin-top: 3rem;
   width: 90%;
   display: block;
+  position: static;
 }
 
 #save,
 #discard {
-  height: 25px;
-  border: 1px solid #000;
-  border-radius: 40px;
+  height: 30px;
+  border: 2px solid #000;
+  border-radius: 30px;
   background-color: rgb(243 195 131);
   cursor: pointer;
 }
 
 #upload {
-  height: 25px;
+  height: 30px;
   text-align: center;
   padding-left: 15px;
   padding-right: 15px;
-  border: 1px solid #000;
-  border-radius: 40px;
+  border: 2px solid #000;
+  border-radius: 30px;
   background-color: rgb(243 195 131);
   cursor: pointer;
 }
 
 .recipe-name {
   font-weight: bold;
+}
+
+div.box-style {
+  background: #f8f4e5;
+  border: 2px solid #111;
+  box-shadow:
+    15px 15px 1px #ffa580,
+    15px 15px 1px 2px #111;
+}
+
+ul.meta-style {
+  margin-left: 30px;
+  background: #f8f4e5;
+  border: 2px solid #111;
+}
+
+li {
+  margin-left: 20px;
+  margin-right: 5px;
+}
+
+div #make-recipe {
+  margin-left: -100px;
+  font-size: 30px;
+}
+
+img.img-thumbnail.mb-5 {
+  width: 500px;
+  margin: 18px;
 }
 
 @media screen and (min-width: 800px) {
@@ -216,12 +321,34 @@ span .delete-btn {
 }
 
 @media screen and (max-width: 800px) {
+  .recipe-cards,
+  #fav-recipe {
+    margin-left: 300px;
+  }
+
+  body {
+    overflow-x: visible;
+  }
+
   .popup {
     min-width: 520px;
   }
 }
 
 @media screen and (max-width: 700px) {
+  .recipe-cards,
+  #fav-recipe {
+    margin-left: 280px;
+  }
+
+  body {
+    overflow-x: visible;
+  }
+
+  .recipe-cards {
+    margin-left: 280px;
+  }
+
   .popup {
     min-width: 420px;
   }
@@ -236,6 +363,15 @@ span .delete-btn {
 }
 
 @media screen and (max-width: 600px) {
+  .recipe-cards,
+  #fav-recipe {
+    margin-left: 280px;
+  }
+
+  body {
+    overflow-x: visible;
+  }
+
   .popup {
     min-width: 380px;
     height: calc(100vh - 80px);
@@ -265,6 +401,15 @@ span .delete-btn {
 }
 
 @media screen and (max-width: 550px) {
+  .recipe-cards,
+  #fav-recipe {
+    margin-left: 280px;
+  }
+
+  body {
+    overflow-x: visible;
+  }
+
   .popup {
     min-width: 90%;
     max-height: 480px;
@@ -290,13 +435,22 @@ span .delete-btn {
     width: 22%;
   }
 
+  .recipe-cards,
+  #fav-recipe {
+    margin-left: 280px;
+  }
+
+  body {
+    overflow-x: visible;
+  }
+
   .nav-style a:link,
   .nav-style a:visited {
     font-size: 14px;
   }
 
   .form-control {
-    font-size: 3rem !important;
+    font-size: 5rem !important;
     line-height: 30px !important;
     padding-left: 1.5rem !important;
   }

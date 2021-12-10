@@ -64,15 +64,19 @@ contextBridge.exposeInMainWorld('electron', {
    * @param {string} path the location of the `.rcpkg` file.
    * @returns {[object]}
    */
-  import: (path) => {
-    ipcRenderer.sendSync('RC_UNPACK', path);
-  },
+  import: (path) => ipcRenderer.sendSync('RC_UNPACK', path),
+
+  /**
+   * Request that the file dialogue be shown.
+   * @returns SUCCESS if succeeded, FAILURE if not.
+   */
+  showSaveFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
 
   /**
    * Request that the file dialogue be shown.
    * @returns {string} returns the selected path
    */
-  showFileDialog: () => ipcRenderer.sendSync('SAVE_DIALOG'),
+  showOpenFileDialog: () => ipcRenderer.sendSync('OPEN_DIALOG'),
 
   /**
    * Request a new uuidv4 from the back end.

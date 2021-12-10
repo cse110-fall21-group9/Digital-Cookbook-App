@@ -197,12 +197,24 @@ ipcMain.on('RC_UNPACK', (event, filePath) => {
 });
 
 /**
- * Unzip the RC Package at the specified dir into an array of JSON objects.
+ * Return the list of paths the user selected
  */
 ipcMain.on('SAVE_DIALOG', (event) => {
   try {
     let path = dialog.showSaveDialogSync(null);
     event.returnValue = path;
+  } catch (err) {
+    event.returnValue = `FAILED: ${err}`;
+  }
+});
+
+/**
+ * Unzip the RC Package at the specified dir into an array of JSON objects.
+ */
+ipcMain.on('OPEN_DIALOG', (event) => {
+  try {
+    let paths = dialog.showOpenDialogSync({extensions: ['rcpkg']});
+    event.returnValue = paths;
   } catch (err) {
     event.returnValue = `FAILED: ${err}`;
   }
