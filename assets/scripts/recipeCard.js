@@ -14,7 +14,7 @@ const IMAGE_CHANGED = 'data-changed';
 const TAG_LIST = 'tag-items';
 const OPENED_FROM = 'data-opened-from';
 const RECIPE_FORM_ID = 'add-recipe';
-const RECIPE_ID_PROPERTY = 'data-recipe-id';
+const RECIPE_ID_PROPERTY = 'data-recipe-id'; // defunct, no longer needed
 
 export var recipeLabels = [];
 
