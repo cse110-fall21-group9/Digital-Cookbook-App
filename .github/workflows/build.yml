@@ -18,7 +18,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 14
-      - run: npm ci
       - name: Build Electron app
         run: ci/buildall.sh "${{ runner.os }}"
         shell: bash

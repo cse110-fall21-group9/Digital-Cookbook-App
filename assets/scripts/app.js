@@ -1,8 +1,17 @@
 // import { doc } from "prettier";
-export var frontEndRecipeDict = {};
-export var displayedList = [];
+const OPENED_FROM = 'data-opened-from';
+const RECIPE_FORM_ID = 'add-recipe';
+const IMAGE_CHANGED = 'data-changed';
+const RECIPE_ID_PROPERTY = 'data-recipe-id';
+const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
+const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
+const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
+const SEARCH_BAR = 'search-bar';
 const TAG_LIST = 'tag-items';
-var tags = [];
+
+export var frontEndRecipeDict = {};
+var displayedList = []; // used for search bar
+var tags = []; // used to store tags for each recipe
 
 /**
  * Strip the spaces from a given string
@@ -14,26 +23,23 @@ function strStrip(name) {
   return name.replace(/\s/g, '');
 }
 
-const OPENED_FROM = 'data-opened-from';
-const RECIPE_FORM_ID = 'add-recipe';
-const IMAGE_CHANGED = 'data-changed';
-const RECIPE_ID_PROPERTY = 'data-recipe-id';
-const IMAGES_DIR = './assets/recipes/images/'; // the directory for RECIPE IMAGES
-const CARD_CONTAINER_SELECTOR = 'article.recipe-cards';
-const IMAGE_UPLOAD_SELECTOR = 'input[type="file"][id="file"]';
-const SEARCH_BAR = 'search-bar';
-
 window.addEventListener('DOMContentLoaded', () => {
-  frontEndRecipeDict = window.electron.acquireRecipesDictionary();
-  console.log('Received from back end:');
-  console.log(frontEndRecipeDict);
-  Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
-    displayedList.push(val);
-    // createRecipeCard(val);
-  });
-  refreshRecipeCards(displayedList);
+  let backendRecipes = window.electron.acquireRecipesDictionary();
+  refreshFrontend(backendRecipes);
   init();
 });
+
+function refreshFrontend(newList) {
+  removeChildren(document.querySelector(CARD_CONTAINER_SELECTOR));
+  frontEndRecipeDict = newList;
+  console.log('Received from back end:');
+  console.log(frontEndRecipeDict);
+  displayedList = [];
+  Object.entries(frontEndRecipeDict).forEach(([key, val]) => {
+    displayedList.push(val);
+  });
+  refreshRecipeCards(displayedList);
+}
 
 /**
  * Delete the children of a given DOM node.
@@ -64,7 +70,6 @@ function init() {
     document.getElementById(RECIPE_FORM_ID)[OPENED_FROM] = '';
     // by default, the image for a new recipe has been "changed"
     document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED] = true;
-
     document.querySelector(IMAGE_UPLOAD_SELECTOR).value = null;
 
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
@@ -73,7 +78,11 @@ function init() {
 
   // Search bar function
   let search = document.getElementById(SEARCH_BAR);
+  let container = document.querySelector('.recipe-cards');
+
+  // Normal Search
   search.addEventListener('keyup', (e) => {
+    console.log(document.getElementById('tab').textContent.toLowerCase() === 'favorite');
     const searchString = e.target.value.toLowerCase();
     // Reset displayed list for search after deleting
     displayedList.splice(0, displayedList.length);
@@ -84,12 +93,13 @@ function init() {
     const filteredRecipes = displayedList.filter((recipe) => {
       return recipe.name.toLowerCase().includes(searchString);
     });
-
-    let container = document.querySelector('.recipe-cards');
     removeChildren(container);
-
     refreshRecipeCards(filteredRecipes);
   });
+
+  // Favorite List
+  let favBtn = document.getElementById('fav-btn');
+  favBtn.addEventListener('click', showFavorite);
 
   // Close the add function
   let close = document.getElementById('close');
@@ -117,7 +127,6 @@ function init() {
     console.log(document.getElementById(RECIPE_FORM_ID).classList);
 
     // get stateful information from the form's data.
-    // let recipeName = strStrip(document.getElementById('recipe-name').value);
     let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
     let imgChanged = document.querySelector(IMAGE_UPLOAD_SELECTOR)[IMAGE_CHANGED];
 
@@ -134,32 +143,13 @@ function init() {
       const parent = document.querySelector(CARD_CONTAINER_SELECTOR);
       let oldCard = document.querySelector(`recipe-card[id="${oldRecipeId}"]`); // this better work gdi
       parent.removeChild(oldCard);
-      /*
-      if (recipeName != oldRecipeId) {
-        //TODO: if we save using UUID, there is no need to do this. just delete the file with the same name as the ID.
-        console.log(oldRecipeId);
-        let status = window.electron.removeRecipe(oldRecipeId);
-        console.log(status);
-      } */
     }
 
     let json = buildJSONFromForm(imgChanged, oldRecipeId);
-    createRecipeCard(json);
-
-    // debug directives
-    console.log('JSON built from form:');
-    console.log(json);
-    // add to front-end copy of dictionary
-    frontEndRecipeDict[json.recipe_id] = json;
-
-    // Save file to local storage
-    // recipeName = strStrip(json['name']);
-    // let file = `${recipeName}.json`;
-    let status = window.electron.addRecipe(json, json.recipe_id);
+    let status = createAddRecipeFromJSON(json);
     console.log(status);
   });
 
-  //let imageInput = document.querySelector('input#file[type="file"][name="image]');
   const img = document.getElementById('output');
   img.addEventListener('error', function (event) {
     event.target.src = './assets/images/default-image.jpg';
@@ -180,6 +170,8 @@ function init() {
     // this write operation should happen RIGHT AFTER clicking the save recipe button and RIGHT BEFORE writing the JSON to disk
     console.log(imageFile.path);
   });
+  document.getElementById('export-button').addEventListener('click', exportRecipes);
+  document.getElementById('import-button').addEventListener('click', importRecipes);
 }
 
 /**
@@ -190,7 +182,16 @@ function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
   recipeCard.id = data.recipe_id;
   recipeCard.data = data;
-  document.querySelector('.recipe-cards').appendChild(recipeCard);
+  return recipeCard;
+}
+
+/**
+ * Appends the recipe card to the DOM
+ * @param {recipe-card} recipeCardElem recipeCard element to add to the DOM
+ */
+function addRecipeCardToDOM(recipeCardElem) {
+  console.log(`Adding to dom: ${recipeCardElem}`);
+  document.querySelector('.recipe-cards').appendChild(recipeCardElem);
 }
 
 /**
@@ -200,7 +201,7 @@ function createRecipeCard(data) {
  */
 function refreshRecipeCards(cardList) {
   for (let i = cardList.length - 1; i >= 0; i--) {
-    createRecipeCard(cardList[i]);
+    createAddRecipeFromJSON(cardList[i]);
   }
 }
 
@@ -216,7 +217,6 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   // DateTime
   let today = new Date();
-  // let date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
   let date = today.toString();
 
   // List of Tags
@@ -246,6 +246,7 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
 
   let ingredients = document.getElementById('ingredients').value.split('\n');
   let instruction = document.getElementById('instructions').value.split('\n');
+  instruction = instruction.filter((e) => e);
   let cookTime = document.getElementById('time-cook').value;
   let timePrep = document.getElementById('time-prep').value;
   let serving = document.getElementById('serving').value;
@@ -275,11 +276,33 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
   return newRecipe;
 }
 
+export function showFavorite() {
+  document.querySelector('div.input-group.rounded').classList.add('hidden');
+  document.querySelector('h1').textContent = 'Favorite';
+  document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  removeChildren(document.getElementById('view-recipe'));
+  const container = document.getElementById('fav-recipe');
+  removeChildren(container);
+  console.log(container);
+  let favList = JSON.parse(localStorage.getItem('favorites'));
+  for (let i = 0; i < favList.length; i++) {
+    const recipeCard = document.createElement('recipe-card');
+    recipeCard.id = favList[i];
+    recipeCard.data = frontEndRecipeDict[favList[i]];
+    container.appendChild(recipeCard);
+  }
+  container.style.display = 'flex';
+  console.log(container);
+}
+
 // The view recipe function for clicking on a recipe card
 export function showRecipe(recipe) {
   let jsonData = frontEndRecipeDict[recipe.recipe_id];
   console.log(jsonData);
+  document.querySelector('div.input-group.rounded').classList.add('hidden');
   document.getElementsByClassName('recipe-cards')[0].style.display = 'none';
+  removeChildren(document.getElementById('fav-recipe'));
+  document.getElementById('tab').textContent = '';
   const container = document.getElementById('view-recipe');
   // First row to hold the Buttons and Recipe Name
   const row1 = document.createElement('div');
@@ -290,11 +313,11 @@ export function showRecipe(recipe) {
   col1.className = 'col-3';
   col1.classList.add('col-3');
   const viewIngredients = document.createElement('button');
-  viewIngredients.className = 'btn btn-outline-success btn-lg';
-  viewIngredients.classList.add('btn', 'btn-outline-success', 'btn-lg');
+  viewIngredients.className = 'btn ingre';
+  viewIngredients.classList.add('btn', 'ingre');
   viewIngredients.type = 'button';
   viewIngredients.innerHTML = 'View Ingredients';
-  viewIngredients.id = 'view-directions';
+  viewIngredients.id = 'view-ingredients';
   col1.appendChild(viewIngredients);
   row1.appendChild(col1);
 
@@ -303,8 +326,8 @@ export function showRecipe(recipe) {
   col2.className = 'col-3';
   col2.classList.add('col-3');
   const viewDirections = document.createElement('button');
-  viewDirections.className = 'btn btn-outline-danger btn-lg';
-  viewDirections.classList.add('btn', 'btn-outline-danger', 'btn-lg');
+  viewDirections.className = 'btn direct';
+  viewDirections.classList.add('btn', 'direct');
   viewDirections.type = 'button';
   viewDirections.innerHTML = 'View Directions';
   viewDirections.id = 'view-directions';
@@ -325,15 +348,23 @@ export function showRecipe(recipe) {
   row2.classList.add('row');
   // Border
   const border = document.createElement('div');
-  border.className = 'col-6 mt-4 border border-dark rounded';
-  border.classList.add('col-6', 'mt-4', 'border', 'border-dark', 'rounded');
+  border.className = 'col-6 mt-4 box-style';
+  border.classList.add('col-6', 'mt-4', 'box-style');
   // Recipe Inside Text
   const recipeText = document.createElement('div');
   recipeText.className = 'py-3 px-2';
   recipeText.classList.add('py-3', 'px-2');
   recipeText.id = 'making-recipe';
+  if (jsonData.ingredients.length === 1) {
+    const str = jsonData.ingredients[0];
+    jsonData.ingredients = str.split(',');
+  }
+  if (jsonData.steps.length === 1) {
+    const str = jsonData.steps[0];
+    jsonData.steps = str.split(',');
+  }
   for (let i = 0; i < jsonData.ingredients.length; i++) {
-    recipeText.innerHTML += `${jsonData.ingredients[i]}<br>`;
+    recipeText.innerHTML += `<p>${jsonData.ingredients[i]}<p><br>`;
   }
   border.appendChild(recipeText);
   row2.appendChild(border);
@@ -350,14 +381,14 @@ export function showRecipe(recipe) {
   finalCol.appendChild(img);
   // Recipe Meta Data UL
   const metaData = document.createElement('ul');
-  metaData.className = 'list-unstyled border border-dark rounded px-3 py-3';
-  metaData.classList.add('list-unstyled', 'border', 'border-dark', 'rounded', 'px-3', 'py-3');
+  metaData.className = 'meta-style px-3 py-3';
+  metaData.classList.add('meta-style', 'px-3', 'py-3');
   // Prep Time
   const prepTime = document.createElement('li');
   prepTime.className = 'mb-2';
   prepTime.classList.add('mb-2');
   prepTime.id = 'prep';
-  prepTime.innerHTML = `Prep Time: ${jsonData.metrics.prep_time}`;
+  prepTime.innerHTML = `<b>Prep Time:</b> ${jsonData.metrics.prep_time} mins`;
   metaData.appendChild(prepTime);
   finalCol.appendChild(metaData);
   // Cook Time
@@ -365,7 +396,7 @@ export function showRecipe(recipe) {
   cookTime.className = 'mb-2';
   cookTime.classList.add('mb-2');
   cookTime.id = 'cook-time';
-  cookTime.innerHTML = `Cook Time: ${jsonData.metrics.cook_time}`;
+  cookTime.innerHTML = `<b>Cook Time:</b> ${jsonData.metrics.cook_time} mins`;
   metaData.appendChild(cookTime);
   row2.appendChild(finalCol);
   // Servings
@@ -373,14 +404,27 @@ export function showRecipe(recipe) {
   servings.className = 'mb-2';
   servings.classList.add('mb-2');
   servings.id = 'servings';
-  servings.innerHTML = `Servings: ${jsonData.metrics.servings}`;
+  servings.innerHTML = `<b>Serving:</b> ${jsonData.metrics.servings}`;
   metaData.appendChild(servings);
+  // Tags
+  const tagItems = document.createElement('li');
+  tagItems.className = 'mb-2';
+  tagItems.classList.add('mb-2');
+  tagItems.id = 'tag-items-view';
+  let stringTag = '';
+  for (const element of jsonData.metadata.labels) {
+    stringTag += element.toUpperCase() + ' ';
+  }
+  tagItems.innerHTML = `<b>Tags:</b> ${stringTag}`;
+  metaData.appendChild(tagItems);
+  row2.appendChild(finalCol);
+
   // Date Created
   const date = document.createElement('li');
   date.className = 'mb-2';
   date.classList.add('mb-2');
   date.id = 'date';
-  date.innerHTML = `Date Created: ${jsonData.metadata.time_added}`;
+  date.innerHTML = `<b>Date Created:</b> ${jsonData.metadata.time_added}`;
   metaData.appendChild(date);
   row2.appendChild(finalCol);
 
@@ -390,14 +434,15 @@ export function showRecipe(recipe) {
   viewIngredients.addEventListener('click', (event) => {
     recipeText.innerHTML = '';
     for (let i = 0; i < jsonData.ingredients.length; i++) {
-      recipeText.innerHTML += `${jsonData.ingredients[i]}<br>`;
+      recipeText.innerHTML += `<p>${jsonData.ingredients[i]}<p><br>`;
     }
   });
   // console.log(viewDirections);
   viewDirections.addEventListener('click', (event) => {
     recipeText.innerHTML = '';
     for (let i = 0; i < jsonData.steps.length; i++) {
-      recipeText.innerHTML += `${i + 1}. ${jsonData.steps[i]}<br>`;
+      recipeText.innerHTML += `<h5>Step ${i + 1}</h5>`;
+      recipeText.innerHTML += `<p>${jsonData.steps[i]}<p><br>`;
     }
   });
 }
@@ -413,6 +458,7 @@ function clearRecipeComposeForm() {
   document.getElementById('time-prep').value = '';
   document.getElementById('serving').value = '';
   document.getElementById('output').src = '';
+  document.getElementById('tag-ip').value = '';
   removeChildren(document.getElementById('tag-items'));
   tags = [];
 }
@@ -433,23 +479,57 @@ function exportRecipes() {
   }
 
   try {
-    let path = window.electron.showFileDialog();
+    let path = window.electron.showSaveFileDialog();
+    if (!path) {
+      return;
+    }
     window.electron.export(recipesToExport, path);
   } catch (err) {
     console.log(err);
   }
 }
-document.getElementById('export-button').addEventListener('click', exportRecipes);
 
 function isSelected(recipeCardDiv) {
   return recipeCardDiv.getAttribute('data-selected') === 'true';
 }
 
 function getRecipeIdFromDOM(recipeCardDiv) {
-  return recipeCardDiv.classList[0];
+  return recipeCardDiv.getAttribute('id');
 }
 
-// Tag function
+function importRecipes() {
+  try {
+    let paths = window.electron.showOpenFileDialog();
+    if (!paths || paths.length == 0) {
+      return;
+    }
+    console.log(paths);
+    for (let path of paths) {
+      let importedRecs = window.electron.import(path);
+      for (let recipeJSON of importedRecs) {
+        recipeJSON.recipe_id = window.electron.generateNewId();
+        createAddRecipeFromJSON(recipeJSON);
+      }
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function deleteTag(t) {
+  // Add functionality for close button functions
+  let newTag = document.getElementById(`${t}`);
+  newTag.addEventListener('click', function () {
+    let parent = newTag.parentNode.parentNode;
+    parent.removeChild(newTag.parentNode);
+    let index = tags.indexOf(`${t}`);
+    tags.splice(index, 1);
+    console.log('after delete');
+    console.log(tags);
+  });
+}
+
+// Add new tag function
 function addTag(e) {
   let code = e.keyCode ? e.keyCode : e.which;
   // If user hit "Enter"
@@ -458,7 +538,7 @@ function addTag(e) {
   }
 
   let tag = e.target.value.trim();
-  if (tag.length < 1 || tags.includes(tag) || tags.length >= 3) {
+  if (tag.length < 1 || tags.includes(tag) || tags.length >= 2) {
     e.target.value = '';
     return;
   }
@@ -475,13 +555,31 @@ function addTag(e) {
   `;
   document.getElementById(TAG_LIST).appendChild(tagItem);
   e.target.value = '';
+  console.log(tags);
 
   // Close button for new tag
-  let newTag = document.getElementById(`${tag}`);
-  newTag.addEventListener('click', function () {
-    let parent = newTag.parentNode.parentNode;
-    parent.removeChild(newTag.parentNode);
-    let index = tags.indexOf(`${tag}`);
-    tags.splice(index);
-  });
+  deleteTag(tag);
+}
+
+export function populateTags(recipeLabels) {
+  // if not new recipe, then populate tag list with old one
+  let oldRecipeId = document.getElementById(RECIPE_FORM_ID)[OPENED_FROM];
+  if (oldRecipeId != '') {
+    tags = recipeLabels;
+  }
+  console.log('before delete');
+  console.log(tags);
+  for (let i = 0; i < tags.length; i++) {
+    // Add delete functionality for the tags that are just populated
+    deleteTag(tags[i]);
+  }
+}
+
+function createAddRecipeFromJSON(json) {
+  let id = json.recipe_id;
+  let card = createRecipeCard(json); // returns the HTMLElement recipe-card
+  addRecipeCardToDOM(card);
+  frontEndRecipeDict[id] = json;
+  let status = window.electron.addRecipe(json, id);
+  return status;
 }
