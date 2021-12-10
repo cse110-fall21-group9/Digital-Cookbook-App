@@ -18,16 +18,6 @@ export var frontEndRecipeDict = {};
 var displayedList = []; // used for search bar
 var tags = []; // used to store tags for each recipe
 
-/**
- * Strip the spaces from a given string
- * REMARKS: We have updated our code base to use UUIDv4, hence largely deprecating this function and others like it.
- * @param {string} name a string to strip the spaces from
- * @returns the stripped string
- */
-function strStrip(name) {
-  return name.replace(/\s/g, '');
-}
-
 window.addEventListener('DOMContentLoaded', () => {
   let backendRecipes = window.electron.acquireRecipesDictionary();
   refreshFrontend(backendRecipes);
