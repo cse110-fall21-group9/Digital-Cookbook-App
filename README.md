@@ -35,4 +35,4 @@ This is a desktop app that runs using `electron.js` and other web technologies.
 ## Sprints Completed
 - [x] Sprint 1 (Completed 11/13/2021)
 - [x] Sprint 2 (Completed 11/28/2021)
-- [x] Sprint 3 (Scheduled 12/09/2021)
+- [x] Sprint 3 (Completed 12/09/2021)
