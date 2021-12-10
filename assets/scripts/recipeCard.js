@@ -1,3 +1,8 @@
+/**
+ * @module recipeCard
+ * @description defines the custom type recipe-card
+ */
+
 import {frontEndRecipeDict} from './app.js';
 import {showRecipe} from './app.js';
 import {removeChildren} from './app.js';
@@ -17,6 +22,11 @@ function strStrip(name) {
   return name.replace(/\s/g, '');
 }
 
+/**
+ * @class RecipeCard
+ * @extends HTMLElement
+ * @classdesc describes how to create a new recipe-card HTML element that we put on screen
+ */
 class recipeCard extends HTMLElement {
   DOMRef = null;
   constructor() {
@@ -343,6 +353,10 @@ class recipeCard extends HTMLElement {
   }
 }
 
+/**
+ * Used to populate the recipe form when user requests to edit a recipe
+ * @param {object} recipeData JSON object with recipe information
+ */
 function fillComposeRecipeFormData(recipeData) {
   document.getElementById('add-recipe').classList.remove('hidden');
   document.getElementById('add-recipe').style.display = 'grid';

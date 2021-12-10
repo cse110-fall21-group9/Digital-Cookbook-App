@@ -1,3 +1,8 @@
+/**
+ * @module app
+ * @description Frontend code for the application
+ */
+
 // import { doc } from "prettier";
 const OPENED_FROM = 'data-opened-from';
 const RECIPE_FORM_ID = 'add-recipe';
@@ -175,8 +180,9 @@ function init() {
 }
 
 /**
- * Make a new `recipe-card` and prepend it to the list of cards in the front end
+ * Make a new `recipe-card` from the provided json data
  * @param {object} data as JSON
+ * @returns {HTMLElement} a recipe card element with the data json embedded in it
  */
 function createRecipeCard(data) {
   const recipeCard = document.createElement('recipe-card');
@@ -198,6 +204,7 @@ function addRecipeCardToDOM(recipeCardElem) {
  * Takes the list of recipes to display and makes the corresponding recipe cards.
  * Currently, this is done in reverse order because we push to the end of the list
  * when making new/editing new cards. Change this one when sorting is implemented.
+ * @param {object} cardList a list of JSON objects to create recipe cards from.
  */
 function refreshRecipeCards(cardList) {
   for (let i = cardList.length - 1; i >= 0; i--) {
@@ -276,6 +283,9 @@ function buildJSONFromForm(imgChanged, openedFromRecipeId) {
   return newRecipe;
 }
 
+/**
+ * @callback
+ */
 export function showFavorite() {
   document.querySelector('div.input-group.rounded').classList.add('hidden');
   document.querySelector('h1').textContent = 'Favorite';
@@ -295,7 +305,11 @@ export function showFavorite() {
   console.log(container);
 }
 
-// The view recipe function for clicking on a recipe card
+/**
+ * @param {object} recipe the JSON object containing all data about the recipe
+ * @description Modifies the DOM to show this recipe on the current page.
+ * @callback
+ */
 export function showRecipe(recipe) {
   let jsonData = frontEndRecipeDict[recipe.recipe_id];
   console.log(jsonData);
@@ -447,6 +461,9 @@ export function showRecipe(recipe) {
   });
 }
 
+/**
+ * cleans the recipe insertion form (used before creating a new recipe or editing a recipe)
+ */
 function clearRecipeComposeForm() {
   if (document.getElementById('recipe-name') == null) {
     return;
@@ -463,6 +480,11 @@ function clearRecipeComposeForm() {
   tags = [];
 }
 
+/**
+ * @Callback for the export button. Takes all current selected recipe cards
+ * and then shows a file save dialog and puts the JSON of those recipes
+ * in an array in a .rcpkg file of user's choice
+ */
 function exportRecipes() {
   let recipeCardsContainer = document.querySelector('.recipe-cards');
   let recipeCardsDivs = Array.from(recipeCardsContainer.children);
@@ -489,14 +511,25 @@ function exportRecipes() {
   }
 }
 
+/**
+ * @param {HTMLElement} recipeCardDiv the parent div of the recipe card custom element
+ * @returns whether the checkbox of the recipe card is checked
+ */
 function isSelected(recipeCardDiv) {
   return recipeCardDiv.getAttribute('data-selected') === 'true';
 }
 
+/**
+ * @param {HTMLElement} recipeCardDiv the parent div of the recipe card custom element
+ * @returns the id of the recipe
+ */
 function getRecipeIdFromDOM(recipeCardDiv) {
   return recipeCardDiv.getAttribute('id');
 }
-
+/**
+ * @callback
+ * @description called when user clicks the import button
+ */
 function importRecipes() {
   try {
     let paths = window.electron.showOpenFileDialog();
