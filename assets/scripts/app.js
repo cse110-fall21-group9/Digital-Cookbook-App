@@ -6,7 +6,7 @@ var tags = [];
 
 /**
  * Strip the spaces from a given string
- * TODO: Our goal is to update our code base to use UUIDv4, hence largely deprecating this function and others like it.
+ * REMARKS: We have updated our code base to use UUIDv4, hence largely deprecating this function and others like it.
  * @param {string} name a string to strip the spaces from
  * @returns the stripped string
  */

@@ -262,35 +262,6 @@ class IOSystem {
    * @param {string} jString The string to convert into an image.
    */
   static decodeStringToImage(jString, dir, imageName) {}
-
-  // DEPRECATED METHODS:
-  /**
-   * Unpacks a JSON file into a JS object.
-   * TODO: may be unnecessary if we do not get JSON files directly from users.
-   * @param {File} fileHandle the File to unpack.
-   * @returns {object} the unpacked JS object.
-   */
-  static unpackJSON(fileHandle) {
-    if (!fileHandle) {
-      throw new Error(`This file handle is null!`);
-    }
-
-    // const fileAsString = encodeFileToString(fileHandle);
-    // let fileAsObject = JSON.parse(fileAsString);
-
-    return fileAsObject;
-  }
-
-  /**
-   * Converts a Node Buffer into a JS Blob.
-   * Facilitates insertion into JSON.
-   * TODO: Might be unnecessary if no buffers are ever requested directly.
-   * @param {Buffer} theBuffer the buffer to convert to a Blob
-   */
-  static bufferToJSBlob(theBuffer) {
-    // convert buffer to JSON
-    return theBuffer.toString('base64');
-  }
 }
 
 module.exports = IOSystem;
