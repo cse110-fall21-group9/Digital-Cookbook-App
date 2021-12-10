@@ -21,7 +21,7 @@ This is a desktop app that runs using `electron.js` and other web technologies.
 - [x] Electron Desktop App
 - [x] Styling
 - [x] Filesystem Operations
-- [ ] Offline Import/Export
+- [x] Offline Import/Export
 
 ## CI/CD Pipeline
 - [x] HTML5 Validation Complete
@@ -29,10 +29,10 @@ This is a desktop app that runs using `electron.js` and other web technologies.
 - [x] CSS linting and styling
 - [x] Jest Unit Testing
 - [x] Automated Electron builds and packaging on every commit
-- [ ] JSDoc document generation
+- [x] JSDoc document generation
 - [ ] End-to-end testing
 
 ## Sprints Completed
 - [x] Sprint 1 (Completed 11/13/2021)
 - [x] Sprint 2 (Completed 11/28/2021)
-- [ ] Sprint 3 (Scheduled 12/09/2021)
+- [x] Sprint 3 (Scheduled 12/09/2021)
