@@ -1,7 +1,7 @@
 # The `import pandas` Cookbook
 [![GitHub Super-Linter](https://github.com/cse110-fall21-group9/Digital-Cookbook-App/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-[Documentation](https://cse110-fall21-group9.github.io/Digital-Cookbook-App/index.html)
+[Documentation](https://cse110-fall21-group9.github.io/Digital-Cookbook-App/index.html) and Link to [Builds](https://github.com/cse110-fall21-group9/Digital-Cookbook-App/releases/tag/v1.0)
 
 A digital cookbook created for UC San Diego CSE 110 - Software Engineering. We are Group 9, the `import pandas`!  
 This is a desktop app that runs using `electron.js` and other web technologies.
