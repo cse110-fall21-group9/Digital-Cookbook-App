@@ -140,11 +140,8 @@ ipcMain.on('DELETE', (event, recipeId) => {
     IOSystem.eraseFileAt(RECIPES_DIR, `${recipeId}.json`);
 
     // also delete the corresponding image.
-    /*
     let imgName = path.basename(IOSystem.recipesDict[recipeId].image);
-    let imgPath = path.join(__dirname, IMAGES_DIR);
-    IOSystem.eraseFileAt(`${imgPath}${imgName}`);
-    */
+    IOSystem.eraseFileAt(IMAGES_DIR, imgName);
 
     // de-index the recipe from our dictionary in the backend.
     IOSystem.deIndexFile(recipeId);
