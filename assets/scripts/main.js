@@ -10,7 +10,7 @@ const path = require('path');
 const IOSystem = require('./IOSystem');
 const {v4: uuidv4} = require('uuid');
 
-// directory with recipes
+// directory with the recipes
 const RECIPES_DIR = path.join(__dirname, '../recipes/');
 // directory with *recipe images*, NOT app images
 const IMAGES_DIR = path.join(__dirname, '../recipes/images/');
