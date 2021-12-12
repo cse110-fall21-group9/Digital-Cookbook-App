@@ -4,7 +4,7 @@
  * @description This file is the entry point of our app and defines a fake server that contains a Node.js environment. Node.js modules, the electron API (windowing methods, etc.) and message handlers live here.
  */
 
-// Modules to control application life and create native browser window
+// Modules to control the application life and create native browser window
 const {app, BrowserWindow, dialog, ipcMain} = require('electron');
 const path = require('path');
 const IOSystem = require('./IOSystem');
